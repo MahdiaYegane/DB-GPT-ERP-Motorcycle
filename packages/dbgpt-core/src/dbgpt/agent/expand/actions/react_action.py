@@ -108,14 +108,123 @@ class Terminate(Action[None], BaseTool):
 class ReActAction(ToolAction):
     """React action class."""
 
+    # Stop the agent instead of looping forever when the model keeps emitting
+    # tool calls with EMPTY arguments (e.g. truncated tool-call JSON from a
+    # small output limit, or a lost tool-call format). Each such call returns
+    # a success observation like "No code provided", so the normal retry loop
+    # never terminates on its own.
+    MAX_CONSECUTIVE_EMPTY_ARGS = 3
+
+    _EMPTY_ARGS_FINAL_MESSAGE = {
+        "en": (
+            "I stopped because '{tool}' was called {count} times in a row "
+            "without any usable arguments (the tool kept reporting that no "
+            "input was provided). This usually means the model's output was "
+            "cut off before the tool arguments were finished — try asking "
+            "again with a shorter request. If it keeps happening, increase "
+            "`max_new_tokens` in the app config or switch to a model with "
+            "more reliable tool calling."
+        ),
+        "fa": (
+            "متوقف شدم چون ابزار «{tool}» تعداد {count} بار پشت سر هم بدون "
+            "هیچ ورودی قابل‌استفاده‌ای فراخوانی شد (ابزار هر بار گزارش داد "
+            "که ورودی‌ای دریافت نکرده است). این معمولاً یعنی خروجی مدل قبل "
+            "از کامل شدن آرگومان‌ها قطع شده است — لطفاً دوباره با یک درخواست "
+            "کوتاه‌تر تلاش کنید. اگر ادامه داشت، مقدار `max_new_tokens` را "
+            "در کانفیگ بیشتر کنید یا مدل دیگری انتخاب کنید."
+        ),
+        "zh": (
+            "已停止，因为工具“{tool}”连续 {count} 次被调用但都没有收到可用参数"
+            "（工具每次都报告未提供输入）。这通常意味着模型输出在工具参数写完"
+            "之前被截断了——请用更短的请求再试一次。如果问题持续，请调大应用"
+            "配置中的 `max_new_tokens` 或更换工具调用更可靠的模型。"
+        ),
+    }
+
     def __init__(self, **kwargs):
         """Tool action init."""
         super().__init__(**kwargs)
+        self._consecutive_empty_args = 0
+        self._last_empty_tool: Optional[str] = None
 
     @property
     def resource_need(self) -> Optional[ResourceType]:
         """Return the resource type needed for the action."""
         return None
+
+    @staticmethod
+    def _is_degenerate_args(args: Any) -> bool:
+        """Return True when tool args carry no usable input.
+
+        Covers ``None``/``{}``/``[]`` as well as dicts whose values are all
+        blank (e.g. ``{"code": ""}`` produced by a truncated tool call).
+        """
+        if args is None:
+            return True
+        if isinstance(args, dict):
+            if not args:
+                return True
+            for value in args.values():
+                if value is None:
+                    continue
+                if isinstance(value, str) and not value.strip():
+                    continue
+                if value == {} or value == []:
+                    continue
+                return False
+            return True
+        if isinstance(args, (list, str)):
+            return len(args) == 0
+        return False
+
+    def _empty_args_final_message(self, tool_name: Optional[str]) -> str:
+        """Build the user-facing message used when the breaker trips."""
+        lang = (self.language or "en").lower()
+        if lang.startswith("fa"):
+            template = self._EMPTY_ARGS_FINAL_MESSAGE["fa"]
+        elif lang.startswith("zh"):
+            template = self._EMPTY_ARGS_FINAL_MESSAGE["zh"]
+        else:
+            template = self._EMPTY_ARGS_FINAL_MESSAGE["en"]
+        return template.format(
+            tool=tool_name or "the tool", count=self.MAX_CONSECUTIVE_EMPTY_ARGS
+        )
+
+    def _note_tool_invocation(
+        self, tool_name: Optional[str], args: Any
+    ) -> Optional[ActionOutput]:
+        """Track empty-argument invocations and trip the breaker if needed.
+
+        Returns a terminal :class:`ActionOutput` (``terminate=True``) once
+        ``MAX_CONSECUTIVE_EMPTY_ARGS`` degenerate calls happen in a row, so
+        the agent stops instead of looping forever. Any call carrying real
+        arguments resets the counter. Returns ``None`` otherwise.
+        """
+        normalized = (tool_name or "").strip().lower()
+        names = {part.strip() for part in normalized.split(",")}
+        if "terminate" in names or not self._is_degenerate_args(args):
+            self._consecutive_empty_args = 0
+            self._last_empty_tool = None
+            return None
+        self._consecutive_empty_args += 1
+        self._last_empty_tool = tool_name or self._last_empty_tool
+        logger.warning(
+            "Empty tool arguments for '%s' (%d/%d consecutive) — "
+            "model likely emitted a truncated or malformed tool call",
+            tool_name,
+            self._consecutive_empty_args,
+            self.MAX_CONSECUTIVE_EMPTY_ARGS,
+        )
+        if self._consecutive_empty_args < self.MAX_CONSECUTIVE_EMPTY_ARGS:
+            return None
+        content = self._empty_args_final_message(self._last_empty_tool)
+        return ActionOutput(
+            is_exe_success=True,
+            content=content,
+            observations=content,
+            action=tool_name,
+            terminate=True,
+        )
 
     @classmethod
     def parse_action(
@@ -471,6 +580,12 @@ class ReActAction(ToolAction):
             need_vis_render=need_vis_render,
             raw_tool_input=action_input_str,
         )
+        # Break out of empty-argument retry loops: repeated calls with no
+        # usable args (each "succeeding" with e.g. "No code provided") would
+        # otherwise spin until max_retry_count while burning context.
+        breaker_out = self._note_tool_invocation(name, tool_args)
+        if breaker_out is not None:
+            act_out = breaker_out
         if not act_out.action_input:
             act_out.action_input = action_input_str
         return act_out

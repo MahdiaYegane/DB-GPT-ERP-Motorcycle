@@ -82,8 +82,10 @@ async def test_code_interpreter_isolates_generated_images_per_state():
 
     out_a = await tools_a["code_interpreter"](code="")
     out_b = await tools_b["code_interpreter"](code="")
-    assert "No code provided" in json.loads(out_a)["chunks"][0]["content"]
-    assert "No code provided" in json.loads(out_b)["chunks"][0]["content"]
+    assert "No code was received" in json.loads(out_a)["chunks"][0]["content"]
+    assert "No code was received" in json.loads(out_b)["chunks"][0]["content"]
+    # The guidance must tell the agent to resend the full script, not loop.
+    assert "Do NOT repeat" in json.loads(out_a)["chunks"][0]["content"]
 
     # Simulate an artifact landing in A's state; B must stay clean.
     state_a.setdefault("generated_images", []).append("/images/a.png")

@@ -199,6 +199,17 @@ class ParallelToolAction(ReActAction):
                     raw_tool_input=raw_input,
                 )
             )
+        # Empty-argument loop breaker (same rationale as the single-step
+        # path): only trips when every batched call is degenerate.
+        if specs and all(self._is_degenerate_args(s.args) for s in specs):
+            breaker_out = self._note_tool_invocation(
+                ", ".join(s.name or "?" for s in specs), {}
+            )
+            if breaker_out is not None:
+                return breaker_out
+        else:
+            self._consecutive_empty_args = 0
+            self._last_empty_tool = None
         out = await run_tools_batch(
             specs,
             self.resource,
@@ -273,6 +284,25 @@ class NativeToolCallAction(ParallelToolAction):
             if thought:
                 thoughts.append(str(thought))
             specs.append(ToolCallSpec(name=name, args=args, call_id=tc.get("id")))
+        # Same empty-argument loop breaker as the text path: provider-native
+        # calls with truncated JSON previously collapsed to args={} and spun
+        # until max retries. A batch only trips the breaker when EVERY call
+        # is degenerate; any call with real args resets the counter.
+        if specs and all(self._is_degenerate_args(s.args) for s in specs):
+            breaker_out = self._note_tool_invocation(
+                ", ".join(s.name or "?" for s in specs), {}
+            )
+            if breaker_out is not None:
+                breaker_out.action_intention = "\n".join(intentions) or None
+                if thoughts:
+                    breaker_out.thoughts = "\n".join(thoughts)
+                elif ai_message:
+                    breaker_out.thoughts = ai_message
+                return breaker_out
+        else:
+            # At least one call carries real arguments — reset the streak.
+            self._consecutive_empty_args = 0
+            self._last_empty_tool = None
         out = await run_tools_batch(
             specs,
             self.resource,

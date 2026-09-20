@@ -124,7 +124,25 @@ def make_code_interpreter(react_state: Dict[str, Any]):
 
         if not code or not code.strip():
             return json.dumps(
-                {"chunks": [{"output_type": "text", "content": "No code provided"}]},
+                {
+                    "chunks": [
+                        {
+                            "output_type": "text",
+                            "content": (
+                                "No code was received by code_interpreter on "
+                                "this call — nothing was executed. This can "
+                                "happen when the tool call was truncated or "
+                                "malformed. Do NOT repeat the same call right "
+                                "away: instead, resend the COMPLETE Python "
+                                "script in ONE call, keeping it short (under "
+                                "60 lines), with all imports, data loading, "
+                                "and print() of the results. If you already "
+                                "retried with full code, move on (e.g. use "
+                                "html_interpreter or terminate with a summary)."
+                            ),
+                        }
+                    ]
+                },
                 ensure_ascii=False,
             )
 

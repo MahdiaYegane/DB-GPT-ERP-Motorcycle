@@ -14,24 +14,29 @@ type = "sqlite"
 path = "pilot/meta_data/dbgpt.db"
 
 [service.web.agent_context]
-# Groq Qwen3.8-27b preview: 8K TPM / 200K per day / 30 RPM
-# Must stay < 8000 input. System prompt alone is ~3500, so budget must be tight.
-max_context_tokens = 3000
-reserved_tokens = 600
-warning_threshold = 0.60
-error_threshold = 0.75
-critical_threshold = 0.85
-min_keep_recent_rounds = 1
-max_observation_age_rounds = 1
-truncated_observation_max_chars = 220
-min_keep_tokens = 1500
-max_compact_failures = 1
+# Groq qwen3-32b: ~131K context window. TPM (tokens/minute) is a RATE limit,
+# not the context window — do NOT shrink max_context_tokens to satisfy TPM;
+# that only forces the UI to 100% and triggers destructive compaction that
+# wipes tool results every round (which causes tool-call retry loops).
+# TPM overruns surface as HTTP 429 and are absorbed by the agent's LLM retry.
+max_context_tokens = 20000
+reserved_tokens = 2048
+warning_threshold = 0.70
+error_threshold = 0.90
+critical_threshold = 0.95
+min_keep_recent_rounds = 2
+max_observation_age_rounds = 5
+truncated_observation_max_chars = 500
+min_keep_tokens = 6000
+max_compact_failures = 3
 max_parallel_subagents = 1
 
 [app]
-# Groq preview OTPM 1000 -> cap output strictly
+# Output cap must leave room for full tool-call argument JSON. Too small a
+# value truncates tool arguments mid-JSON -> empty args -> "No code provided"
+# retry loops. 1500 fits a typical matplotlib script + thought.
 temperature = 0.2
-max_new_tokens = 600
+max_new_tokens = 1500
 
 [rag.storage]
 [rag.storage.vector]
