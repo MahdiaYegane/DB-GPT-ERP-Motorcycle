@@ -1,0 +1,110 @@
+PROPRIETARY LICENSE — ERP Motorcycle Edition
+Version 1.0, Effective 2026-09-19
+
+Copyright (c) 2026 Arash Mansourpour and Mahdia Yegane
+All Rights Reserved.
+
+Preamble
+--------
+This license governs the ERP Motorcycle Edition derived from DB-GPT,
+including but not limited to: erp/ , configs/dbgpt-proxy-ollama-qwen.toml,
+test_database_connection.py, docs/ERP_INTEGRATION.md, docs/ERP_SCHEMA_REPORT.md,
+launch_dbgpt.py and all custom modifications made after 2026-09-19.
+
+1. Ownership
+-----------
+The copyright for all original modifications, ERP integration code, schema
+reports, documentation, and derivative work created after 2026-09-19 is owned
+jointly by:
+
+  - Arash Mansourpour
+  - Mahdia Yegane
+
+2. Original DB-GPT Components - MIT Preservation
+-------------------------------------------------
+Portions of this repository are based on DB-GPT by magic.chen / eosphoros-ai,
+originally licensed under the MIT License (2023). The original MIT license text
+is preserved verbatim in LICENSE.MIT.ORIGINAL and MUST NOT be removed.
+
+  Copyright (c) 2023 magic.chen (MIT)
+
+The MIT license obligations for the original files remain in full effect.
+This Proprietary License applies ONLY to the modifications, ERP integration,
+and derivative work created by Arash Mansourpour and Mahdia Yegane after
+2026-09-19. Where a file contains both original and modified content, the
+MIT license applies to the original portion and this license applies to the
+new contributions.
+
+3. Grant of Use (Restricted)
+-----------------------------
+Permitted without separate written agreement:
+  (a) Internal use within Rahpardaz Kavir / authorized private deployment as
+      delivered to the licensee;
+  (b) Running, testing, and modifying the software solely for internal
+      business purposes on the licensee's systems.
+
+4. Prohibited Acts (Without Prior Written Permission From BOTH Copyright Holders)
+--------------------------------------------------------------------------------
+You may NOT, without prior written permission signed by both Arash Mansourpour
+and Mahdia Yegane:
+
+  (a) Redistribute, publish, sublicense, sell, lease, or otherwise make the
+      software (in source or binary form) available to any third party;
+  (b) Use the software to provide services to third parties (including SaaS,
+      hosted, or managed-service offerings);
+  (c) Remove or alter copyright notices, license headers, or the NOTICE file;
+  (d) Use the names, trademarks, or likenesses of Arash Mansourpour or
+      Mahdia Yegane to endorse or promote derivative works;
+  (e) Reverse engineer the proprietary ERP integration for the purpose of
+      creating a competing product.
+
+5. Source Code Confidentiality
+--------------------------------
+The source and configuration containing business logic for erp_motorcycle
+(including .env values, database host 172.16.1.131, and Groq / Ollama keys
+when configured) is CONFIDENTIAL. Do not commit .env to version control,
+do not publish it, and do not share it outside authorized personnel.
+
+6. Third-Party Components
+---------------------------
+  - skills/skill-creator remains licensed under Apache License 2.0
+    per skills/skill-creator/LICENSE.txt (not covered by this license).
+  - All dependencies listed in pyproject.toml / requirements retain their
+    respective licenses.
+  - Oracle test files in tests/intetration_tests/datasource/test_conn_*.py
+    retain Oracle Copyright (c) 2000, 2023.
+
+7. No Warranty & Limitation of Liability
+------------------------------------------
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+8. Termination
+---------------
+This license terminates automatically if you breach any of its terms and fail
+to cure such breach within 30 days of notice. Upon termination, you must cease
+all use and delete all copies in your possession.
+
+9. Contact for Commercial Licensing
+------------------------------------
+For redistribution, commercial licensing, or written permission, contact:
+
+  Arash Mansourpour
+  Mahdia Yegane
+
+  (Contact via authorized company channels)
+
+10. Governing Notice
+---------------------
+This file, together with LICENSE.MIT.ORIGINAL and NOTICE, constitutes the
+complete licensing information for this repository. The presence of
+LICENSE.MIT.ORIGINAL does not imply that the entire work is MIT licensed;
+it is retained solely to satisfy the MIT attribution requirement for the
+original portions.
+
+END OF LICENSE
