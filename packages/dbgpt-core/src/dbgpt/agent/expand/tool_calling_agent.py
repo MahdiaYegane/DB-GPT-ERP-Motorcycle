@@ -248,19 +248,30 @@ class NativeToolCallAction(ParallelToolAction):
         **kwargs,
     ) -> ActionOutput:
         """Perform the action from native tool_calls or text fallback."""
+        # Fail fast on provider errors (same rationale as the text path):
+        # they arrive as plain text with no tool_calls, so without this the
+        # fallback below raises "No valid ReAct step" and retries ~30 times.
+        if self.detect_provider_error(ai_message) is not None:
+            return self._provider_error_output(ai_message)
         tool_calls = kwargs.get("tool_calls")
         if not tool_calls:
             # No native tool calls — fall back to text ReAct parsing.
-            try:
-                return await super().run(
-                    ai_message,
-                    resource=resource,
-                    rely_action_out=rely_action_out,
-                    need_vis_render=need_vis_render,
-                    **kwargs,
-                )
-            except ValueError as e:
-                return ActionOutput(is_exe_success=False, content=str(e))
+            # NOTE: super().run() never raises for the parse-failure case
+            # anymore (the breaker returns a terminal output instead), so a
+            # returned terminal breaker output must be passed through as-is.
+            out = await super().run(
+                ai_message,
+                resource=resource,
+                rely_action_out=rely_action_out,
+                need_vis_render=need_vis_render,
+                **kwargs,
+            )
+            # Preserve any structured narration the model sent with the turn.
+            if out.terminate and not out.thoughts and ai_message:
+                text = ai_message.strip()
+                if text and self._PROVIDER_ERROR_MARKER not in text:
+                    out.thoughts = text[:500]
+            return out
 
         specs: List[ToolCallSpec] = []
         intentions: List[str] = []

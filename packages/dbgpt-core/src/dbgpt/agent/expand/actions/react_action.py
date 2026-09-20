@@ -114,9 +114,30 @@ class ReActAction(ToolAction):
     # a success observation like "No code provided", so the normal retry loop
     # never terminates on its own.
     MAX_CONSECUTIVE_EMPTY_ARGS = 3
+    # Separate budget for unparseable model output ("No valid ReAct step..."):
+    # a model that cannot follow the Thought/Action format at all would
+    # otherwise burn all max_retry_count (30) rounds showing empty 思考中 steps.
+    MAX_CONSECUTIVE_PARSE_FAILURES = 5
 
-    _EMPTY_ARGS_FINAL_MESSAGE = {
-        "en": (
+    # Provider/model-level failures arrive as *text* (e.g. "**LLMServer
+    # Generate Error...**: Error code: 403 ..."), so the ReAct parser finds no
+    # step and the agent retries the same broken model call ~30 times. Detect
+    # these up front and terminate immediately with a readable message.
+    _PROVIDER_ERROR_MARKER = "LLMServer Generate Error"
+
+    _PROVIDER_ERROR_KIND_PATTERNS = (
+        ("email_verify", ("email_verification_required", "verify your email")),
+        ("rate_limit", ("rate_limit", "rate limit", "429", "tokens per day", "TPD")),
+        ("auth", ("invalid_api_key", "incorrect api key", "401", "unauthorized",
+                   "authentication")),
+        ("context_length", ("context_too_long", "context_length_exceeded",
+                            "maximum context length")),
+        ("not_found", ("model_not_found", "does not exist", "404")),
+        ("overloaded", ("overloaded", "503", "service unavailable", "timeout",
+                        "timed out")),
+    )
+
+    _EMPTY_ARGS_FINAL_MESSAGE = {        "en": (
             "I stopped because '{tool}' was called {count} times in a row "
             "without any usable arguments (the tool kept reporting that no "
             "input was provided). This usually means the model's output was "
@@ -146,6 +167,191 @@ class ReActAction(ToolAction):
         super().__init__(**kwargs)
         self._consecutive_empty_args = 0
         self._last_empty_tool: Optional[str] = None
+        self._consecutive_parse_failures = 0
+
+    @classmethod
+    def detect_provider_error(cls, ai_message: Optional[str]) -> Optional[str]:
+        """Return a provider-error kind when the model output is an error blob.
+
+        Model adapters wrap upstream HTTP failures as plain text
+        ("**LLMServer Generate Error...**: ..."), which the ReAct parser
+        cannot parse — so the agent would retry identical failing calls.
+        Returns the error kind (``email_verify``, ``rate_limit``, ``auth``,
+        ``context_length``, ``not_found``, ``overloaded``) or ``None``.
+        """
+        if not ai_message or cls._PROVIDER_ERROR_MARKER not in ai_message:
+            return None
+        lowered = ai_message.lower()
+        for kind, needles in cls._PROVIDER_ERROR_KIND_PATTERNS:
+            if any(needle in lowered for needle in needles):
+                return kind
+        return "unknown"
+
+    _PROVIDER_ERROR_FINAL_MESSAGE = {
+        "email_verify": {
+            "en": (
+                "The AI provider refused the request: the TokenHarbor account "
+                "behind this model has not verified its email address (error "
+                "403 email_verification_required). No tool was run — open "
+                "https://tokenharbor.ai/dashboard, verify the email (or "
+                "request a new link), then try again."
+            ),
+            "fa": (
+                "سرویس هوش مصنوعی درخواست را رد کرد: ایمیل حساب TokenHarbor "
+                "هنوز تأیید نشده است (خطای 403). هیچ ابزاری اجرا نشد — وارد "
+                "https://tokenharbor.ai/dashboard شوید، ایمیل را تأیید کنید "
+                "(یا لینک جدید بخواهید) و دوباره تلاش کنید."
+            ),
+        },
+        "rate_limit": {
+            "en": (
+                "The AI provider rate-limited the request (e.g. daily token "
+                "quota exhausted). No tool was run. Wait for the quota window "
+                "to reset or switch to a different model, then try again."
+            ),
+            "fa": (
+                "سرویس هوش مصنوعی به‌خاطر سقف مصرف درخواست را رد کرد (مثلاً "
+                "سهمیه روزانه تمام شده). هیچ ابزاری اجرا نشد. تا بازنشدن "
+                "سهمیه صبر کنید یا مدل دیگری انتخاب کنید."
+            ),
+        },
+        "auth": {
+            "en": (
+                "The AI provider rejected the API key (authentication error). "
+                "No tool was run. Check the model's api_key in the server "
+                "config, then try again."
+            ),
+            "fa": (
+                "سرویس هوش مصنوعی کلید API را رد کرد (خطای احراز هویت). هیچ "
+                "ابزاری اجرا نشد. کلید مدل را در کانفیگ سرور بررسی کنید."
+            ),
+        },
+        "context_length": {
+            "en": (
+                "The request exceeded the model's context window. No tool was "
+                "run. Try a shorter request or a model with a larger context "
+                "window."
+            ),
+            "fa": (
+                "درخواست از پنجره کانتکست مدل بزرگ‌تر بود. هیچ ابزاری اجرا "
+                "نشد. درخواست کوتاه‌تری بفرستید یا مدلی با کانتکست بزرگ‌تر "
+                "انتخاب کنید."
+            ),
+        },
+        "not_found": {
+            "en": (
+                "The requested model was not found on the provider side "
+                "(wrong model id or removed model). No tool was run. Check "
+                "the model name in the server config."
+            ),
+            "fa": (
+                "مدل درخواستی در سمت سرویس‌دهنده پیدا نشد (نام مدل اشتباه "
+                "است یا حذف شده). هیچ ابزاری اجرا نشد. نام مدل را در کانفیگ "
+                "سرور بررسی کنید."
+            ),
+        },
+        "overloaded": {
+            "en": (
+                "The AI provider is temporarily overloaded or timed out. No "
+                "tool was run. Wait a moment and try again."
+            ),
+            "fa": (
+                "سرویس هوش مصنوعی موقتاً پرترافیک است یا timeout داد. هیچ "
+                "ابزاری اجرا نشد. کمی صبر کنید و دوباره تلاش کنید."
+            ),
+        },
+        "unknown": {
+            "en": (
+                "The AI provider returned an error and no tool was run. "
+                "Details: {detail}"
+            ),
+            "fa": (
+                "سرویس هوش مصنوعی خطا داد و هیچ ابزاری اجرا نشد. جزئیات: "
+                "{detail}"
+            ),
+        },
+    }
+
+    def _provider_error_final_message(self, kind: str, raw: str) -> str:
+        """Build the user-facing message for a provider error."""
+        lang = (self.language or "en").lower()
+        key = "fa" if lang.startswith("fa") else "en"
+        entry = self._PROVIDER_ERROR_FINAL_MESSAGE.get(kind) or self._PROVIDER_ERROR_FINAL_MESSAGE["unknown"]
+        template = entry.get(key) or entry["en"]
+        detail = raw.strip()
+        if len(detail) > 400:
+            detail = detail[:400] + "…"
+        try:
+            return template.format(detail=detail)
+        except Exception:
+            return template
+
+    def _provider_error_output(self, ai_message: str) -> ActionOutput:
+        """Build a terminal ActionOutput for a provider error (fail fast)."""
+        kind = self.detect_provider_error(ai_message) or "unknown"
+        content = self._provider_error_final_message(kind, ai_message)
+        return ActionOutput(
+            is_exe_success=False,
+            content=content,
+            observations=content,
+            have_retry=False,
+            terminate=True,
+        )
+
+    _PARSE_FAILURE_FINAL_MESSAGE = {
+        "en": (
+            "I stopped because the model's replies could not be understood "
+            "{count} times in a row (no Thought/Action step found). The last "
+            "reply looked like an error or an empty response rather than a "
+            "tool call. Details: {detail}"
+        ),
+        "fa": (
+            "متوقف شدم چون پاسخ‌های مدل {count} بار پشت سر هم قابل‌فهم نبود "
+            "(هیچ مرحله Thought/Action پیدا نشد). به‌نظر می‌رسد آخرین پاسخ "
+            "به‌جای فراخوانی ابزار، یک خطا یا پاسخ خالی بوده است. جزئیات: "
+            "{detail}"
+        ),
+    }
+
+    def _parse_failure_final_message(self, raw: str) -> str:
+        lang = (self.language or "en").lower()
+        key = "fa" if lang.startswith("fa") else "en"
+        detail = (raw or "").strip()
+        if len(detail) > 300:
+            detail = detail[:300] + "…"
+        if not detail:
+            detail = "empty model reply"
+        return self._PARSE_FAILURE_FINAL_MESSAGE[key].format(
+            count=self.MAX_CONSECUTIVE_PARSE_FAILURES, detail=detail
+        )
+
+    def _note_parse_failure(self, ai_message: str) -> Optional[ActionOutput]:
+        """Trip after repeated unparseable model outputs.
+
+        Each "No valid ReAct step" round currently returns fail+retry, so a
+        model stuck emitting error blobs loops max_retry_count (30) times
+        showing empty 思考中 steps. This breaker terminates instead.
+        Returns a terminal ActionOutput, or None to keep retrying.
+        """
+        self._consecutive_parse_failures += 1
+        logger.warning(
+            "Unparseable ReAct output (%d/%d consecutive)",
+            self._consecutive_parse_failures,
+            self.MAX_CONSECUTIVE_PARSE_FAILURES,
+        )
+        if self._consecutive_parse_failures < self.MAX_CONSECUTIVE_PARSE_FAILURES:
+            return None
+        content = self._parse_failure_final_message(ai_message)
+        return ActionOutput(
+            is_exe_success=False,
+            content=content,
+            observations=content,
+            have_retry=False,
+            terminate=True,
+        )
+
+    def _reset_parse_failures(self) -> None:
+        self._consecutive_parse_failures = 0
 
     @property
     def resource_need(self) -> Optional[ResourceType]:
@@ -250,13 +456,23 @@ class ReActAction(ToolAction):
     ) -> ActionOutput:
         """Perform the action."""
 
+        # Fail fast on provider errors: the error arrives as plain text, so
+        # parsing would find no step and the agent would retry the identical
+        # broken model call ~30 times (30 empty 思考中 steps in the UI).
+        if self.detect_provider_error(ai_message) is not None:
+            return self._provider_error_output(ai_message)
+
         if "parser" in kwargs and isinstance(kwargs["parser"], ReActOutputParser):
             parser = kwargs["parser"]
         else:
             parser = ReActOutputParser()
         steps = parser.parse_current_step(ai_message)
         if len(steps) == 0:
+            breaker_out = self._note_parse_failure(ai_message)
+            if breaker_out is not None:
+                return breaker_out
             raise ValueError("No valid ReAct step found in model output.")
+        self._reset_parse_failures()
         if len(steps) > 1:
             logger.warning(
                 "Model output contains %d steps, only the first will be executed.",
@@ -264,6 +480,9 @@ class ReActAction(ToolAction):
             )
         step = steps[0]
         act_out = await self._do_run(ai_message, step, need_vis_render=need_vis_render)
+        # A successful tool execution means the model is behaving again.
+        if act_out.is_exe_success:
+            self._reset_parse_failures()
         if not act_out.action:
             act_out.action = step.action
         if step.thought:
