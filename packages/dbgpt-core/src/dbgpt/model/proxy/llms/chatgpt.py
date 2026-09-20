@@ -298,11 +298,19 @@ class OpenAILLMClient(ProxyLLMClient):
         if request.temperature:
             payload["temperature"] = request.temperature
         if request.max_new_tokens:
-            # Groq Free tier OTPM is 1000 (qwen/qwen3.8-27b) -> cap max_tokens to stay under limit
-            # Also Groq openai/gpt-oss-120b has same 1000 OTPM on free tier
+            # Groq Free tier OTPM is 1000 (qwen/qwen3.8-27b) -> cap max_tokens
+            # to stay under the limit (was 4096 -> 1027 OTPM exceeded).
+            # Scope: Groq gateway only (api_base contains groq.com). Other
+            # OpenAI-compatible gateways (TokenHarbor, SiliconFlow, ...) have
+            # their own limits — capping them to 900 truncates tool-call JSON
+            # and causes empty-argument retry loops.
             raw_max = int(request.max_new_tokens)
-            # cap to 900 to leave headroom (was 4096 -> 1027 OTPM exceeded)
-            payload["max_tokens"] = min(raw_max, 900)
+            api_base = (self._init_params.api_base or "").lower()
+            if "groq.com" in api_base:
+                # cap to 900 to leave headroom
+                payload["max_tokens"] = min(raw_max, 900)
+            else:
+                payload["max_tokens"] = raw_max
         if request.stop:
             payload["stop"] = request.stop
         if request.top_p:

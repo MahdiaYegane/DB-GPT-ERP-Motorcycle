@@ -250,15 +250,15 @@ class NativeToolCallAction(ParallelToolAction):
         """Perform the action from native tool_calls or text fallback."""
         # Fail fast on provider errors (same rationale as the text path):
         # they arrive as plain text with no tool_calls, so without this the
-        # fallback below raises "No valid ReAct step" and retries ~30 times.
+        # fallback would treat them as a final answer.
         if self.detect_provider_error(ai_message) is not None:
             return self._provider_error_output(ai_message)
         tool_calls = kwargs.get("tool_calls")
         if not tool_calls:
             # No native tool calls — fall back to text ReAct parsing.
-            # NOTE: super().run() never raises for the parse-failure case
-            # anymore (the breaker returns a terminal output instead), so a
-            # returned terminal breaker output must be passed through as-is.
+            # NOTE: super().run() never raises: plain text becomes a final
+            # answer, empty output a retryable failure, repeated failures a
+            # terminal breaker output. Pass everything through as-is.
             out = await super().run(
                 ai_message,
                 resource=resource,

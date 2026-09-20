@@ -468,10 +468,47 @@ class ReActAction(ToolAction):
             parser = ReActOutputParser()
         steps = parser.parse_current_step(ai_message)
         if len(steps) == 0:
+            # No Thought:/Action: block. Two very different situations:
+            #  1. The model answered in plain text (greetings, chit-chat,
+            #     direct answers). Treat it as the final answer instead of
+            #     an error — the user should see the greeting, not
+            #     "No valid ReAct step found in model output."
+            #  2. The model returned nothing usable (empty/whitespace).
+            #     Return a retryable failure (NOT an exception: raising here
+            #     kills the whole turn via "Generate reply exception!").
+            #     The breaker below still terminates after repeated failures.
+            if ai_message and ai_message.strip():
+                self._reset_parse_failures()
+                self._consecutive_empty_args = 0
+                self._last_empty_tool = None
+                text = ai_message.strip()
+                logger.info(
+                    "Model replied in plain text (no ReAct step); "
+                    "treating as final answer (%d chars)",
+                    len(text),
+                )
+                return ActionOutput(
+                    is_exe_success=True,
+                    content=text,
+                    observations=text,
+                    action="terminate",
+                    thoughts=text[:200],
+                    terminate=True,
+                )
             breaker_out = self._note_parse_failure(ai_message)
             if breaker_out is not None:
                 return breaker_out
-            raise ValueError("No valid ReAct step found in model output.")
+            return ActionOutput(
+                is_exe_success=False,
+                content=(
+                    "The model returned an empty response with no Thought/Action "
+                    "step. Please retry: output exactly one step in ReAct format "
+                    "(Thought: ... Action: <tool> Action Input: {...}), or, if "
+                    "the task is done or this is a greeting, answer in plain "
+                    "text."
+                ),
+                have_retry=True,
+            )
         self._reset_parse_failures()
         if len(steps) > 1:
             logger.warning(
