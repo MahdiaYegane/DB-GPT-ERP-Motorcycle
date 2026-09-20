@@ -1,0 +1,72 @@
+[system]
+language = "${env:DBGPT_LANG:-en}"
+api_keys = []
+encrypt_key = "your_secret_key"
+
+# Server Configurations
+[service.web]
+host = "0.0.0.0"
+port = 5670
+cors_allowed_origins = "*"
+
+[service.web.database]
+type = "sqlite"
+path = "pilot/meta_data/dbgpt.db"
+
+[service.web.agent_context]
+# Groq Qwen3.8-27b preview: 8K TPM / 200K per day / 30 RPM
+# Must stay < 8000 input. System prompt alone is ~3500, so budget must be tight.
+max_context_tokens = 3000
+reserved_tokens = 600
+warning_threshold = 0.60
+error_threshold = 0.75
+critical_threshold = 0.85
+min_keep_recent_rounds = 1
+max_observation_age_rounds = 1
+truncated_observation_max_chars = 220
+min_keep_tokens = 1500
+max_compact_failures = 1
+max_parallel_subagents = 1
+
+[app]
+# Groq preview OTPM 1000 -> cap output strictly
+temperature = 0.2
+max_new_tokens = 600
+
+[rag.storage]
+[rag.storage.vector]
+type = "chroma"
+persist_path = "pilot/data"
+
+# Model Configurations - Groq + local fallback (Groq hit 200K/day limit, local avoids 429)
+[models]
+[[models.llms]]
+name = "qwen3.5:9b"
+provider = "proxy/ollama"
+api_base = "http://localhost:11434"
+api_key = ""
+
+[[models.llms]]
+name = "openai/gpt-oss-120b"
+provider = "proxy/openai"
+api_key = "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"
+api_base = "https://api.groq.com/openai/v1"
+
+[[models.llms]]
+name = "qwen/qwen3.8-27b"
+provider = "proxy/openai"
+api_key = "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"
+api_base = "https://api.groq.com/openai/v1"
+
+[[models.embeddings]]
+name = "bge-m3:567m"
+provider = "proxy/ollama"
+api_url = "http://localhost:11434"
+api_key = ""
+
+# Optional second embedding - uncomment if you want to use qwen3-embedding:8b instead/as alternative
+# [[models.embeddings]]
+# name = "qwen3-embedding:8b"
+# provider = "proxy/ollama"
+# api_url = "http://localhost:11434"
+# api_key = ""
