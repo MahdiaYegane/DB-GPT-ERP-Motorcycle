@@ -63,6 +63,15 @@ provider = "proxy/openai"
 api_key = "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"
 api_base = "https://api.groq.com/openai/v1"
 
+[[models.llms]]
+name = "deepseek-v4.1-flash:free"
+provider = "proxy/openai"
+# TokenHarbor gateway (OpenAI-compatible). Key is read from the
+# TOKENHARBOR_API_KEY environment variable so the secret never lands in git.
+# Free-tier id (no charge); paid id is "deepseek-v4.1-flash" (1M ctx, $0.30/1M in).
+api_key = "${env:TOKENHARBOR_API_KEY}"
+api_base = "https://tokenharbor.ai/v1"
+
 [[models.embeddings]]
 name = "bge-m3:567m"
 provider = "proxy/ollama"
