@@ -68,7 +68,29 @@ name = "deepseek-v4.1-flash:free"
 provider = "proxy/openai"
 # TokenHarbor gateway (OpenAI-compatible). Key is read from the
 # TOKENHARBOR_API_KEY environment variable so the secret never lands in git.
-# Free-tier id (no charge); paid id is "deepseek-v4.1-flash" (1M ctx, $0.30/1M in).
+# All four entries below are free-tier ids (no charge); paid ids drop ":free".
+# Paid: "deepseek-v4.1-flash" (1M ctx, $0.30/1M in).
+api_key = "${env:TOKENHARBOR_API_KEY}"
+api_base = "https://tokenharbor.ai/v1"
+
+[[models.llms]]
+name = "qwen3.8-flash:free"
+provider = "proxy/openai"
+# Paid: "qwen3.8-flash" ($0.15/1M in, 128K max output; text+image+video).
+api_key = "${env:TOKENHARBOR_API_KEY}"
+api_base = "https://tokenharbor.ai/v1"
+
+[[models.llms]]
+name = "deepseek-v4-flash:free"
+provider = "proxy/openai"
+# Paid: "deepseek-v4-flash" (1M ctx, $0.44/1M in, text-only).
+api_key = "${env:TOKENHARBOR_API_KEY}"
+api_base = "https://tokenharbor.ai/v1"
+
+[[models.llms]]
+name = "mimo-v2.5:free"
+provider = "proxy/openai"
+# Paid: "mimo-v2.5" (1M ctx, $0.14/1M in; text+image+audio+video).
 api_key = "${env:TOKENHARBOR_API_KEY}"
 api_base = "https://tokenharbor.ai/v1"
 
