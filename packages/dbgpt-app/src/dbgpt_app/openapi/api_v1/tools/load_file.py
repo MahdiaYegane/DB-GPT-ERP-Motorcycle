@@ -55,6 +55,30 @@ def _summarize_preview(preview: Any, truncated: bool) -> str:
     return f"preview: {payload[:200]}"
 
 
+def _kind_hint(kind: Any, media_type: Any) -> str:
+    """Return an honest capability note for non-text attachments.
+
+    The agent runtime is text-only: it cannot SEE image/audio/video content.
+    Binary files (screenshots, charts, photos) can only be analyzed with
+    programmatic tools (``code_interpreter`` + OCR/CV libraries) or described
+    by the user — never by "looking" at them. This hint is appended to the
+    file section so the model plans accordingly instead of assuming vision.
+    """
+    kind_text = str(kind or "").lower()
+    media_text = str(media_type or "").lower()
+    if kind_text in ("image", "audio", "video") or media_text.startswith(
+        ("image/", "audio/", "video/")
+    ):
+        return (
+            " — note: this is a non-text attachment. I have NO vision "
+            "capability: I cannot see or describe its visual content directly. "
+            "To analyze it, use code_interpreter with OCR/CV libraries "
+            "(e.g. pytesseract, cv2) for text extraction, or ask the user to "
+            "describe what is shown."
+        )
+    return ""
+
+
 def _file_section(
     manifest: Any, inspection: Optional[Dict[str, Any]], path: Optional[str] = None
 ) -> str:
@@ -66,6 +90,7 @@ def _file_section(
     lines = [
         f"[{manifest.file_id}] {manifest.name} — {manifest.kind}, "
         f"{manifest.media_type}, {manifest.size} B, {status}"
+        f"{_kind_hint(manifest.kind, manifest.media_type)}"
     ]
     if path:
         lines.append(f"  path: {path} (valid for this turn only)")

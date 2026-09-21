@@ -110,6 +110,13 @@ def make_code_interpreter(react_state: Dict[str, Any]):
             "Supports pandas, numpy, matplotlib, json, os, etc. "
             "Use this tool when you need to run Python code to process data, "
             "generate charts, or perform calculations. "
+            "Text-only output: print() text/numbers; generated chart images "
+            "are attached automatically. This tool CANNOT see images — "
+            "for image attachments use OCR/CV libraries (pytesseract, cv2) "
+            "inside the code, or ask the user to describe the image. "
+            "Emit tool calls ONLY in the textual Thought/Action/Action Input "
+            "format — never as <|DSML|...|> or other markup blocks, which "
+            "are stripped and never executed. "
             'Parameters: {{"code": "python code string"}}'
         )
     )

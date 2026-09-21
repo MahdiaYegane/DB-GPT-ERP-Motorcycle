@@ -13,6 +13,20 @@ from dbgpt.vis.tags.vis_thinking import VisThinking
 # parsing and the whole final-answer extraction chain collapses.
 _SPECIAL_TOKEN_PATTERN = re.compile(r"<\|[^|<>\n]*\|>")
 
+# DSML-style pseudo tool-call blocks emitted as plain text by some models
+# (e.g. DeepSeek variants): ``<|DSML| calls>`` ... ``<|DSML| invoke
+# name="tool">`` ... ``<|DSML| parameter name="x" string="true">...</|DSML|
+# parameter>`` ... ``</|DSML| invoke>`` ... ``</|DSML| calls>``. Like the
+# Kimi-style protocol above, these are NOT executed — but unlike the Kimi
+# variant they lack a parseable tool/args shape, so the correct handling is
+# to STRIP them before parsing (the real Thought/Action text around them
+# usually contains the actual valid step, which _parse_step then finds).
+_DSML_BLOCK_PATTERN = re.compile(
+    r"<\|DSML\|\s*calls\s*>.*?</\|DSML\|\s*calls\s*>",
+    re.DOTALL | re.IGNORECASE,
+)
+
+
 # Kimi-style native tool-calling protocol leaked as plain text by some model
 # servers: ``<|tool_calls_section_begin|><|tool_call_begin|>functions.X:0
 # <|tool_call_argument_begin|>{...}<|tool_call_end|><|tool_calls_section_end|>``.
@@ -191,6 +205,9 @@ class ReActOutputParser:
         if not text:
             return text
 
+        # DSML blocks carry no executable meaning; strip them first so the
+        # real Thought/Action text around them parses cleanly.
+        text = _DSML_BLOCK_PATTERN.sub("", text)
         text = self._translate_native_tool_calls(text)
         text = _SPECIAL_TOKEN_PATTERN.sub("", text)
         text = self._strip_vis_thinking_blocks(text)
