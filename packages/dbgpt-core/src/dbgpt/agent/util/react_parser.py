@@ -11,20 +11,50 @@ from dbgpt.vis.tags.vis_thinking import VisThinking
 # protocol artifacts glued to the real content, never part of it — when
 # they stick to an ``Action Input`` JSON tail they break downstream JSON
 # parsing and the whole final-answer extraction chain collapses.
-_SPECIAL_TOKEN_PATTERN = re.compile(r"<\|[^|<>\n]*\|>")
+# Brackets/pipes may be fullwidth (＜｜＞) — some models (e.g. DeepSeek
+# variants) emit ``<｜DSML｜ ...>`` with fullwidth pipes.
+_SPECIAL_TOKEN_PATTERN = re.compile(r"[<＜][|｜│][^|<>\n｜＜＞]*[|｜│][>＞]")
 
 # DSML-style pseudo tool-call blocks emitted as plain text by some models
 # (e.g. DeepSeek variants): ``<|DSML| calls>`` ... ``<|DSML| invoke
 # name="tool">`` ... ``<|DSML| parameter name="x" string="true">...</|DSML|
-# parameter>`` ... ``</|DSML| invoke>`` ... ``</|DSML| calls>``. Like the
-# Kimi-style protocol above, these are NOT executed — but unlike the Kimi
-# variant they lack a parseable tool/args shape, so the correct handling is
-# to STRIP them before parsing (the real Thought/Action text around them
-# usually contains the actual valid step, which _parse_step then finds).
+# parameter>`` ... ``</|DSML| invoke>`` ... ``</|DSML| calls>``. Brackets and
+# pipes may be FULLWIDTH (＜｜＞ — actually observed in production logs), so
+# every bracket/pipe class below accepts both ASCII and fullwidth forms.
+# Like the Kimi-style protocol above, these are NOT executed — but unlike
+# the Kimi variant they lack a parseable tool/args shape, so the correct
+# handling is to STRIP them before parsing (the real Thought/Action text
+# around them usually contains the actual valid step, which _parse_step
+# then finds).
 _DSML_BLOCK_PATTERN = re.compile(
-    r"<\|DSML\|\s*calls\s*>.*?</\|DSML\|\s*calls\s*>",
+    r"[<＜]\s*[|｜│]\s*DSML\s*[|｜│]\s*calls\s*[>＞]"
+    r".*?"
+    r"[<＜]\s*/\s*[|｜│]\s*DSML\s*[|｜│]\s*calls\s*[>＞]",
     re.DOTALL | re.IGNORECASE,
 )
+# Leftover single DSML tags (unclosed blocks, or stray invoke/parameter
+# tags): ``<|DSML| invoke name="x">``, ``</|DSML| parameter>`` ... in either
+# bracket style. Stripped as a second pass after the block pattern.
+_DSML_TAG_PATTERN = re.compile(
+    r"[<＜]\s*/?\s*[|｜│]\s*DSML\s*[|｜│][^<>＜＞\n]*[>＞]",
+    re.IGNORECASE,
+)
+
+
+def clean_final_text(text: Any) -> str:
+    """Strip model-protocol markup from user-visible final answers.
+
+    Removes DSML pseudo tool-call blocks/tags and leaked special tokens
+    (ASCII or fullwidth). ``vis-thinking`` fences are intentionally LEFT
+    intact — the frontend renders them as thinking UI. Markdown fences are
+    also left alone (final answers legitimately contain code blocks).
+    """
+    if not isinstance(text, str):
+        text = str(text or "")
+    text = _DSML_BLOCK_PATTERN.sub("", text)
+    text = _DSML_TAG_PATTERN.sub("", text)
+    text = _SPECIAL_TOKEN_PATTERN.sub("", text)
+    return text.strip()
 
 
 # Kimi-style native tool-calling protocol leaked as plain text by some model
@@ -206,8 +236,10 @@ class ReActOutputParser:
             return text
 
         # DSML blocks carry no executable meaning; strip them first so the
-        # real Thought/Action text around them parses cleanly.
+        # real Thought/Action text around them parses cleanly. Unclosed
+        # leftovers are caught by the single-tag pass below.
         text = _DSML_BLOCK_PATTERN.sub("", text)
+        text = _DSML_TAG_PATTERN.sub("", text)
         text = self._translate_native_tool_calls(text)
         text = _SPECIAL_TOKEN_PATTERN.sub("", text)
         text = self._strip_vis_thinking_blocks(text)

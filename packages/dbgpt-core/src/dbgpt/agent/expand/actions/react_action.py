@@ -8,7 +8,7 @@ from dbgpt.util.json_utils import parse_or_raise_error
 
 from ...resource.tool.base import BaseTool, ToolParameter
 from ...resource.tool.pack import ToolPack
-from ...util.react_parser import ReActOutputParser, ReActStep
+from ...util.react_parser import ReActOutputParser, ReActStep, clean_final_text
 from .tool_action import ToolAction, run_tool
 
 logger = logging.getLogger(__name__)
@@ -29,10 +29,16 @@ class Terminate(Action[None], BaseTool):
         need_vis_render: bool = True,
         **kwargs,
     ) -> ActionOutput:
+        # Final answers must never leak model-protocol markup (DSML blocks,
+        # special tokens) to the user — strip them here.
+        content = clean_final_text(ai_message)
+        if not content:
+            content = "(The model returned an empty response.)"
         return ActionOutput(
             is_exe_success=True,
             terminate=True,
-            content=ai_message,
+            content=content,
+            observations=content,
         )
 
     @classmethod
@@ -403,7 +409,11 @@ class ReActAction(ToolAction):
                 self._reset_parse_failures()
                 self._consecutive_empty_args = 0
                 self._last_empty_tool = None
-                text = ai_message.strip()
+                # Clean protocol markup (DSML blocks / special tokens) so a
+                # "plain text + markup" reply still reads as a final answer.
+                text = clean_final_text(ai_message)
+                if not text:
+                    text = "(The model returned an empty response.)"
                 logger.info(
                     "Model replied in plain text (no ReAct step); "
                     "treating as final answer (%d chars)",

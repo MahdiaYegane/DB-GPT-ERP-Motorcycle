@@ -2612,18 +2612,19 @@ Example flow for 3 tasks:
 Must output for each interaction round:
 Thought: Analyze current task status and think about what to do next
 Action Intention: What this step will do, plain text, MUST be concise and fit in
-<= 18 Chinese chars or <= 8 English words. If too long, rewrite shorter.
+<= 8 English words. If too long, rewrite shorter.
 Do not use ellipsis.
 Action Reason: Why this action is needed now, plain text, MUST be concise and fit in
-<= 30 Chinese chars or <= 12 English words. If too long, rewrite shorter.
+<= 12 English words. If too long, rewrite shorter.
 Do not use ellipsis.
 Action: The selected tool name (must be one of the tools listed above)
 Action Input: The JSON format of tool parameters
 
 IMPORTANT: Never emit native tool-call markup such as
-<|tool_calls_section_begin|>, <|tool_call_begin|>, <|tool_call_argument_begin|>
-or any other <|...|> tokens. Tool calls are ONLY valid in the textual
-Thought/Action/Action Input format shown above.
+<|tool_calls_section_begin|>, <|tool_call_begin|>, <|tool_call_argument_begin|>,
+<|DSML| ... |> (ASCII or fullwidth brackets/pipes), or any other <|...|> tokens.
+Tool calls are ONLY valid in the textual Thought/Action/Action Input format
+shown above. Markup-style blocks are stripped and never executed.
 """.strip()
 
         if tool_mode == "knowledge":
@@ -2811,18 +2812,19 @@ Parameters: {{"tasks": [{{"goal": "...", "context": "...", "title": "..."}}]}}
 Must output for each interaction round:
 Thought: Analyze current task status and think about what to do next
 Action Intention: What this step will do, plain text, MUST be concise and fit in
-<= 18 Chinese chars or <= 8 English words. If too long, rewrite shorter.
+<= 8 English words. If too long, rewrite shorter.
 Do not use ellipsis.
 Action Reason: Why this action is needed now, plain text, MUST be concise and fit in
-<= 30 Chinese chars or <= 12 English words. If too long, rewrite shorter.
+<= 12 English words. If too long, rewrite shorter.
 Do not use ellipsis.
 Action: The selected tool name
 Action Input: The JSON format of tool parameters
 
 IMPORTANT: Never emit native tool-call markup such as
-<|tool_calls_section_begin|>, <|tool_call_begin|>, <|tool_call_argument_begin|>
-or any other <|...|> tokens. Tool calls are ONLY valid in the textual
-Thought/Action/Action Input format shown above.
+<|tool_calls_section_begin|>, <|tool_call_begin|>, <|tool_call_argument_begin|>,
+<|DSML| ... |> (ASCII or fullwidth brackets/pipes), or any other <|...|> tokens.
+Tool calls are ONLY valid in the textual Thought/Action/Action Input format
+shown above. Markup-style blocks are stripped and never executed.
 """.strip()
 
         workflow_prompt = workflow_prompt + "\n\n" + DISPATCH_PROMPT_SECTION
