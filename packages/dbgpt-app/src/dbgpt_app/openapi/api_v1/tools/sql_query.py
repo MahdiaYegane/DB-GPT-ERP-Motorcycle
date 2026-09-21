@@ -1,9 +1,20 @@
 """sql_query tool — read-only SQL query against the selected database."""
 
 import json
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 from typing import Any, Dict, Optional
 
 from dbgpt.agent.resource.tool.base import tool
+
+# Hard cap per query so one heavy scan can't stall the agent turn (and the
+# user's "time out" perception). Dialect-agnostic: enforced with a worker
+# thread because not every driver honors statement timeouts.
+SQL_QUERY_TIMEOUT_SECONDS = 90
+
+
+def _is_missing_name_error(message: str) -> bool:
+    lowered = message.lower()
+    return "invalid column name" in lowered or "invalid object name" in lowered
 
 
 def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any]):
@@ -57,7 +68,28 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
                 )
 
         try:
-            result = database_connector.run(sql_stripped)
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(database_connector.run, sql_stripped)
+                try:
+                    result = future.result(timeout=SQL_QUERY_TIMEOUT_SECONDS)
+                except FutureTimeoutError:
+                    return json.dumps(
+                        {
+                            "chunks": [
+                                {
+                                    "output_type": "text",
+                                    "content": (
+                                        f"Query timed out after "
+                                        f"{SQL_QUERY_TIMEOUT_SECONDS}s. "
+                                        "Retry with a cheaper query: add TOP, "
+                                        "filter on indexed columns, and avoid "
+                                        "SELECT * on wide tables."
+                                    ),
+                                }
+                            ]
+                        },
+                        ensure_ascii=False,
+                    )
             if not result:
                 return json.dumps(
                     {
@@ -97,12 +129,25 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
                 ensure_ascii=False,
             )
         except Exception as e:
+            message = str(e)
+            # Self-correction hint: the model often guesses table/column
+            # names (e.g. a "fullname" column that doesn't exist). Tell it
+            # exactly how to discover real names so the NEXT attempt
+            # succeeds instead of failing the same way.
+            if _is_missing_name_error(message):
+                message += (
+                    " Suggestion: that table or column does not exist — do "
+                    "not guess names. First run: SELECT COLUMN_NAME, "
+                    "DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE "
+                    "TABLE_NAME='<table>' ORDER BY ORDINAL_POSITION "
+                    "(SQL Server), then retry with a real column."
+                )
             return json.dumps(
                 {
                     "chunks": [
                         {
                             "output_type": "text",
-                            "content": f"SQL execution failed: {str(e)}",
+                            "content": f"SQL execution failed: {message}",
                         }
                     ]
                 },

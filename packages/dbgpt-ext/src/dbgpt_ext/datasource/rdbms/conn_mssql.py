@@ -178,6 +178,69 @@ class MSSQLConnector(RDBMSConnector):
             self._tables_synced = True
             return self._all_tables
 
+    def get_table_info(self, table_names=None) -> str:
+        """Return a compact schema listing (HY104-safe, budgeted).
+
+        The base implementation builds ``CREATE TABLE`` statements from
+        ``MetaData`` reflection plus sample rows — both unavailable/slow
+        here (reflection fails on the legacy driver; 1241 tables would
+        explode the prompt). Instead emit one line per table with column
+        names+types from a single ``INFORMATION_SCHEMA.COLUMNS`` query:
+
+            dbo.account(sql_account_id int, prcode char, ...);
+
+        Output is capped (``MAX_SCHEMA_CHARS`` / ``MAX_COLUMNS_PER_TABLE``)
+        so the schema block never crowds out reasoning space. When capped,
+        the trailer tells the model exactly how to discover any other
+        table's columns before writing SQL — this is what stops the model
+        from guessing (hallucinating) column names like ``fullname``.
+        """
+        max_chars = 12_000
+        max_cols = 30
+        tables = sorted(self.get_table_names())
+        if table_names is not None:
+            wanted = set(table_names)
+            tables = [
+                t
+                for t in tables
+                if t in wanted or t.split(".")[-1] in wanted
+            ]
+        with self.session_scope() as session:
+            cursor = session.execute(
+                text(
+                    "SELECT TABLE_SCHEMA, TABLE_NAME, COLUMN_NAME, DATA_TYPE "
+                    "FROM INFORMATION_SCHEMA.COLUMNS "
+                    "ORDER BY TABLE_SCHEMA, TABLE_NAME, ORDINAL_POSITION"
+                )
+            )
+            cols_by_table: Dict[str, List[str]] = {}
+            for schema, table, col, dtype in cursor.fetchall():
+                key = f"{schema}.{table}"
+                cols_by_table.setdefault(key, []).append(f"{col} {dtype}")
+        lines: List[str] = []
+        used = 0
+        emitted = 0
+        for table in tables:
+            cols = cols_by_table.get(table, [])
+            shown = cols[:max_cols]
+            suffix = ", ..." if len(cols) > max_cols else ""
+            line = f"{table}({', '.join(shown)}{suffix});"
+            if used + len(line) + 1 > max_chars:
+                break
+            lines.append(line)
+            used += len(line) + 1
+            emitted += 1
+        total = len(tables)
+        if emitted < total:
+            lines.append(
+                f"... ({total - emitted} more tables omitted to save context. "
+                "Before querying any other table, list its real columns with: "
+                "SELECT COLUMN_NAME, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS "
+                "WHERE TABLE_NAME='<table>' ORDER BY ORDINAL_POSITION. "
+                "Never guess column names.)"
+            )
+        return "\n".join(lines)
+
     def table_simple_info(self) -> Iterable[str]:
         """Get table simple info."""
         _tables_sql = """

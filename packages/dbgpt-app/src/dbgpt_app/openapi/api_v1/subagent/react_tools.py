@@ -367,7 +367,32 @@ def make_react_tools(
                 )
 
         try:
-            result = database_connector.run(sql_stripped)
+            from concurrent.futures import (
+                ThreadPoolExecutor,
+                TimeoutError as FutureTimeoutError,
+            )
+
+            with ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(database_connector.run, sql_stripped)
+                try:
+                    result = future.result(timeout=90)
+                except FutureTimeoutError:
+                    return json.dumps(
+                        {
+                            "chunks": [
+                                {
+                                    "output_type": "text",
+                                    "content": (
+                                        "Query timed out after 90s. "
+                                        "Retry with a cheaper query: add TOP, "
+                                        "filter on indexed columns, and avoid "
+                                        "SELECT * on wide tables."
+                                    ),
+                                }
+                            ]
+                        },
+                        ensure_ascii=False,
+                    )
             if not result:
                 return json.dumps(
                     {
@@ -398,12 +423,22 @@ def make_react_tools(
                 ensure_ascii=False,
             )
         except Exception as e:
+            message = str(e)
+            lowered = message.lower()
+            if "invalid column name" in lowered or "invalid object name" in lowered:
+                message += (
+                    " Suggestion: that table or column does not exist — do "
+                    "not guess names. First run: SELECT COLUMN_NAME, "
+                    "DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE "
+                    "TABLE_NAME='<table>' ORDER BY ORDINAL_POSITION "
+                    "(SQL Server), then retry with a real column."
+                )
             return json.dumps(
                 {
                     "chunks": [
                         {
                             "output_type": "text",
-                            "content": f"SQL execution failed: {str(e)}",
+                            "content": f"SQL execution failed: {message}",
                         }
                     ]
                 },
