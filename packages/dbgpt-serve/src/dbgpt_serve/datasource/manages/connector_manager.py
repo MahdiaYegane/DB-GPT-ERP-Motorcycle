@@ -4,7 +4,7 @@ import json
 import logging
 import threading
 import time
-from typing import TYPE_CHECKING, Dict, List, Optional, Tuple, Type
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Type
 
 from dbgpt.component import BaseComponent, ComponentType, SystemApp
 from dbgpt.core.awel.flow import ResourceMetadata
@@ -324,6 +324,16 @@ class ConnectorManager(BaseComponent):
                 # Handle JSON decode failure and None/invalid types
                 db_json = {}
                 schema = None
+            extra: Dict[str, Any] = {}
+            if db_type.value() == "mssql":
+                # MSSQL-only: allow the stored ext_config to select the
+                # SQLAlchemy driver (``mssql+pymssql`` default,
+                # ``mssql+pyodbc`` + ``odbc_driver`` where FreeTDS fails).
+                # Other connectors keep their previous call shape untouched.
+                if db_json.get("driver"):
+                    extra["driver"] = db_json.get("driver")
+                if db_json.get("odbc_driver"):
+                    extra["odbc_driver"] = db_json.get("odbc_driver")
             return connect_instance.from_uri_db(  # type: ignore
                 host=db_host,
                 port=db_port,
@@ -331,6 +341,7 @@ class ConnectorManager(BaseComponent):
                 pwd=db_pwd,
                 db_name=db_name,
                 schema=schema,
+                **extra,
             )
 
     def _create_parameters(

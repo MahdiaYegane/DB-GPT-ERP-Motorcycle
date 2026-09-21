@@ -1,7 +1,8 @@
 """MSSQL connector."""
 
 from dataclasses import dataclass, field
-from typing import Iterable, List, Tuple, Type
+from typing import Any, Dict, Iterable, List, Optional, Tuple, Type
+from urllib.parse import quote, quote_plus
 
 from sqlalchemy import text
 
@@ -52,6 +53,52 @@ class MSSQLConnector(RDBMSConnector):
     def param_class(cls) -> Type[MSSQLParameters]:
         """Return the parameter class."""
         return MSSQLParameters
+
+    @classmethod
+    def from_uri_db(
+        cls,
+        host: str,
+        port: int,
+        user: str,
+        pwd: str,
+        db_name: str,
+        engine_args: Optional[dict] = None,
+        driver: Optional[str] = None,
+        odbc_driver: Optional[str] = None,
+        **kwargs: Any,
+    ) -> "MSSQLConnector":
+        """Construct a SQLAlchemy engine, honoring a driver override.
+
+        Args:
+            host: Database host.
+            port: Database port.
+            user: Database user.
+            pwd: Database password (URL-encoded when special chars present).
+            db_name: Database name.
+            engine_args: Optional SQLAlchemy engine arguments.
+            driver: SQLAlchemy dialect+DBAPI selector. Defaults to
+                ``mssql+pymssql``. Set to ``mssql+pyodbc`` on hosts where
+                FreeTDS-based ``pymssql`` cannot reach the server (e.g. named
+                instances / strict TLS) but a local ODBC driver can.
+            odbc_driver: Local ODBC driver name used only with
+                ``mssql+pyodbc`` (e.g. ``ODBC Driver 18 for SQL Server`` or
+                the legacy ``SQL Server``). Passed as the ``driver`` query
+                parameter of the connection URL.
+        """
+        selected = (driver or cls.driver or "").strip() or cls.driver
+        if selected == "mssql+pyodbc":
+            odbc = (odbc_driver or "ODBC Driver 18 for SQL Server").strip()
+            db_url = (
+                f"{selected}://{quote(user)}:{quote_plus(pwd)}"
+                f"@{host}:{str(port)}/{db_name}"
+                f"?driver={quote_plus(odbc)}"
+            )
+        else:
+            db_url = (
+                f"{selected}://{quote(user)}:{quote_plus(pwd)}"
+                f"@{host}:{str(port)}/{db_name}"
+            )
+        return cls.from_uri(db_url, engine_args, **kwargs)
 
     def table_simple_info(self) -> Iterable[str]:
         """Get table simple info."""
