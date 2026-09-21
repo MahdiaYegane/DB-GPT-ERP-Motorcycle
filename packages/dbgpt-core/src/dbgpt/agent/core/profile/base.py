@@ -70,24 +70,25 @@ You can refer to the following examples:
 """  # noqa
 
 _DEFAULT_SYSTEM_TEMPLATE_ZH = """\
-你是一个 {{ role }}, {% if name %}名字叫 {{ name }}.
-{% endif %}你的目标是 {% if is_retry_chat %}{{ retry_goal }}{% else %}{{ goal }}{% endif %}.\
-请一步一步思考完根据下面给出的已知信息和用户问题完成目标，同时请严格遵守下面"重要提醒"中的约束和规范。
-【重要约束】
-- 严禁在任务计划中直接调用任何 resource 中的 tool，即使它们在资源列表中被列出。
-- 所有 tool 的调用必须通过 ToolExpert agent 实现。
-- ToolExpert 的职责是统一管理、代理所有工具的调用，Planner 只应向 ToolExpert 发出工具的使用意图。
+You are a {{ role }}, {% if name %}named {{ name }}.
+{% endif %}your goal is {% if is_retry_chat %}{{ retry_goal }}{% else %}{{ goal }}{% endif %}.\
+Please think step-by-step to achieve your goals based on user input. You can use the resources given below.
+At the same time, please strictly abide by the constraints and specifications in the "IMPORTANT REMINDER" below.
+[Important Constraints]
+- It is strictly prohibited to directly call any tool from resources in the task plan, even if they are listed in the available resources.
+- All tool invocations must be performed only via the ToolExpert agent.
+- The ToolExpert is responsible for managing and proxying all tool invocations. The Planner should only issue high-level intents to the ToolExpert for using tools.
 {% if resource_prompt %}\
-已知资源信息：
+Given resources information:
 {{ resource_prompt }} 
-{% endif %}\
+{% endif %}
 {% if expand_prompt %}\
 {{ expand_prompt }} 
 {% endif %}\
 
-*** 重要提醒 ***
-请用简体中文进行回答.
-当前时间是:{{now_time}}
+*** IMPORTANT REMINDER ***
+Please answer in English.
+The current time is:{{now_time}}
 {% if is_retry_chat %}\
 {% if retry_constraints %}\
 {% for retry_constraint in retry_constraints %}\
@@ -103,7 +104,7 @@ _DEFAULT_SYSTEM_TEMPLATE_ZH = """\
 {% endif %}\
 
 {% if examples %}\
-你也可以参考如下对话示例:
+You can refer to the following examples:
 {{ examples }}\
 {% endif %}\
 
@@ -124,12 +125,12 @@ User input: {{ question }}
 
 _DEFAULT_USER_TEMPLATE_ZH = """\
 {% if most_recent_memories %}\
-最近消息记录:
+Most recent message:
 {{ most_recent_memories }}
 {% endif %}\
 
 {% if question %}\
-用户输入: {{ question }}
+User input: {{ question }}
 {% endif %}
 """
 
@@ -140,10 +141,10 @@ _DEFAULT_WRITE_MEMORY_TEMPLATE = """\
 {% if observation %}Observation: {{ observation }} {% endif %}
 """
 _DEFAULT_WRITE_MEMORY_TEMPLATE_ZH = """\
-{% if question %}问题: {{ question }} {% endif %}
-{% if thought %}思考答案: {{ thought }} {% endif %}
-{% if action %}行动结果: {{ action }} {% endif %}
-{% if observation %}观察: {{ observation }} {% endif %}
+{% if question %}Question: {{ question }} {% endif %}
+{% if thought %}Thought: {{ thought }} {% endif %}
+{% if action %}Action: {{ action }} {% endif %}
+{% if observation %}Observation: {{ observation }} {% endif %}
 """
 
 

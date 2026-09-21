@@ -35,7 +35,7 @@ with the following specific requirements:
 provided to you
 2. Extract information such as column names, data types, data meanings, data formats, \
 etc. 3. To standardize the data structure, I need to transform the original column \
-names, such as converting "年龄" to "age", "Completion progress" to \
+names, such as converting "Age" to "age", "Completion progress" to \
 "completion_progress", etc.
 4. You need to provide the original column names, transformed column names, \
 data types, data meanings, data formats, etc.
@@ -73,75 +73,75 @@ Response format is as follows:
 ```
 """
 
-_PROMPT_SCENE_DEFINE_ZH = "你是一个数据分析专家. "
+_PROMPT_SCENE_DEFINE_ZH = "You are a data analysis expert. "
 
 _DEFAULT_TEMPLATE_ZH = """
-给你一份用户的数据, 请你对数据理解并根据下面的要求响应用户，
-目前数据在 DuckDB 表中，\
+You are given user data; please understand it and respond per the requirements below.
+The data currently resides in a DuckDB table, \
 
-一部分采样数据如下:
+A sample of the data is as follows:
 ``````json
 {data_example}
 ``````
 
-表的摘要信息如下:
+Table summary information:
 ``````json
 {table_summary}
 ``````
 
-DuckDB 表结构信息如下：
+The DuckDB table schema is as follows:
 {table_schema}
 
 
-分析各列数据的含义和作用，并对专业术语进行简单明了的解释, \
-具体要求：
-1. 仔细阅读给你的表结构、数据样例和表摘要信息
-2. 提取出字段的列名、数据类型、数据含义、数据格式等信息
-3. 为了标准化数据结构数据，我需要对于原来的列名进行转化，\
-如将“年龄”转换为“age”, "Completion progress"转化为\
-"completion_progress"等
-4. 你需要提供原始的列名、转化后的列名、数据类型、数据含义、数据格式等信息
-5. 如果是时间类型请给出时间格式类似:yyyy-MM-dd HH:MM:ss.
-6. 请你针对数据从不同维度提供一些有用的分析思路给用户\
-(可以按照分析复杂度从简单到复杂依次提供）
-7. 你需要将提取的信息按照下面的格式输出，确保输出的格式正确
+Analyze the meaning and purpose of each column and explain technical terms simply and clearly, \
+with the following requirements:
+1. Carefully read the provided table schema, data samples, and table summary
+2. Extract column names, data types, data meanings, data formats, and similar information
+3. To standardize the schema, transform the original column names, \
+e.g. converting "age-label" to "age", "Completion progress" to \
+"completion_progress", etc.
+4. Provide the original column names, transformed column names, data types, data meanings, data formats, etc.
+5. For time types, provide the time format, e.g. yyyy-MM-dd HH:mm:ss.
+6. Suggest useful analysis ideas across dimensions for the user \
+(ordered from simple to complex analysis complexity)
+7. Output the extracted information in the format below, ensuring correctness
 
 
-列名的转换规则:
-1. 如果是英文字母，全部转换为小写，并且将空格替换为下划线
-2. 如果是数字，直接保留
-3. 如果是中文，将中文字段名翻译为英文，并且将空格替换为下划线
-4. 如果是其它语言，将其翻译为英文，并且将空格替换为下划线
-5. 如果是特殊字符，直接删除
-6. DuckDB遵循SQL标准，要求标识符(列名、表名)不能以数字开头
-7. 所以列的字段都必须分析和转换，切记在 JSON 中输出
-' // ... (其他列的类似分析) ...)' 之类的话术
-8. 你需要在json中提供原始列名和转化后的新的列名，以及你分析\
-的该列的含义和作用，如果是时间类型请给出时间格式类似:\
-yyyy-MM-dd HH:MM:ss
+Column name conversion rules:
+1. For English letters, lowercase everything and replace spaces with underscores
+2. For numbers, keep them as-is
+3. For Chinese, translate field names to English and replace spaces with underscores
+4. For other languages, translate them to English and replace spaces with underscores
+5. For special characters, remove them directly
+6. DuckDB follows the SQL standard, requiring identifiers (column/table names) not to start with a digit
+7. All columns must be analyzed and converted; always output in JSON
+Avoid phrases like ' // ... (similar analysis for other columns) ...)'
+8. Provide original and transformed column names in JSON, plus your analysis of \
+each column's meaning and purpose; for time types include the format, e.g. \
+yyyy-MM-dd HH:mm:ss
 
-你必须输出 JSON 数据，其中:
-`data_analysis` 属性是数据内容分析总结，\
-`column_analysis` 是一个json数组类型，里面包含了每一列的转换、分析结果，\
-`analysis_program` 属性是分析思路。
+You must output JSON data, where:
+`data_analysis` is the data content analysis summary, \
+`column_analysis` is a JSON array with conversion and analysis results per column, \
+`analysis_program` contains the analysis ideas.
 
-请一步一步思考,确保只以JSON格式回答，并且需要能被 Python 的 json.loads() 函数解析。
-响应格式如下:
+Please think step by step, answer in JSON format only, and ensure it can be parsed by Python's json.loads() function.
+The response format is:
 ```json
     {response}
 ```
 """
 
 _RESPONSE_FORMAT_SIMPLE_ZH = {
-    "data_analysis": "数据内容分析总结",
+    "data_analysis": "Data content analysis summary",
     "column_analysis": [
         {
-            "old_column_name": "原始列名",
-            "new_column_name": "转换后的新的列名",
-            "column_description": "字段1介绍，专业术语解释(请尽量简单明了)",
+            "old_column_name": "Original column name",
+            "new_column_name": "Converted new column name",
+            "column_description": "Field 1 description, technical term explanation (keep it simple and clear)",
         }
     ],
-    "analysis_program": ["1.分析方案1", "2.分析方案2"],
+    "analysis_program": ["1. Analysis plan 1", "2. Analysis plan 2"],
 }
 _RESPONSE_FORMAT_SIMPLE_EN = {
     "data_analysis": "Data content analysis summary",
@@ -170,7 +170,7 @@ PROMPT_SCENE_DEFINE = (
 )
 
 _USER_INPUT = "Please analyze the data for you"
-_USER_INPUT_ZH = "请分析给你的数据"
+_USER_INPUT_ZH = "Please analyze the data provided"
 
 USER_INPUT = _USER_INPUT if CFG.LANGUAGE == "en" else _USER_INPUT_ZH
 

@@ -77,7 +77,7 @@ For each task input, your response should contain:
 1. Thought: Your analysis of the task, planning considerations, and reasoning for
 the next action
 2. Phase: A short phrase describing the intent or stage of this step
-(e.g. "探索数据源结构", "加载数据并初步分析", "执行数据清洗脚本", "生成分析报告")
+(e.g. "explore data source structure", "load data and perform preliminary analysis", "execute data cleaning script", "generate analysis report")
 3. Action: The selected action from the ACTION SPACE
 4. Action Input: Parameters required for the action (can be empty if no input needed)
 
@@ -85,14 +85,14 @@ the next action
 Thought: I need to analyze sales data to identify trends and provide insights.
 First, I should examine the available data sources to understand the data structure
 and then create a comprehensive analysis plan.
-Phase: 分析销售数据结构与来源
+Phase: Analyze sales data structure and sources
 Action: examine_data_sources
 Action Input: {}
 
 # EXECUTION EXAMPLE #
 Thought: Now that I understand the data structure, I'll load the sales data and
 perform initial exploratory analysis to identify patterns and trends.
-Phase: 加载数据并初步分析
+Phase: Load data and perform preliminary analysis
 Action: load_data
 Action Input: {"source": "sales_data", "analysis_type": "exploratory"}
 

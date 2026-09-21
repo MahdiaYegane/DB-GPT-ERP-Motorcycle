@@ -9,8 +9,8 @@ from dbgpt.agent.resource.tool.base import tool
 def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any]):
     @tool(
         description=(
-            "对用户选择的数据库执行 SQL 查询（仅支持 SELECT）。"
-            '参数: {"sql": "SELECT 语句"}'
+            "Execute a SQL query against the user-selected database (SELECT only). "
+            'Parameters: {"sql": "SELECT statement"}'
         )
     )
     def sql_query(sql: str) -> str:
@@ -21,7 +21,7 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
                     "chunks": [
                         {
                             "output_type": "text",
-                            "content": "未选择数据库，请先在左侧面板选择一个数据源。",
+                            "content": "No database selected. Please select a data source in the left panel.",
                         }
                     ]
                 },
@@ -48,8 +48,8 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
                         "chunks": [
                             {
                                 "output_type": "text",
-                                "content": f"安全限制: 不允许执行 {kw} 语句，"
-                                "仅支持 SELECT 查询。",
+                                "content": f"Security restriction: {kw} statements are not allowed. "
+                                "Only SELECT queries are supported.",
                             }
                         ]
                     },
@@ -62,7 +62,7 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
                 return json.dumps(
                     {
                         "chunks": [
-                            {"output_type": "text", "content": "查询返回空结果。"}
+                            {"output_type": "text", "content": "Query returned no results."}
                         ]
                     },
                     ensure_ascii=False,
@@ -79,7 +79,7 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
                 md_rows.append("| " + " | ".join(str(v) for v in row) + " |")
             table = "\n".join([header, separator] + md_rows)
             if len(rows) > 50:
-                table += f"\n\n（仅显示前 50 行，共 {len(rows)} 行）"
+                table += f"\n\n(Showing first 50 rows of {len(rows)} rows)"
 
             # Cap total output size so a single wide query can't blow out the
             # LLM context window. The full result remains available via the
@@ -102,7 +102,7 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
                     "chunks": [
                         {
                             "output_type": "text",
-                            "content": f"SQL 执行失败: {str(e)}",
+                            "content": f"SQL execution failed: {str(e)}",
                         }
                     ]
                 },

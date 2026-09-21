@@ -1,108 +1,108 @@
 ---
 name: financial-report-analyzer
-description: 专门用于上市公司财报（如年度报告、季度报告）的深度分析。该技能能够自动提取关键财务指标，计算核心财务比率，生成可视化图表，并结合行业背景生成专业的财务分析报告。
+description: In-depth analysis of listed-company financial reports (such as annual and quarterly reports). This skill automatically extracts key financial metrics, calculates core financial ratios, generates visualizations, and produces professional financial analysis reports with industry context.
 ---
 
-# 财报分析技能 (Financial Report Analyzer)
+# Financial Report Analyzer
 
-本技能旨在帮助 DB-GPT 系统化地分析上市公司财报，通过提取核心数据、计算财务比率、生成可视化图表并结合业务背景，产出高质量的财务分析报告。
+This skill helps DB-GPT systematically analyze listed-company financial reports by extracting core data, calculating financial ratios, generating visualizations, and incorporating business context to produce high-quality financial analysis reports.
 
-## 核心工作流程
+## Core Workflow
 
-1. **数据提取与结构化**：
-   - 使用 `execute_skill_script_file` 工具执行 `scripts/extract_financials.py` 脚本，传入财报文件路径（`file_path` 参数），自动提取营收、净利润、资产、负债等核心数值。
-   - 脚本支持 PDF 文件（通过 pdfplumber 解析）和纯文本文件，返回 JSON 格式的结构化数据。
+1. **Data extraction and structuring**:
+   - Use the `execute_skill_script_file` tool to run the `scripts/extract_financials.py` script, passing the report file path (`file_path` parameter) to automatically extract core figures such as revenue, net profit, assets, and liabilities.
+   - The script supports PDF files (parsed via pdfplumber) and plain-text files, and returns structured data in JSON format.
 
-2. **财务比率计算**：
-   - 使用 `execute_skill_script_file` 执行 `scripts/calculate_ratios.py`，传入 Step 1 的 JSON 数据。
-   - 自动计算毛利率、净利率、ROE、资产负债率等关键指标，输出 30 个模板占位符键值。
-   - 参考 `references/financial_metrics.md` 确保指标定义的准确性。
-   - **系统会自动保存返回的 JSON 结果**（`react_state["ratio_data"]`），后续 html_interpreter 会自动合并。
+2. **Financial ratio calculation**:
+   - Use `execute_skill_script_file` to run `scripts/calculate_ratios.py`, passing the JSON data from Step 1.
+   - Automatically calculate key metrics such as gross margin, net margin, ROE, and debt-to-asset ratio, outputting 30 template placeholder keys.
+   - Refer to `references/financial_metrics.md` to ensure accurate metric definitions.
+   - **The system automatically saves the returned JSON result** (`react_state["ratio_data"]`), which html_interpreter merges automatically later.
 
-3. **图表生成**：
-   - 使用 `execute_skill_script_file` 执行 `scripts/generate_charts.py`，传入 Step 1 的 JSON 数据。
-   - 自动生成 3 张可视化图表：
-     - `financial_overview.png`：核心财务指标对比柱状图
-     - `profitability.png`：盈利能力指标横向条形图
-     - `asset_structure.png`：资产结构环形饼图
-   - **系统会自动将图片复制到静态目录并记录 URL 映射**（`react_state["image_url_map"]`），后续 html_interpreter 会自动合并。
+3. **Chart generation**:
+   - Use `execute_skill_script_file` to run `scripts/generate_charts.py`, passing the JSON data from Step 1.
+   - Automatically generate 3 visualizations:
+     - `financial_overview.png`: bar chart comparing core financial metrics
+     - `profitability.png`: horizontal bar chart of profitability metrics
+     - `asset_structure.png`: donut chart of asset structure
+   - **The system automatically copies images to the static directory and records the URL mapping** (`react_state["image_url_map"]`), which html_interpreter merges automatically later.
 
-4. **深度分析**：
-   - 遵循 `references/analysis_framework.md` 提供的框架，从盈利质量、偿债风险、营运效率和现金流四个维度进行深度剖析。
-   - 结合"经营情况讨论与分析"章节，解释业绩变动的核心驱动因素。
-   - 撰写以下 7 段分析文本：
-     - `PROFITABILITY_ANALYSIS`：盈利能力分析
-     - `SOLVENCY_ANALYSIS`：偿债与风险分析
-     - `EFFICIENCY_ANALYSIS`：营运效率分析
-     - `CASHFLOW_ANALYSIS`：现金流与利润质量分析
-     - `ADVANTAGES_LIST`：核心优势列表（HTML `<li>` 格式）
-     - `RISKS_LIST`：主要风险列表（HTML `<li>` 格式）
-     - `OVERALL_ASSESSMENT`：综合评价
+4. **In-depth analysis**:
+   - Follow the framework in `references/analysis_framework.md` to analyze in depth across four dimensions: earnings quality, solvency risk, operating efficiency, and cash flow.
+   - Combine with the "Management Discussion and Analysis" section to explain the key drivers of performance changes.
+   - Write the following 7 analysis passages:
+     - `PROFITABILITY_ANALYSIS`: profitability analysis
+     - `SOLVENCY_ANALYSIS`: solvency and risk analysis
+     - `EFFICIENCY_ANALYSIS`: operating efficiency analysis
+     - `CASHFLOW_ANALYSIS`: cash flow and earnings-quality analysis
+     - `ADVANTAGES_LIST`: list of key strengths (HTML `<li>` format)
+     - `RISKS_LIST`: list of key risks (HTML `<li>` format)
+     - `OVERALL_ASSESSMENT`: overall assessment
 
-5. **渲染报告**：
-   - 调用 `html_interpreter`，使用 `template_path` 模式：
+5. **Render the report**:
+   - Call `html_interpreter` using `template_path` mode:
      ```json
      {
        "template_path": "financial-report-analyzer/templates/report_template.html",
        "data": {
-         "PROFITABILITY_ANALYSIS": "LLM撰写的盈利能力分析...",
-         "SOLVENCY_ANALYSIS": "LLM撰写的偿债分析...",
-         "EFFICIENCY_ANALYSIS": "LLM撰写的营运效率分析...",
-         "CASHFLOW_ANALYSIS": "LLM撰写的现金流分析...",
-         "ADVANTAGES_LIST": "<li>优势1</li><li>优势2</li>",
-         "RISKS_LIST": "<li>风险1</li><li>风险2</li>",
-         "OVERALL_ASSESSMENT": "LLM撰写的综合评价..."
+         "PROFITABILITY_ANALYSIS": "Profitability analysis written by the LLM...",
+         "SOLVENCY_ANALYSIS": "Solvency analysis written by the LLM...",
+         "EFFICIENCY_ANALYSIS": "Operating efficiency analysis written by the LLM...",
+         "CASHFLOW_ANALYSIS": "Cash flow analysis written by the LLM...",
+         "ADVANTAGES_LIST": "<li>Strength 1</li><li>Strength 2</li>",
+         "RISKS_LIST": "<li>Risk 1</li><li>Risk 2</li>",
+         "OVERALL_ASSESSMENT": "Overall assessment written by the LLM..."
        },
-       "title": "XX公司 2023年度财报分析报告"
+       "title": "XX Company 2023 Annual Financial Report Analysis"
      }
      ```
-   - **重要**：`data` 字典中只需传入你撰写的 7 段分析文本！后端会自动合并：
-     - Step 2 的 30 个数据指标（COMPANY_NAME、REVENUE、NET_PROFIT 等）
-     - Step 3 的图表 URL（CHART_FINANCIAL_OVERVIEW、CHART_PROFITABILITY、CHART_ASSET_STRUCTURE）
-   - **绝对不要**在 `data` 中包含数据指标或图表路径，否则 JSON 过大会导致截断。
+   - **Important**: only pass the 7 analysis passages you wrote in the `data` dictionary! The backend automatically merges:
+     - The 30 data metrics from Step 2 (COMPANY_NAME, REVENUE, NET_PROFIT, etc.)
+     - The chart URLs from Step 3 (CHART_FINANCIAL_OVERVIEW, CHART_PROFITABILITY, CHART_ASSET_STRUCTURE)
+   - **Never** include data metrics or chart paths in `data`; otherwise the JSON will be too large and get truncated.
 
-6. **完成**：
-   - 调用 `terminate` 返回 1-2 句话的简短摘要。
-   - 报告会以卡片形式展示在左侧面板，用户点击卡片即可在右侧面板查看完整报告。
+6. **Complete**:
+   - Call `terminate` to return a brief 1-2 sentence summary.
+   - The report is displayed as a card in the left panel; users click the card to view the full report in the right panel.
 
-## 完整流程示例
+## Complete Workflow Example
 
 ```
 Step 1: execute_skill_script_file(skill_name="financial-report-analyzer", script_file_name="extract_financials.py", args={"file_path": "/path/to/report.pdf"})
-  → 返回 JSON: {"revenue": 10500000000, "net_profit": 1200000000, ...}  （记为 raw_data）
+  → Returns JSON: {"revenue": 10500000000, "net_profit": 1200000000, ...}  (saved as raw_data)
 
 Step 2: execute_skill_script_file(skill_name="financial-report-analyzer", script_file_name="calculate_ratios.py", args=<raw_data>)
-  → 返回 30 个模板键值，系统自动记录到 react_state["ratio_data"]
+  → Returns 30 template keys, automatically recorded in react_state["ratio_data"]
 
 Step 3: execute_skill_script_file(skill_name="financial-report-analyzer", script_file_name="generate_charts.py", args=<raw_data>)
-  → 生成图表，系统自动复制到 /images/ 并记录 URL 映射
+  → Generates charts, automatically copied to /images/ with URL mapping recorded
 
-Step 4: （LLM 自行撰写 7 段深度分析文本）
+Step 4: (LLM writes the 7 in-depth analysis passages)
 
-Step 5: html_interpreter(template_path="financial-report-analyzer/templates/report_template.html", data={仅包含 7 段分析文本}, title="报告标题")
-  → 后端自动合并数据指标 + 图表 URL + 分析文本，渲染完整报告
+Step 5: html_interpreter(template_path="financial-report-analyzer/templates/report_template.html", data={only the 7 analysis passages}, title="report title")
+  → Backend automatically merges data metrics + chart URLs + analysis text to render the complete report
 
-Step 6: terminate(result="简短摘要")
+Step 6: terminate(result="brief summary")
 ```
 
-## 资源使用说明
+## Resource Usage
 
-- **脚本**（均通过 `execute_skill_script_file` 执行）：
-  - `scripts/extract_financials.py`：接收 `file_path` 参数，读取财报文件（支持 PDF 和文本格式），提取核心财务数据。
-  - `scripts/calculate_ratios.py`：计算财务比率，输出 30 个模板占位符键值。系统自动记录结果。
-  - `scripts/generate_charts.py`：生成 3 张可视化图表（matplotlib），系统自动处理图片复制。
-  - `scripts/fill_template.py`：（备用）接收 `ratio_data`、`chart_paths`、`analysis` 三个参数，读取 HTML 模板并替换所有占位符。正常情况下不需要使用此脚本，因为 html_interpreter 的 template_path 模式会自动完成模板填充。
-- **参考**：
-  - `references/financial_metrics.md`：包含公式定义。
-  - `references/analysis_framework.md`：包含分析逻辑。
-- **模板**：
-  - `templates/report_template.html`：最终交付报告的 HTML 模板（**必须严格遵循**，不得删减章节或修改表格结构）。由 html_interpreter 的 template_path 参数自动读取并填充。
-  - `templates/report_template.md`：Markdown 版本，仅供参考结构说明。
+- **Scripts** (all executed via `execute_skill_script_file`):
+  - `scripts/extract_financials.py`: accepts the `file_path` parameter, reads the financial report file (PDF and text formats supported), and extracts core financial data.
+  - `scripts/calculate_ratios.py`: computes financial ratios and outputs 30 template placeholder keys. The system records the result automatically.
+  - `scripts/generate_charts.py`: generates 3 visualizations (matplotlib); the system handles image copying automatically.
+  - `scripts/fill_template.py`: (fallback) accepts three parameters — `ratio_data`, `chart_paths`, and `analysis` — reads the HTML template and replaces all placeholders. Normally this script is not needed because html_interpreter's template_path mode fills the template automatically.
+- **References**:
+  - `references/financial_metrics.md`: contains formula definitions.
+  - `references/analysis_framework.md`: contains the analysis logic.
+- **Templates**:
+  - `templates/report_template.html`: the HTML template for the final report (**must be followed strictly**; do not remove sections or modify table structure). It is automatically read and filled via html_interpreter's template_path parameter.
+  - `templates/report_template.md`: Markdown version, provided for structural reference only.
 
-## 注意事项
+## Notes
 
-- **必须使用 `execute_skill_script_file`** 执行脚本（不要用 shell_interpreter），因为 `execute_skill_script_file` 会自动处理图片复制和数据记录。
-- 脚本提取可能受排版影响，建议在计算前人工核对提取的关键数值。
-- 始终关注"非经常性损益"，以评估公司核心业务的真实盈利能力。
-- 对比至少三年的历史数据，以识别趋势。
-- `generate_charts.py` 依赖 matplotlib，请确保环境中已安装该库。
+- **You must use `execute_skill_script_file`** to run scripts (do not use shell_interpreter), because `execute_skill_script_file` automatically handles image copying and data recording.
+- Script extraction may be affected by formatting; manually verify the extracted key figures before computing ratios.
+- Always check "non-recurring gains and losses" to assess the true profitability of the core business.
+- Compare at least three years of historical data to identify trends.
+- `generate_charts.py` depends on matplotlib; make sure the library is installed in the environment.

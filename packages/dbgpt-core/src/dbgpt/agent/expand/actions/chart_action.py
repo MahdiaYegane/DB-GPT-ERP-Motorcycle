@@ -70,14 +70,14 @@ class ChartAction(Action[SqlInput]):
             )
         try:
             if not self.resource_need:
-                raise ValueError("The resource type is not found！")
+                raise ValueError("The resource type is not found!")
 
             if not self.render_protocol:
-                raise ValueError("The rendering protocol is not initialized！")
+                raise ValueError("The rendering protocol is not initialized!")
 
             db_resources: List[DBResource] = DBResource.from_resource(self.resource)
             if not db_resources:
-                raise ValueError("The database resource is not found！")
+                raise ValueError("The database resource is not found!")
 
             db = db_resources[0]
             data_df = await db.query_to_df(param.sql)
@@ -108,7 +108,7 @@ class ChartAction(Action[SqlInput]):
                 resource_value=db._db_name,
             )
         except Exception as e:
-            logger.exception("Check your answers, the sql run failed！")
+            logger.exception("Check your answers, the sql run failed!")
             return ActionOutput(
                 is_exe_success=False,
                 content=f"Error:Check your answers, the sql run failed!Reason:{str(e)}",

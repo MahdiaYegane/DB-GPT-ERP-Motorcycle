@@ -165,7 +165,7 @@ class ConversableAgent(Role, Agent):
                 ):
                     raise ValueError(
                         f"{self.name}[{self.role}] Missing resources"
-                        f"[{action.resource_need}] required for runtime！"
+                        f"[{action.resource_need}] required for runtime!"
                     )
         else:
             if not self.is_human and not self.is_team:
@@ -178,7 +178,7 @@ class ConversableAgent(Role, Agent):
         ):
             raise ValueError(
                 f"{self.name}[{self.role}] Model configuration is missing or model "
-                "service is unavailable！"
+                "service is unavailable!"
             )
 
     @property
@@ -192,14 +192,14 @@ class ConversableAgent(Role, Agent):
             ValueError: If the agent context is not initialized.
         """
         if not self.agent_context:
-            raise ValueError("Agent context is not initialized！")
+            raise ValueError("Agent context is not initialized!")
         return self.agent_context
 
     @property
     def not_null_llm_config(self) -> LLMConfig:
         """Get the LLM config."""
         if not self.llm_config:
-            raise ValueError("LLM config is not initialized！")
+            raise ValueError("LLM config is not initialized!")
         return self.llm_config
 
     @property
@@ -207,7 +207,7 @@ class ConversableAgent(Role, Agent):
         """Get the LLM client."""
         llm_client = self.not_null_llm_config.llm_client
         if not llm_client:
-            raise ValueError("LLM client is not initialized！")
+            raise ValueError("LLM client is not initialized!")
         return llm_client
 
     async def blocking_func_to_async(
@@ -240,7 +240,7 @@ class ConversableAgent(Role, Agent):
         # Initialize LLM Server
         if not self.is_human:
             if not self.llm_config or not self.llm_config.llm_client:
-                raise ValueError("LLM client is not initialized！")
+                raise ValueError("LLM client is not initialized!")
             self.llm_client = AIWrapper(llm_client=self.llm_config.llm_client)
             real_conv_id, _ = parse_conv_id(self.not_null_agent_context.conv_id)
             memory_session = f"{real_conv_id}_{self.role}_{self.name}"
@@ -567,7 +567,7 @@ class ConversableAgent(Role, Agent):
 
                 # In manual retry mode, load all messages of the last speaker as dependent messages # noqa
                 logger.info(
-                    f"Depends on the number of historical messages:{len(rely_messages) if rely_messages else 0}！"  # noqa
+                    f"Depends on the number of historical messages:{len(rely_messages) if rely_messages else 0}!"  # noqa
                 )
                 thinking_messages, resource_info = await self._load_thinking_messages(
                     received_message=received_message,
@@ -883,7 +883,7 @@ class ConversableAgent(Role, Agent):
                         last_out.to_dict() if last_out else None
                     )
             if not last_out:
-                raise ValueError("Action should return value！")
+                raise ValueError("Action should return value!")
             return last_out
         finally:
             # Restore the previous storage binding (supports nested agent calls).
@@ -1382,8 +1382,8 @@ class ConversableAgent(Role, Agent):
                 observation, is_retry_chat=is_retry_chat
             )
         except Exception as e:
-            logger.exception(f"Load resource error！{str(e)}")
-            raise ValueError(f"Load resource error！{str(e)}")
+            logger.exception(f"Load resource error!{str(e)}")
+            raise ValueError(f"Load resource error!{str(e)}")
 
         resource_vars = await self.generate_resource_variables(resource_prompt_str)
 

@@ -96,7 +96,7 @@ def test_sql_query_degrades_when_no_database():
     tools = make_react_tools({"conv_id": "c1"}, database_connector=None)
     out = tools["sql_query"](sql="SELECT 1")
     parsed = json.loads(out)
-    assert "未选择数据库" in parsed["chunks"][0]["content"]
+    assert "No database selected" in parsed["chunks"][0]["content"]
 
 
 def test_sql_query_blocks_non_select():
@@ -107,7 +107,7 @@ def test_sql_query_blocks_non_select():
     tools = make_react_tools({"conv_id": "c1"}, database_connector=_FakeConn())
     out = tools["sql_query"](sql="DELETE FROM t")
     parsed = json.loads(out)
-    assert "安全限制" in parsed["chunks"][0]["content"]
+    assert "Security restriction" in parsed["chunks"][0]["content"]
 
 
 @pytest.mark.asyncio

@@ -530,12 +530,13 @@ def make_dispatch_tool(
 
     @tool(
         description=(
-            "把多个【相互独立、无依赖】的子任务并行交给子 Agent 执行，返回各自"
-            "结果。任务包含至少 2 个可独立交付、可同时开始、且各自值得独立上下文"
-            "的目标时使用。同一数据库或同一张表上的独立只读分析也可以并行；只有"
-            "共享中间结果、计算状态或存在前后依赖时才应串行。"
-            f"单次最多 {max_parallel} 个子任务，超出请分批多轮调用。"
-            '参数: {"tasks": [{"goal": "...", "context": "...", "title": "..."}]}'
+            "Dispatch multiple [independent, dependency-free] subtasks to sub-agents in parallel and return their "
+            "results. Use when the task contains at least 2 independently deliverable goals that can start at the "
+            "same time and each deserve an isolated context. Independent read-only analyses on the same database "
+            "or the same table may also run in parallel; run serially only when they share intermediate results, "
+            "computation state, or have ordering dependencies. "
+            f"At most {max_parallel} subtasks per call; dispatch additional batches in later rounds if exceeded. "
+            'Parameters: {"tasks": [{"goal": "...", "context": "...", "title": "..."}]}'
         )
     )
     async def dispatch_parallel_tasks(tasks: list) -> str:
@@ -546,7 +547,7 @@ def make_dispatch_tool(
                     "chunks": [
                         {
                             "output_type": "text",
-                            "content": "Error: tasks 必须是非空列表",
+                            "content": "Error: tasks must be a non-empty list",
                         }
                     ]
                 },
@@ -567,7 +568,7 @@ def make_dispatch_tool(
             agent_id = f"sub_d{batch_id}_{idx}"
             title = (
                 t.get("title") if isinstance(t, dict) else None
-            ) or f"子任务{idx + 1}"
+            ) or f"Subtask {idx + 1}"
             goal = (t.get("goal") if isinstance(t, dict) else None) or ""
             extra = t.get("context") if isinstance(t, dict) else None
             await emit_event(
@@ -648,7 +649,7 @@ def make_dispatch_tool(
                         else:
                             limit = _SUBAGENT_OBS_MAX_CHARS
                         if len(content) > limit:
-                            c["content"] = content[:limit] + "…（已截断）"
+                            c["content"] = content[:limit] + "...(truncated)"
                     step_event = {
                         "type": "agent.step",
                         "agent_id": _aid,
@@ -679,7 +680,7 @@ def make_dispatch_tool(
                 r = {
                     "title": title,
                     "status": "timeout",
-                    "result": f"子任务超时（{_SUBAGENT_TIMEOUT}s）",
+                    "result": f"Subtask timed out ({_SUBAGENT_TIMEOUT}s)",
                     "artifacts": [],
                 }
             except Exception as e:  # single failure must not break the batch
@@ -687,7 +688,7 @@ def make_dispatch_tool(
                 r = {
                     "title": title,
                     "status": "failed",
-                    "result": f"执行失败: {e}",
+                    "result": f"Execution failed: {e}",
                     "artifacts": [],
                 }
             # Stamp the source agent on every artifact so the frontend can
@@ -699,7 +700,7 @@ def make_dispatch_tool(
             if len(result_summary) > _SUBAGENT_RESULT_SUMMARY_MAX_CHARS:
                 result_summary = (
                     result_summary[:_SUBAGENT_RESULT_SUMMARY_MAX_CHARS]
-                    + "\n\n…（完整结果请查看子任务详情）"
+                    + "\n\n...(see subtask details for the full result)"
                 )
             await emit_event(
                 {
@@ -728,8 +729,8 @@ def make_dispatch_tool(
         )
         if dropped > 0:
             summary += (
-                f"\n\n⚠️ 另有 {dropped} 个子任务因超过并发上限未执行，"
-                f"请在下一轮再次调用 dispatch_parallel_tasks 处理。"
+                f"\n\n⚠️ {dropped} more subtask(s) were not executed due to the concurrency limit. "
+                f"Please call dispatch_parallel_tasks again in the next round to process them."
             )
         return json.dumps(
             {"chunks": [{"output_type": "markdown", "content": summary}]},

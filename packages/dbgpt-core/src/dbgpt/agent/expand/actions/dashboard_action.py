@@ -85,12 +85,12 @@ class DashboardAction(Action[List[ChartItem]]):
         try:
             db_resources: List[DBResource] = DBResource.from_resource(self.resource)
             if not db_resources:
-                raise ValueError("The database resource is not found！")
+                raise ValueError("The database resource is not found!")
 
             db = db_resources[0]
 
             if not db:
-                raise ValueError("The database resource is not found！")
+                raise ValueError("The database resource is not found!")
 
             chart_params = []
             for chart_item in chart_items:
@@ -101,7 +101,7 @@ class DashboardAction(Action[List[ChartItem]]):
 
                     chart_dict["data"] = sql_df
                 except Exception as e:
-                    logger.warning(f"Sql execute failed！{str(e)}")
+                    logger.warning(f"Sql execute failed!{str(e)}")
                     chart_dict["err_msg"] = str(e)
                 chart_params.append(chart_dict)
             if not self.render_protocol:
@@ -115,7 +115,7 @@ class DashboardAction(Action[List[ChartItem]]):
                 view=view,
             )
         except Exception as e:
-            logger.exception("Dashboard generate Failed！")
+            logger.exception("Dashboard generate Failed!")
             return ActionOutput(
                 is_exe_success=False, content=f"Dashboard action run failed!{str(e)}"
             )

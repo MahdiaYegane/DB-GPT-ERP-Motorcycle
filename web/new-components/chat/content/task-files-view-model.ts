@@ -21,21 +21,21 @@ export interface TaskArtifactLike {
 }
 
 export const TASK_FILE_TABS: readonly TaskFileTabDefinition[] = Object.freeze([
-  { key: 'all', label: '全部' },
-  { key: 'input', label: '上传资料' },
-  { key: 'document', label: '文档' },
-  { key: 'image', label: '图片' },
-  { key: 'code', label: '代码文件' },
+  { key: 'all', label: 'All' },
+  { key: 'input', label: 'Uploaded Materials' },
+  { key: 'document', label: 'Documents' },
+  { key: 'image', label: 'Images' },
+  { key: 'code', label: 'Code Files' },
 ]);
 
 const IMAGE_EXTENSIONS = new Set(['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg']);
 const CODE_EXTENSIONS = new Set(['py', 'js', 'ts', 'tsx', 'jsx', 'sql', 'sh', 'json', 'yaml', 'yml']);
 const EMPTY_LABELS: Record<TaskFileTab, string> = {
-  all: '暂无任务文件',
-  input: '暂无上传资料',
-  document: '暂无生成文档',
-  image: '暂无生成图片',
-  code: '暂无生成代码文件',
+  all: 'No task files',
+  input: 'No uploaded materials',
+  document: 'No generated documents',
+  image: 'No generated images',
+  code: 'No generated code files',
 };
 
 export function getTaskFileEmptyLabel(activeTab: TaskFileTab): string {

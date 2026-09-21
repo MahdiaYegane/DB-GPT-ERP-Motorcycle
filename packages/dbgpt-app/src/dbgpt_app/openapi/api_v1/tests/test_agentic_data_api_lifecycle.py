@@ -108,7 +108,7 @@ async def test_runtime_failure_emits_structured_final_and_done(
         {
             "type": "final",
             "protocol_version": 2,
-            "content": "抱歉，回答生成过程中发生错误，请重试。",
+            "content": "Sorry, an error occurred while generating the answer. Please try again.",
             "citations": [],
         },
         {"type": "done"},

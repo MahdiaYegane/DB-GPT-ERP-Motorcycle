@@ -133,7 +133,7 @@ class PlanAction(Action[List[PlanInput]]):
             else:
                 raise ValueError(fail_reason)
         except Exception as e:
-            logger.exception("Plan Action Run Failed！")
+            logger.exception("Plan Action Run Failed!")
             return ActionOutput(
                 is_exe_success=False, content=f"Plan action run failed!{str(e)}"
             )

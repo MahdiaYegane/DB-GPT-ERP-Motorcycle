@@ -1,14 +1,14 @@
-# 核心财务指标参考指南
+# Core Financial Metrics Reference
 
-本参考资料定义了财报分析中常用的核心指标及其计算公式。
+This reference defines the core metrics commonly used in financial report analysis and their formulas.
 
-| 指标类别 | 指标名称 | 计算公式 | 意义 |
+| Category | Metric | Formula | Meaning |
 | :--- | :--- | :--- | :--- |
-| **盈利能力** | 毛利率 | (营业收入 - 营业成本) / 营业收入 | 衡量产品竞争力和盈利空间 |
-| | 净利率 | 净利润 / 营业收入 | 衡量公司最终获利能力 |
-| | ROE (净资产收益率) | 净利润 / 平均净资产 | 衡量股东权益的投资回报率 |
-| **偿债能力** | 资产负债率 | 总负债 / 总资产 | 衡量公司财务杠杆和风险水平 |
-| | 流动比率 | 流动资产 / 流动负债 | 衡量短期偿债能力 |
-| **营运能力** | 应收账款周转率 | 营业收入 / 平均应收账款余额 | 衡量回款效率 |
-| | 存货周转率 | 营业成本 / 平均存货余额 | 衡量库存管理效率 |
-| **现金流** | 净现比 | 经营活动现金流净额 / 净利润 | 衡量利润的含金量 |
+| **Profitability** | Gross margin | (Revenue - Cost of Revenue) / Revenue | Measures product competitiveness and profit potential |
+| | Net margin | Net Profit / Revenue | Measures the company's ultimate profitability |
+| | ROE (Return on Equity) | Net Profit / Average Equity | Measures return on shareholders' equity |
+| **Solvency** | Debt-to-asset ratio | Total Liabilities / Total Assets | Measures financial leverage and risk level |
+| | Current ratio | Current Assets / Current Liabilities | Measures short-term solvency |
+| **Operating Efficiency** | Receivables turnover | Revenue / Average Receivables | Measures collection efficiency |
+| | Inventory turnover | Cost of Revenue / Average Inventory | Measures inventory management efficiency |
+| **Cash Flow** | Cash-to-profit ratio | Net Operating Cash Flow / Net Profit | Measures the cash quality of earnings |

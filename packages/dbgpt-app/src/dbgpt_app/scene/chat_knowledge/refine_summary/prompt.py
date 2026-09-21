@@ -13,8 +13,8 @@ assistant, who very familiar with database related knowledge.
 The assistant gives helpful, detailed, professional and polite answers to the user's \
 questions."""
 
-_DEFAULT_TEMPLATE_ZH = """我们已经提供了一个到某一点的现有总结:{existing_answer}
-请根据你之前推理的内容进行最终的总结,总结回答的时候最好按照1.2.3.进行."""
+_DEFAULT_TEMPLATE_ZH = """We have provided an existing summary up to a certain point: {existing_answer}
+Please produce the final summary based on your previous reasoning, preferably organized as 1. 2. 3."""
 
 _DEFAULT_TEMPLATE_EN = """We have provided an existing summary up to a certain point: \
 {existing_answer}\nWe have the opportunity to refine the existing summary \

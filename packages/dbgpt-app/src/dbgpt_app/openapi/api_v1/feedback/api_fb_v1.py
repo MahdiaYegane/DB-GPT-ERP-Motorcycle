@@ -37,9 +37,9 @@ async def feed_back_commit(request: Request, feed_back_body: FeedBackBody = Body
 async def feed_back_select():
     return Result.succ(
         {
-            "information": "信息查询",
-            "work_study": "工作学习",
-            "just_fun": "互动闲聊",
-            "others": "其他",
+            "information": "Information lookup",
+            "work_study": "Work and study",
+            "just_fun": "Casual chat",
+            "others": "Others",
         }
     )

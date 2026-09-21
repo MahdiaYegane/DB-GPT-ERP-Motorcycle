@@ -146,7 +146,7 @@ def make_react_tools(
     @tool(
         description="Load skill content by skill name and file path. "
         "Returns the SKILL.md content of the specified skill. "
-        '参数: {"skill_name": "技能名称", "file_path": "技能文件路径"}'
+        'Parameters: {"skill_name": "skill name", "file_path": "skill file path"}'
     )
     def load_skill(skill_name: str, file_path: str) -> str:
         """Load the skill content (SKILL.md) by skill name and file path.
@@ -317,8 +317,8 @@ def make_react_tools(
 
     @tool(
         description=(
-            "对用户选择的数据库执行 SQL 查询（仅支持 SELECT）。"
-            '参数: {"sql": "SELECT 语句"}'
+            "Execute a SQL query against the user-selected database (SELECT only). "
+            'Parameters: {"sql": "SELECT statement"}'
         )
     )
     def sql_query(sql: str) -> str:
@@ -329,7 +329,7 @@ def make_react_tools(
                     "chunks": [
                         {
                             "output_type": "text",
-                            "content": "未选择数据库，请先在左侧面板选择一个数据源。",
+                            "content": "No database selected. Please select a data source in the left panel.",
                         }
                     ]
                 },
@@ -357,8 +357,8 @@ def make_react_tools(
                             {
                                 "output_type": "text",
                                 "content": (
-                                    f"安全限制: 不允许执行 {kw} 语句，"
-                                    f"仅支持 SELECT 查询。"
+                                    f"Security restriction: {kw} statements are not allowed. "
+                                    f"Only SELECT queries are supported."
                                 ),
                             }
                         ]
@@ -372,7 +372,7 @@ def make_react_tools(
                 return json.dumps(
                     {
                         "chunks": [
-                            {"output_type": "text", "content": "查询返回空结果。"}
+                            {"output_type": "text", "content": "Query returned no results."}
                         ]
                     },
                     ensure_ascii=False,
@@ -391,7 +391,7 @@ def make_react_tools(
                 md_rows.append("| " + " | ".join(str(v) for v in row) + " |")
             table = "\n".join([header, separator] + md_rows)
             if len(rows) > 50:
-                table += f"\n\n（仅显示前 50 行，共 {len(rows)} 行）"
+                table += f"\n\n(Showing first 50 rows of {len(rows)} rows)"
 
             return json.dumps(
                 {"chunks": [{"output_type": "markdown", "content": table}]},
@@ -403,7 +403,7 @@ def make_react_tools(
                     "chunks": [
                         {
                             "output_type": "text",
-                            "content": f"SQL 执行失败: {str(e)}",
+                            "content": f"SQL execution failed: {str(e)}",
                         }
                     ]
                 },
@@ -605,7 +605,7 @@ def make_react_tools(
         # has a clear reference when generating HTML later.
         all_images = react_state.get("generated_images", [])
         if all_images:
-            img_summary = "已生成的图片URL（在生成HTML时请使用这些URL）:\n" + "\n".join(
+            img_summary = "Generated image URLs (use these URLs when generating HTML):\n" + "\n".join(
                 f"  - {url}" for url in all_images
             )
             chunks.append({"output_type": "text", "content": img_summary})
@@ -816,7 +816,7 @@ def make_react_tools(
                     all_images = react_state.get("generated_images", [])
                     if all_images:
                         img_summary = (
-                            "已生成的图片URL（在生成HTML报告时请使用这些URL）:\n"
+                            "Generated image URLs (use these URLs when generating the HTML report):\n"
                             + "\n".join(f"  - {url}" for url in all_images)
                         )
                         chunks.append({"output_type": "text", "content": img_summary})
@@ -832,8 +832,8 @@ def make_react_tools(
         return json.dumps({"chunks": chunks}, ensure_ascii=False)
 
     @tool(
-        description="执行技能scripts目录下的脚本文件。参数: "
-        '{"skill_name": "技能名称", "script_file_name": "脚本文件名", "args": {参数}}'
+        description="Execute a script file under the skill scripts directory. Parameters: "
+        '{"skill_name": "skill name", "script_file_name": "script file name", "args": {args}}'
     )
     async def execute_skill_script_file(
         skill_name: str, script_file_name: str, args: Optional[dict] = None
@@ -943,7 +943,7 @@ def make_react_tools(
                 all_images = react_state.get("generated_images", [])
                 if all_images:
                     img_summary = (
-                        "已生成的图片URL（在生成HTML报告时请使用这些URL）:\n"
+                        "Generated image URLs (use these URLs when generating the HTML report):\n"
                         + "\n".join(f"  - {url}" for url in all_images)
                     )
                     chunks.append({"output_type": "text", "content": img_summary})
@@ -990,24 +990,24 @@ def make_react_tools(
             )
 
     @tool(
-        description="将 HTML 渲染为可交互的网页报告，这是向用户展示网页报告的唯一方式。"
-        "【一次性】一次调用即可把【完整】报告渲染出来；同一份报告【禁止】重复调用本工具，"
-        "渲染成功后若目标已达成请直接 terminate。"
-        "【默认用法】直接传入完整的 HTML 字符串："
-        '{"html": "<html>...</html>", "title": "报告标题"}。'
-        "你需要自己生成完整的 HTML 代码"
-        "（包含 <!DOCTYPE html>、<html>、<head>、<body> 等），"
-        "然后传给 html 参数即可。"
-        "HTML 可以很长，没有长度限制，不需要分段传入；"
-        "若报告含多部分内容，请合并进【同一份】HTML 一次性渲染，"
-        "不要分多次生成多份报告。"
-        "【禁止】不要用 code_interpreter 写 HTML 再 print，"
-        "不要用 code_interpreter 把 HTML 写入文件再读取，"
-        "直接把 HTML 传给本工具即可。"
-        "【技能模式 - 仅在使用技能时可选】如果正在使用技能（skill），可以用模板模式："
-        '{"template_path": "技能名/templates/模板.html", '
-        '"data": {"KEY": "值"}, "title": "标题"}。'
-        '也可以用文件模式：{"file_path": "/path/to/report.html"}'
+        description="Render HTML as an interactive web report. This is the only way to show a web report to the user. "
+        "[One-shot] Render the [complete] report in a single call; do NOT call this tool repeatedly for the "
+        "same report. If the goal is achieved after a successful render, call terminate directly. "
+        "[Default usage] Pass the complete HTML string directly: "
+        '{"html": "<html>...</html>", "title": "report title"}. '
+        "You need to generate the complete HTML code yourself "
+        "(including <!DOCTYPE html>, <html>, <head>, <body>, etc.), "
+        "then pass it via the html parameter. "
+        "HTML can be very long with no length limit; no need to split it into parts. "
+        "If the report has multiple sections, merge them into the [same] HTML and render once. "
+        "Do not generate multiple reports in separate calls. "
+        "[Prohibited] Do not use code_interpreter to write HTML and print it. "
+        "Do not use code_interpreter to write HTML to a file and read it back. "
+        "Pass the HTML directly to this tool. "
+        "[Skill mode - optional, only when using a skill] If you are using a skill, you may use template mode: "
+        '{"template_path": "skill-name/templates/template.html", '
+        '"data": {"KEY": "value"}, "title": "title"}. '
+        'You may also use file mode: {"file_path": "/path/to/report.html"}'
     )
     async def html_interpreter(
         html: str = "",
@@ -1315,7 +1315,7 @@ def make_react_tools(
                     )
                     section = (
                         '<div style="margin-top:32px">'
-                        "<h2>📊 分析图表</h2>"
+                        "<h2>📊 Analysis Charts</h2>"
                         f"{imgs_html}</div>"
                     )
                     # Insert before </body> if present, otherwise append
@@ -1341,9 +1341,9 @@ def make_react_tools(
             {
                 "output_type": "text",
                 "content": (
-                    "✅ HTML 报告已成功渲染并展示给用户。报告任务已完成，"
-                    "请勿重复调用 html_interpreter 生成报告。"
-                    "若全部目标已达成，请直接调用 terminate 结束。"
+                    "✅ HTML report has been successfully rendered and shown to the user. The report task is complete. "
+                    "Do not call html_interpreter again to generate the report. "
+                    "If all goals are achieved, call terminate directly to finish."
                 ),
             },
             {"output_type": "html", "content": fixed_html, "title": title},

@@ -584,7 +584,7 @@ const StepCard: React.FC<{
               {isWaiting ? t('waiting_for_user') || 'Waiting for User' : t('step_type_question') || 'Ask User'}
             </span>
             <span className='text-sm font-medium text-slate-800 dark:text-slate-200 truncate'>
-              {step.title === 'question' ? t('user_confirmation') || '需要您的确认' : step.title}
+              {step.title === 'question' ? t('user_confirmation') || 'Needs your confirmation' : step.title}
             </span>
           </div>
           <div className='flex-shrink-0'>
@@ -1247,7 +1247,7 @@ const ManusLeftPanel: React.FC<ManusLeftPanelProps> = ({
                 className='mt-3 inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-xs font-medium text-blue-600 transition-colors hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/40 dark:text-blue-400 dark:hover:bg-blue-500/10 dark:hover:text-blue-300'
               >
                 <BookOutlined aria-hidden />
-                查看 {citationIndexes.length} 条参考来源
+                View {citationIndexes.length} reference sources
               </button>
             )}
           </div>

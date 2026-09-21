@@ -287,7 +287,7 @@ def make_code_interpreter(react_state: Dict[str, Any]):
 
         all_images = react_state.get("generated_images", [])
         if all_images:
-            img_summary = "已生成的图片URL（在生成HTML时请使用这些URL）:\n" + "\n".join(
+            img_summary = "Generated image URLs (use these URLs when generating HTML):\n" + "\n".join(
                 f"  - {url}" for url in all_images
             )
             chunks.append({"output_type": "text", "content": img_summary})

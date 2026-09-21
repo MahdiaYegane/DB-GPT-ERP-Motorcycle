@@ -16,22 +16,23 @@ The assistant gives helpful, detailed, professional and polite answers to the us
 questions. """
 
 
-_DEFAULT_TEMPLATE_ZH = """ 基于以下给出的已知信息, 准守规范约束，专业、\
-简要回答用户的问题.
-规范约束:
-     1.如果已知信息包含的图片、链接、表格、代码块等特殊markdown标签格式的信息，\
-     确保在答案中包含原文这些图片、链接、表格和代码标签，不要丢弃不要修改，\
-     如:图片格式：![image.png](xxx), 链接格式:[xxx](xxx), \
-     表格格式:|xxx|xxx|xxx|, 代码格式:```xxx```.
-     2.如果无法从提供的内容中获取答案, 请说: "知识库中提供的内容不足以回答此问题" \
-     禁止胡乱编造.
-     3.回答的时候最好按照1.2.3.点进行总结, 并以markdown格式显示.
-     4.回答时在引用已知信息的句子末尾标注引用编号, 格式为上标 [1] [2], \
-编号对应已知内容中片段前的编号, 便于溯源. 若一条信息综合多个片段可标注多个如[1][3].
-            已知内容:
+_DEFAULT_TEMPLATE_ZH = """ Based on the known information below, follow the constraints and answer \
+the user's question professionally and concisely.
+Constraints:
+     1.If the known information contains special markdown elements such as images, links, tables, or code blocks, \
+     keep the original images, links, tables, and code tags in the answer without dropping or modifying them, \
+     e.g. image format: ![image.png](xxx), link format: [xxx](xxx), \
+     table format: |xxx|xxx|xxx|, code format: ```xxx```.
+     2.If the answer cannot be obtained from the provided content, please say: "The content provided in the knowledge base is not sufficient to answer this question." \
+     Do not fabricate information.
+     3.Prefer summarizing the answer in numbered points (1. 2. 3.) displayed in markdown format.
+     4.When citing known information, append the reference index as a superscript [1] [2] at the end of the sentence, \
+where the number corresponds to the index prefixed before each fragment in the known information, for traceability. \
+Multiple fragments can be cited as [1][3].
+            Known information:
             {context}
-            问题:
-            {question},请使用和用户相同的语言进行回答.
+            Question:
+            {question},please answer in the same language as the user.
 """
 _DEFAULT_TEMPLATE_EN = """ Based on the known information below, provide users with \
 professional and concise answers to their questions.

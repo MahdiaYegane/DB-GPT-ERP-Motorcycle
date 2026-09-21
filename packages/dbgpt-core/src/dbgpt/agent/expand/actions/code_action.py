@@ -82,9 +82,9 @@ class CodeAction(Action[None]):
                 observations=content,
             )
         except Exception as e:
-            logger.exception("Code Action Run Failed！")
+            logger.exception("Code Action Run Failed!")
             return ActionOutput(
-                is_exe_success=False, content="Code execution exception，" + str(e)
+                is_exe_success=False, content="Code execution exception," + str(e)
             )
 
     def execute_code_blocks(self, code_blocks):

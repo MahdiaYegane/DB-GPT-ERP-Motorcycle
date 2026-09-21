@@ -186,7 +186,7 @@ def make_shell_interpreter(react_state: Dict[str, Any]):
                     all_images = react_state.get("generated_images", [])
                     if all_images:
                         img_summary = (
-                            "已生成的图片URL（在生成HTML报告时请使用这些URL）:\n"
+                            "Generated image URLs (use these URLs when generating the HTML report):\n"
                             + "\n".join(f"  - {url}" for url in all_images)
                         )
                         chunks.append({"output_type": "text", "content": img_summary})

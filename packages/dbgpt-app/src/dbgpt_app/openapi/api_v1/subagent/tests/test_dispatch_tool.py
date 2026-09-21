@@ -195,7 +195,7 @@ async def test_dispatch_caps_to_max_parallel(monkeypatch):
     out = await tool(tasks=[{"goal": f"g{i}"} for i in range(5)])
     summary = json.loads(out)["chunks"][0]["content"]
     # Only 3 executed; the drop notice mentions the remaining 2.
-    assert "另有 2 个" in summary
+    assert "2 more subtask" in summary
     assert len([e for e in events if e["type"] == "agent.start"]) == 3
 
 
@@ -245,7 +245,7 @@ async def test_dispatch_rejects_empty_tasks(monkeypatch):
         parent_conv_id="p", llm_client=_make_fake_llm_client(), emit_event=emit
     )
     out = await tool(tasks=[])
-    assert "非空列表" in json.loads(out)["chunks"][0]["content"]
+    assert "non-empty list" in json.loads(out)["chunks"][0]["content"]
     assert events == []
 
 

@@ -220,7 +220,7 @@ class Excel2TableAction(Action[Excel2TableInput]):
             r'CREATE\s+TABLE\s+[`"]?(\w+)[`"]?\s*\((.*)\)', sql_clean, re.IGNORECASE
         )
         if not match:
-            raise ValueError("无效的CREATE TABLE语句")
+            raise ValueError("Invalid CREATE TABLE statement")
 
         # 提取字段定义部分
         fields_part = match.group(2).strip()
@@ -353,13 +353,13 @@ def read_excel_headers_and_data(
         - 表头列表: 从Excel第一行读取的列名
         - 数据列表: 每个元素是一个字典，键为表头，值为对应单元格数据（空单元格转为None）
     """
-    # 验证文件是否存在
+    # Verify file exists
     if not Path(file_path).exists():
-        raise FileNotFoundError(f"文件不存在: {file_path}")
+        raise FileNotFoundError(f"File not found: {file_path}")
 
-    # 验证文件格式
+    # Verify file format
     if Path(file_path).suffix.lower() != ".xlsx":
-        raise ValueError(f"不支持的文件格式: {Path(file_path).suffix}，仅支持.xlsx")
+        raise ValueError(f"Unsupported file format: {Path(file_path).suffix}, only .xlsx is supported")
 
     try:
         # 读取Excel文件，第一行作为表头
@@ -370,12 +370,12 @@ def read_excel_headers_and_data(
             keep_default_na=False,  # 空单元格转为空字符串
         )
     except Exception as e:
-        raise RuntimeError(f"读取Excel失败: {str(e)}")
+        raise RuntimeError(f"Failed to read Excel: {str(e)}")
 
     # 提取表头（第一行）
     headers = list(df.columns)
     if not headers:
-        raise ValueError("Excel文件没有表头信息（第一行为空）")
+        raise ValueError("Excel file has no header information (first row is empty)")
 
     # 处理数据：将空字符串转为None，保持原始数据类型
     data = []

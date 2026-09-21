@@ -145,7 +145,7 @@ def update_from_git(
     os.makedirs(download_path, exist_ok=True)
     if github_repo:
         if github_repo.index("github.com") <= 0:
-            raise ValueError("Not a correct Github repository address！" + github_repo)
+            raise ValueError("Not a correct Github repository address!" + github_repo)
         github_repo = github_repo.replace(".git", "")
         url = github_repo + "/archive/refs/heads/" + branch_name + ".zip"
         plugin_repo_name = github_repo.strip("/").split("/")[-1]
@@ -180,7 +180,7 @@ def update_from_git(
             return plugin_repo_name
         else:
             logger.error(
-                f"Update plugins failed，response code：{response.status_code}"
+                f"Update plugins failed, response code:{response.status_code}"
             )
             raise ValueError(f"Download plugin failed: {response.status_code}")
     except Exception as e:

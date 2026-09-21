@@ -95,8 +95,9 @@ class BaseTool(Resource[ToolResourceParameters], ABC):
             "Parameters: {parameters}"
         )
         prompt_template_zh = (
-            "{name}：调用此工具与 {name} API进行交互。{name} API 有什么用？"
-            "{description} 参数：{parameters}"
+            "{name}: Call this tool to interact with the {name} API. "
+            "What is the {name} API useful for? "
+            "{description} Parameters: {parameters}"
         )
         template = prompt_template if lang == "en" else prompt_template_zh
         if prompt_type == "openai":

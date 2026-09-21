@@ -15,25 +15,25 @@ logger = logging.getLogger(__name__)
 def make_html_interpreter(react_state: Dict[str, Any], skills_dir: str):
     @tool(
         description=(
-            "将 HTML 渲染为可交互的网页报告，这是向用户展示网页报告的唯一方式。"
-            "【一次性】一次调用即可把【完整】报告渲染出来；同一份报告【禁止】"
-            "重复调用本工具，渲染成功后若目标已达成请直接 terminate。"
-            "【默认用法】直接传入完整的 HTML 字符串："
-            '{"html": "<html>...</html>", "title": "报告标题"}。'
-            "你需要自己生成完整的 HTML 代码"
-            "（包含 <!DOCTYPE html>、<html>、<head>、<body> 等），"
-            "然后传给 html 参数即可。"
-            "HTML 可以很长，没有长度限制，不需要分段传入；"
-            "若报告含多部分内容，请合并进【同一份】HTML 一次性渲染，"
-            "不要分多次生成多份报告。"
-            "【禁止】不要用 code_interpreter 写 HTML 再 print，"
-            "不要用 code_interpreter 把 HTML 写入文件再读取，"
-            "直接把 HTML 传给本工具即可。"
-            "【技能模式 - 仅在使用技能时可选】"
-            "如果正在使用技能（skill），可以用模板模式："
-            '{"template_path": "技能名/templates/模板.html", '
-            '"data": {"KEY": "值"}, "title": "标题"}。'
-            '也可以用文件模式：{"file_path": "/path/to/report.html"}'
+            "Render HTML as an interactive web report. This is the only way to show a web report to the user. "
+            "[One-shot] Render the [complete] report in a single call; do NOT call this tool repeatedly for the "
+            "same report. If the goal is achieved after a successful render, call terminate directly. "
+            "[Default usage] Pass the complete HTML string directly: "
+            '{"html": "<html>...</html>", "title": "report title"}. '
+            "You need to generate the complete HTML code yourself "
+            "(including <!DOCTYPE html>, <html>, <head>, <body>, etc.), "
+            "then pass it via the html parameter. "
+            "HTML can be very long with no length limit; no need to split it into parts. "
+            "If the report has multiple sections, merge them into the [same] HTML and render once. "
+            "Do not generate multiple reports in separate calls. "
+            "[Prohibited] Do not use code_interpreter to write HTML and print it. "
+            "Do not use code_interpreter to write HTML to a file and read it back. "
+            "Pass the HTML directly to this tool. "
+            "[Skill mode - optional, only when using a skill] "
+            "If you are using a skill, you may use template mode: "
+            '{"template_path": "skill-name/templates/template.html", '
+            '"data": {"KEY": "value"}, "title": "title"}. '
+            'You may also use file mode: {"file_path": "/path/to/report.html"}'
         )
     )
     async def html_interpreter(
@@ -258,7 +258,7 @@ def make_html_interpreter(react_state: Dict[str, Any], skills_dir: str):
                         for url in missing
                     )
                     section = (
-                        '<div style="margin-top:32px"><h2>📊 分析图表</h2>'
+                        '<div style="margin-top:32px"><h2>📊 Analysis Charts</h2>'
                         f"{imgs_html}</div>"
                     )
                     if "</body>" in fixed_html.lower():
@@ -278,9 +278,9 @@ def make_html_interpreter(react_state: Dict[str, Any], skills_dir: str):
             {
                 "output_type": "text",
                 "content": (
-                    "✅ HTML 报告已成功渲染并展示给用户。报告任务已完成，"
-                    "请勿重复调用 html_interpreter 生成报告。"
-                    "若全部目标已达成，请直接调用 terminate 结束。"
+                    "✅ HTML report has been successfully rendered and shown to the user. The report task is complete. "
+                    "Do not call html_interpreter again to generate the report. "
+                    "If all goals are achieved, call terminate directly to finish."
                 ),
             },
             {"output_type": "html", "content": fixed_html, "title": title},

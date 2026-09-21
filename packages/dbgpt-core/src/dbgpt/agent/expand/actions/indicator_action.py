@@ -163,7 +163,7 @@ class IndicatorAction(Action[IndicatorInput]):
                 is_exe_success=response_success, content=response_text, view=view
             )
         except Exception as e:
-            logger.exception("Indicator Action Run Failed！")
+            logger.exception("Indicator Action Run Failed!")
             return ActionOutput(
                 is_exe_success=False, content=f"Indicator action run failed!{str(e)}"
             )

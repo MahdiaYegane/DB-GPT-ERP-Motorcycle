@@ -39,9 +39,9 @@ def test_dispatch_tool_description_matches_same_source_policy():
     )
     description = tool._tool.description
 
-    assert "至少 2 个" in description
-    assert "同一数据库或同一张表上的独立只读分析也可以并行" in description
-    assert "只有共享中间结果、计算状态或存在前后依赖时才应串行" in description
+    assert "at least 2 independently deliverable goals" in description
+    assert "Independent read-only analyses on the same database" in description
+    assert "only when they share intermediate results" in description
     assert "对同一份数据的多角度切片，请直接" not in description
 
 

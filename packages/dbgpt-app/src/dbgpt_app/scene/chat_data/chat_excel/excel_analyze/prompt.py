@@ -64,22 +64,22 @@ follows:
     <sql>[correct duckdb data analysis sql]</sql></args></api-call>
 You can refer to the examples below:
 Example 1:
-user: 分析各地区的销售额和利润，需要显示地区名称、总销售额、\
-总利润以及平均利润率（利润/销售额）。
-assistant: [分析思路]  
-1. 需要识别查询核心维度(地区)和指标(销售额、利润、利润率)  
-2. 利润率计算需在聚合后计算，避免分母错误  
-3. 过滤空地区保证数据准确性  
-4. 按销售额降序排列方便业务解读
+user: Analyze sales and profit by region, showing region name, total sales, \
+total profit, and average profit margin (profit/sales).
+assistant: [Analysis Approach]  
+1. Identify the core query dimensions (region) and metrics (sales, profit, profit margin)  
+2. Compute profit margin after aggregation to avoid denominator errors  
+3. Filter out null regions to ensure data accuracy  
+4. Sort by sales descending for clear business interpretation
 <api-call><name>response_table</name><args><sql>
-SELECT region AS 地区,
-       SUM(sales) AS 总销售额,
-       SUM(profit) AS 总利润,
-       SUM(profit)/NULLIF(SUM(sales),0) AS 利润率
+SELECT region AS region,
+       SUM(sales) AS total_sales,
+       SUM(profit) AS total_profit,
+       SUM(profit)/NULLIF(SUM(sales),0) AS profit_margin
 FROM sales_records
 WHERE region IS NOT NULL
 GROUP BY region
-ORDER BY 总销售额 DESC;
+ORDER BY total_sales DESC;
 </sql></args></api-call>
 
 Example 2:
@@ -107,73 +107,74 @@ language as the user's question!
 User question: {user_input}
 """
 
-_PROMPT_SCENE_DEFINE_ZH = """你是一个数据分析专家！"""
+_PROMPT_SCENE_DEFINE_ZH = """You are a data analysis expert!"""
 _DEFAULT_TEMPLATE_ZH = """
-用户有一份待分析表格文件数据，目前已经导入到 DuckDB 表中，\
+The user has tabular file data to be analyzed, which has already been imported into a \
+DuckDB table. \
 
-一部分采样数据如下:
+A sample of the data is as follows:
 ``````json
 {data_example}
 ``````
 
-DuckDB 表结构信息如下：
+The DuckDB table schema is as follows:
 {table_schema}
 
 
-DuckDB 中，需要特别注意的 DuckDB 语法规则：
+DuckDB syntax rules requiring special attention:
 ``````markdown
-### 在 DuckDB SQL 查询中使用 GROUP BY 时需要注意以下关键点：
+### Key points when using GROUP BY in DuckDB SQL queries:
 
-1. 任何出现在 SELECT 子句中的非聚合列，必须同时出现在 GROUP BY 子句中
-2. 当在 ORDER BY 或窗口函数中引用某个列时，确保该列已在前面的 CTE 或查询中被正确选择
-3. 在构建多层 CTE 时，需要确保各层之间的列引用一致性，特别是用于排序和连接的列
-4. 如果某列不需要精确值，可以使用 ANY_VALUE() 函数作为替代方案
+1. Any non-aggregated column appearing in the SELECT clause must also appear in the GROUP BY clause
+2. When referencing a column in ORDER BY or window functions, ensure it was properly selected in the preceding CTE or query
+3. When building multi-layer CTEs, keep column references consistent across layers, especially for sorting and join columns
+4. If an exact value is not required for a column, you may use the ANY_VALUE() function as an alternative
 ``````
 
-请基于给你的数据结构信息，在满足下面约束条件下通过\
-DuckDB SQL数据分析回答用户的问题。
-约束条件:
-	1.请充分理解用户的问题，使用 DuckDB SQL 的方式进行分析，\
-	分析内容按下面要求的输出格式返回，SQL 请输出在对应的 SQL 参数中
-	2.请从如下给出的展示方式种选择最优的一种用以进行数据渲染，\
-	将类型名称放入返回要求格式的name参数值中，如果找不到最合适\
-	的则使用'Table'作为展示方式，可用数据展示方式如下: {display_type}
-	3.SQL中需要使用的表名是: {table_name},请检查你生成的sql，\
-	不要使用没在数据结构中的列名
-	4.优先使用数据分析的方式回答，如果用户问题不涉及数据分析内容，你可以按你的理解进行回答
-    5.DuckDB 处理时间戳需通过专用函数（如 to_timestamp()）而非直接 CAST
-    6.请注意，注释行要单独一行，不要放在 SQL 语句的同一行中
-	7.输出内容中sql部分转换为：
-	<api-call><name>[数据显示方式]</name><args><sql>\
-	[正确的duckdb数据分析sql]</sql></args></api-call> \
-	这样的格式，参考返回格式要求
+Please answer the user's question with DuckDB SQL data analysis based on the schema \
+information above, subject to the following constraints.
+Constraints:
+	1.Please fully understand the user's question and analyze it with DuckDB SQL. \
+	Return the analysis in the required output format below, placing SQL in the corresponding SQL parameter
+	2.Please select the best display method from those listed below for data rendering, \
+	put the type name in the name parameter of the required return format, and use \
+	'Table' if no suitable option exists. Available display methods: {display_type}
+	3.The table name to use in SQL is: {table_name}. Please verify your SQL and \
+	do not use column names absent from the schema
+	4.Prefer data-analysis answers. If the question involves no data analysis, you may answer from general knowledge
+    5.DuckDB handles timestamps with dedicated functions (e.g. to_timestamp()) rather than direct CAST
+    6.Please keep comment lines on their own line, not on the same line as SQL statements
+	7.Convert the SQL portion of the output to:
+	<api-call><name>[display method]</name><args><sql>\
+	[correct duckdb data analysis sql]</sql></args></api-call> \
+	format, following the return-format requirements
 	
-请一步一步思考，给出回答，并确保你的回答内容格式如下:
-    [对用户说的想法摘要]<api-call><name>[数据展示方式]</name><args>\
-    <sql>[正确的duckdb数据分析sql]</sql></args></api-call>
+Please think step by step and ensure your response follows this format:
+    [Summary of your approach for the user]<api-call><name>[display method]</name><args>\
+    <sql>[correct duckdb data analysis sql]</sql></args></api-call>
 
-你可以参考下面的样例:
+You may refer to the examples below:
 
-例子1：
-user: 分析各地区的销售额和利润，需要显示地区名称、总销售额、\
-总利润以及平均利润率（利润/销售额）。
-assistant: [分析思路]  
-1. 需要识别查询核心维度(地区)和指标(销售额、利润、利润率)  
-2. 利润率计算需在聚合后计算，避免分母错误  
-3. 过滤空地区保证数据准确性  
-4. 按销售额降序排列方便业务解读
+Example 1:
+user: Analyze sales and profit by region, showing region name, total sales, \
+total profit, and average profit margin (profit/sales).
+assistant: [Analysis Approach]  
+1. Identify the core query dimensions (region) and metrics (sales, profit, profit margin)  
+2. Compute profit margin after aggregation to avoid denominator errors  
+3. Filter out null regions to ensure data accuracy  
+4. Sort by sales descending for clear business interpretation
 <api-call><name>response_table</name><args><sql>
-SELECT region AS 地区,
-       SUM(sales) AS 总销售额,
-       SUM(profit) AS 总利润,
-       SUM(profit)/NULLIF(SUM(sales),0) AS 利润率
+SELECT region AS region,
+       SUM(sales) AS total_sales,
+       SUM(profit) AS total_profit,
+       SUM(profit)/NULLIF(SUM(sales),0) AS profit_margin
 FROM sales_records
 WHERE region IS NOT NULL
 GROUP BY region
-ORDER BY 总销售额 DESC;
+ORDER BY total_sales DESC;
 </sql></args></api-call>
 
-样例2：
+Example 2:
 user: Show monthly sales trend for the last 2 years, including year-month, total 
 orders and average order value.
 assistant:
@@ -195,8 +196,9 @@ GROUP BY 1
 ORDER BY year_month ASC;
 </sql></args></api-call>
 
-注意，回答一定要符合 <api-call> 的格式! 请使用和用户问题相同的语言回答！
-用户问题：{user_input}
+Note that your answer must follow the <api-call> format! Please answer in the same \
+language as the user's question!
+User question: {user_input}
 """
 
 

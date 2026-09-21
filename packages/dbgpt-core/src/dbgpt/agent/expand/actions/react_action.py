@@ -137,30 +137,15 @@ class ReActAction(ToolAction):
                         "timed out")),
     )
 
-    _EMPTY_ARGS_FINAL_MESSAGE = {        "en": (
-            "I stopped because '{tool}' was called {count} times in a row "
-            "without any usable arguments (the tool kept reporting that no "
-            "input was provided). This usually means the model's output was "
-            "cut off before the tool arguments were finished — try asking "
-            "again with a shorter request. If it keeps happening, increase "
-            "`max_new_tokens` in the app config or switch to a model with "
-            "more reliable tool calling."
-        ),
-        "fa": (
-            "متوقف شدم چون ابزار «{tool}» تعداد {count} بار پشت سر هم بدون "
-            "هیچ ورودی قابل‌استفاده‌ای فراخوانی شد (ابزار هر بار گزارش داد "
-            "که ورودی‌ای دریافت نکرده است). این معمولاً یعنی خروجی مدل قبل "
-            "از کامل شدن آرگومان‌ها قطع شده است — لطفاً دوباره با یک درخواست "
-            "کوتاه‌تر تلاش کنید. اگر ادامه داشت، مقدار `max_new_tokens` را "
-            "در کانفیگ بیشتر کنید یا مدل دیگری انتخاب کنید."
-        ),
-        "zh": (
-            "已停止，因为工具“{tool}”连续 {count} 次被调用但都没有收到可用参数"
-            "（工具每次都报告未提供输入）。这通常意味着模型输出在工具参数写完"
-            "之前被截断了——请用更短的请求再试一次。如果问题持续，请调大应用"
-            "配置中的 `max_new_tokens` 或更换工具调用更可靠的模型。"
-        ),
-    }
+    _EMPTY_ARGS_FINAL_MESSAGE = (
+        "I stopped because '{tool}' was called {count} times in a row "
+        "without any usable arguments (the tool kept reporting that no "
+        "input was provided). This usually means the model's output was "
+        "cut off before the tool arguments were finished — try asking "
+        "again with a shorter request. If it keeps happening, increase "
+        "`max_new_tokens` in the app config or switch to a model with "
+        "more reliable tool calling."
+    )
 
     def __init__(self, **kwargs):
         """Tool action init."""
@@ -188,96 +173,49 @@ class ReActAction(ToolAction):
         return "unknown"
 
     _PROVIDER_ERROR_FINAL_MESSAGE = {
-        "email_verify": {
-            "en": (
-                "The AI provider refused the request: the TokenHarbor account "
-                "behind this model has not verified its email address (error "
-                "403 email_verification_required). No tool was run — open "
-                "https://tokenharbor.ai/dashboard, verify the email (or "
-                "request a new link), then try again."
-            ),
-            "fa": (
-                "سرویس هوش مصنوعی درخواست را رد کرد: ایمیل حساب TokenHarbor "
-                "هنوز تأیید نشده است (خطای 403). هیچ ابزاری اجرا نشد — وارد "
-                "https://tokenharbor.ai/dashboard شوید، ایمیل را تأیید کنید "
-                "(یا لینک جدید بخواهید) و دوباره تلاش کنید."
-            ),
-        },
-        "rate_limit": {
-            "en": (
-                "The AI provider rate-limited the request (e.g. daily token "
-                "quota exhausted). No tool was run. Wait for the quota window "
-                "to reset or switch to a different model, then try again."
-            ),
-            "fa": (
-                "سرویس هوش مصنوعی به‌خاطر سقف مصرف درخواست را رد کرد (مثلاً "
-                "سهمیه روزانه تمام شده). هیچ ابزاری اجرا نشد. تا بازنشدن "
-                "سهمیه صبر کنید یا مدل دیگری انتخاب کنید."
-            ),
-        },
-        "auth": {
-            "en": (
-                "The AI provider rejected the API key (authentication error). "
-                "No tool was run. Check the model's api_key in the server "
-                "config, then try again."
-            ),
-            "fa": (
-                "سرویس هوش مصنوعی کلید API را رد کرد (خطای احراز هویت). هیچ "
-                "ابزاری اجرا نشد. کلید مدل را در کانفیگ سرور بررسی کنید."
-            ),
-        },
-        "context_length": {
-            "en": (
-                "The request exceeded the model's context window. No tool was "
-                "run. Try a shorter request or a model with a larger context "
-                "window."
-            ),
-            "fa": (
-                "درخواست از پنجره کانتکست مدل بزرگ‌تر بود. هیچ ابزاری اجرا "
-                "نشد. درخواست کوتاه‌تری بفرستید یا مدلی با کانتکست بزرگ‌تر "
-                "انتخاب کنید."
-            ),
-        },
-        "not_found": {
-            "en": (
-                "The requested model was not found on the provider side "
-                "(wrong model id or removed model). No tool was run. Check "
-                "the model name in the server config."
-            ),
-            "fa": (
-                "مدل درخواستی در سمت سرویس‌دهنده پیدا نشد (نام مدل اشتباه "
-                "است یا حذف شده). هیچ ابزاری اجرا نشد. نام مدل را در کانفیگ "
-                "سرور بررسی کنید."
-            ),
-        },
-        "overloaded": {
-            "en": (
-                "The AI provider is temporarily overloaded or timed out. No "
-                "tool was run. Wait a moment and try again."
-            ),
-            "fa": (
-                "سرویس هوش مصنوعی موقتاً پرترافیک است یا timeout داد. هیچ "
-                "ابزاری اجرا نشد. کمی صبر کنید و دوباره تلاش کنید."
-            ),
-        },
-        "unknown": {
-            "en": (
-                "The AI provider returned an error and no tool was run. "
-                "Details: {detail}"
-            ),
-            "fa": (
-                "سرویس هوش مصنوعی خطا داد و هیچ ابزاری اجرا نشد. جزئیات: "
-                "{detail}"
-            ),
-        },
+        "email_verify": (
+            "The AI provider refused the request: the TokenHarbor account "
+            "behind this model has not verified its email address (error "
+            "403 email_verification_required). No tool was run — open "
+            "https://tokenharbor.ai/dashboard, verify the email (or "
+            "request a new link), then try again."
+        ),
+        "rate_limit": (
+            "The AI provider rate-limited the request (e.g. daily token "
+            "quota exhausted). No tool was run. Wait for the quota window "
+            "to reset or switch to a different model, then try again."
+        ),
+        "auth": (
+            "The AI provider rejected the API key (authentication error). "
+            "No tool was run. Check the model's api_key in the server "
+            "config, then try again."
+        ),
+        "context_length": (
+            "The request exceeded the model's context window. No tool was "
+            "run. Try a shorter request or a model with a larger context "
+            "window."
+        ),
+        "not_found": (
+            "The requested model was not found on the provider side "
+            "(wrong model id or removed model). No tool was run. Check "
+            "the model name in the server config."
+        ),
+        "overloaded": (
+            "The AI provider is temporarily overloaded or timed out. No "
+            "tool was run. Wait a moment and try again."
+        ),
+        "unknown": (
+            "The AI provider returned an error and no tool was run. "
+            "Details: {detail}"
+        ),
     }
 
     def _provider_error_final_message(self, kind: str, raw: str) -> str:
         """Build the user-facing message for a provider error."""
-        lang = (self.language or "en").lower()
-        key = "fa" if lang.startswith("fa") else "en"
-        entry = self._PROVIDER_ERROR_FINAL_MESSAGE.get(kind) or self._PROVIDER_ERROR_FINAL_MESSAGE["unknown"]
-        template = entry.get(key) or entry["en"]
+        entry = self._PROVIDER_ERROR_FINAL_MESSAGE.get(
+            kind
+        ) or self._PROVIDER_ERROR_FINAL_MESSAGE["unknown"]
+        template = entry
         detail = raw.strip()
         if len(detail) > 400:
             detail = detail[:400] + "…"
@@ -298,30 +236,20 @@ class ReActAction(ToolAction):
             terminate=True,
         )
 
-    _PARSE_FAILURE_FINAL_MESSAGE = {
-        "en": (
-            "I stopped because the model's replies could not be understood "
-            "{count} times in a row (no Thought/Action step found). The last "
-            "reply looked like an error or an empty response rather than a "
-            "tool call. Details: {detail}"
-        ),
-        "fa": (
-            "متوقف شدم چون پاسخ‌های مدل {count} بار پشت سر هم قابل‌فهم نبود "
-            "(هیچ مرحله Thought/Action پیدا نشد). به‌نظر می‌رسد آخرین پاسخ "
-            "به‌جای فراخوانی ابزار، یک خطا یا پاسخ خالی بوده است. جزئیات: "
-            "{detail}"
-        ),
-    }
+    _PARSE_FAILURE_FINAL_MESSAGE = (
+        "I stopped because the model's replies could not be understood "
+        "{count} times in a row (no Thought/Action step found). The last "
+        "reply looked like an error or an empty response rather than a "
+        "tool call. Details: {detail}"
+    )
 
     def _parse_failure_final_message(self, raw: str) -> str:
-        lang = (self.language or "en").lower()
-        key = "fa" if lang.startswith("fa") else "en"
         detail = (raw or "").strip()
         if len(detail) > 300:
             detail = detail[:300] + "…"
         if not detail:
             detail = "empty model reply"
-        return self._PARSE_FAILURE_FINAL_MESSAGE[key].format(
+        return self._PARSE_FAILURE_FINAL_MESSAGE.format(
             count=self.MAX_CONSECUTIVE_PARSE_FAILURES, detail=detail
         )
 
@@ -385,13 +313,7 @@ class ReActAction(ToolAction):
 
     def _empty_args_final_message(self, tool_name: Optional[str]) -> str:
         """Build the user-facing message used when the breaker trips."""
-        lang = (self.language or "en").lower()
-        if lang.startswith("fa"):
-            template = self._EMPTY_ARGS_FINAL_MESSAGE["fa"]
-        elif lang.startswith("zh"):
-            template = self._EMPTY_ARGS_FINAL_MESSAGE["zh"]
-        else:
-            template = self._EMPTY_ARGS_FINAL_MESSAGE["en"]
+        template = self._EMPTY_ARGS_FINAL_MESSAGE
         return template.format(
             tool=tool_name or "the tool", count=self.MAX_CONSECUTIVE_EMPTY_ARGS
         )

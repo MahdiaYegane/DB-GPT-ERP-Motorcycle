@@ -12,7 +12,7 @@ def make_load_skill(react_state: Dict[str, Any]):
     @tool(
         description="Load skill content by skill name and file path. "
         "Returns the SKILL.md content of the specified skill. "
-        '参数: {"skill_name": "技能名称", "file_path": "技能文件路径"}'
+        'Parameters: {"skill_name": "skill name", "file_path": "skill file path"}'
     )
     def load_skill(skill_name: str, file_path: str) -> str:
         """Load the skill content (SKILL.md) by skill name and file path."""
@@ -68,8 +68,8 @@ def make_execute_skill_script_file(react_state: Dict[str, Any]):
     """Return an ``execute_skill_script_file`` FunctionTool bound to react_state."""
 
     @tool(
-        description="执行技能scripts目录下的脚本文件。参数: "
-        '{"skill_name": "技能名称", "script_file_name": "脚本文件名", "args": {参数}}'
+        description="Execute a script file under the skill scripts directory. Parameters: "
+        '{"skill_name": "skill name", "script_file_name": "script file name", "args": {args}}'
     )
     async def execute_skill_script_file(
         skill_name: str, script_file_name: str, args: dict | None = None
@@ -163,7 +163,7 @@ def make_execute_skill_script_file(react_state: Dict[str, Any]):
                 all_images = react_state.get("generated_images", [])
                 if all_images:
                     img_summary = (
-                        "已生成的图片URL（在生成HTML报告时请使用这些URL）:\n"
+                        "Generated image URLs (use these URLs when generating the HTML report):\n"
                         + "\n".join(f"  - {url}" for url in all_images)
                     )
                     chunks.append({"output_type": "text", "content": img_summary})

@@ -69,7 +69,7 @@ class Excel2TableAgent:
             "1. Field name adaptive processing: If the Excel header is "
             "already in English (snake_case/camelCase), retain it directly "
             "without translation; if it is Chinese, convert it to standard "
-            "English snake_case (e.g., 产品ID→product_id); "
+            "English snake_case (e.g., product ID to product_id); "
             "2. Field order strict alignment: The field order in the CREATE "
             "TABLE SQL must be exactly the same as the header order in the "
             "Excel table (to support subsequent data insertion by field order); "
@@ -132,10 +132,10 @@ class Excel2TableAgent:
             headers, table_data = read_excel_headers_and_data(excel_file)
             mdstr = data2md(headers, table_data)
             all_file_data.append((filename_with_ext, mdstr))
-        message_parts = ["Excel文件中的部分数据如下："]
+        message_parts = ["Sample data from the Excel files:"]
         for i, (filename, mdstr) in enumerate(all_file_data, 1):
-            message_parts.append(f"\n文件 {i}: {filename}")
-            message_parts.append(f"数据内容：\n{mdstr}")
+            message_parts.append(f"\nFile {i}: {filename}")
+            message_parts.append(f"Data content:\n{mdstr}")
         prompt = "\n".join(message_parts)
         result = await super().thinking(
             messages, sender, prompt, stream_callback=stream_callback
@@ -249,7 +249,7 @@ class Excel2TableAgent:
             return True, None
 
         except Exception as e:
-            logger.exception(f"DataScientist check exception！{str(e)}")
+            logger.exception(f"DataScientist check exception!{str(e)}")
             return (
                 False,
                 f"Verification error, please re-read the historical information to "
@@ -278,9 +278,9 @@ def read_excel_headers_and_data(
     """
     # 1. 基础文件校验
     if not Path(file_path).exists():
-        raise FileNotFoundError(f"文件不存在: {file_path}")
+        raise FileNotFoundError(f"File not found: {file_path}")
     if Path(file_path).suffix.lower() != ".xlsx":
-        raise ValueError(f"不支持的文件格式: {Path(file_path).suffix}，仅支持.xlsx")
+        raise ValueError(f"Unsupported file format: {Path(file_path).suffix}, only .xlsx is supported")
 
     try:
         # 2. 读取Excel（先获取完整数据，后续按需截取）
@@ -291,12 +291,12 @@ def read_excel_headers_and_data(
             keep_default_na=False,  # 空单元格先转为空字符串，后续统一处理为None
         )
     except Exception as e:
-        raise RuntimeError(f"读取Excel失败: {str(e)}")
+        raise RuntimeError(f"Failed to read Excel: {str(e)}")
 
     # 3. 表头提取与校验
     headers = list(df.columns)
     if not headers:
-        raise ValueError("Excel文件没有表头信息（第一行为空）")
+        raise ValueError("Excel file has no header information (first row is empty)")
 
     # 4. 处理“读取行数”逻辑：截取指定行数的数据（不含表头）
     total_data_rows = len(df)  # 数据总行数（不含表头）
@@ -306,7 +306,7 @@ def read_excel_headers_and_data(
     elif isinstance(read_rows, int) and read_rows > 0:
         target_rows = min(read_rows, total_data_rows)
     else:
-        raise ValueError(f"参数read_rows无效：{read_rows}，仅支持正整数、None或0")
+        raise ValueError(f"Invalid read_rows parameter: {read_rows}, only positive integers, None or 0 are supported")
 
     # 截取目标行数的数据（避免读取无关行，提升效率）
     df_target = df.head(target_rows)

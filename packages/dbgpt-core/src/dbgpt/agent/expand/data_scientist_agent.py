@@ -148,7 +148,7 @@ class DataScientistAgent(ConversableAgent):
                 )
                 return True, None
         except Exception as e:
-            logger.exception(f"DataScientist check exception！{str(e)}")
+            logger.exception(f"DataScientist check exception!{str(e)}")
             return (
                 False,
                 f"SQL execution error, please re-read the historical information to "

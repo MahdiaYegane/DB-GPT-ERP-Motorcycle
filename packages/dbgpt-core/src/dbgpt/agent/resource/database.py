@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 _DEFAULT_PROMPT_TEMPLATE = (
     "Database type: {db_type}, related table structure definition: {schemas}"
 )
-_DEFAULT_PROMPT_TEMPLATE_ZH = "数据库类型：{db_type}，相关表结构定义：{schemas}"
+_DEFAULT_PROMPT_TEMPLATE_ZH = "Database type: {db_type}, related table structure definition: {schemas}"
 
 
 @dataclasses.dataclass

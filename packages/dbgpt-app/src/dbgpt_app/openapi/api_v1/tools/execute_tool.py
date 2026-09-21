@@ -42,7 +42,7 @@ def make_execute_tool(react_state: Dict[str, Any]):
                         "confirm_id": confirm_id,
                         "tool_name": tool_name,
                         "args_summary": interceptor._summarize_args(args),
-                        "message": f"即将执行写操作 {tool_name}，是否确认？",
+                        "message": f"About to execute write operation {tool_name}. Confirm?",
                         "timeout": 300,
                     }
                     try:
@@ -59,7 +59,7 @@ def make_execute_tool(react_state: Dict[str, Any]):
                                 "chunks": [
                                     {
                                         "output_type": "text",
-                                        "content": "用户拒绝了此操作，工具执行已取消。",
+                                        "content": "User rejected this operation. Tool execution cancelled.",
                                     }
                                 ]
                             },

@@ -43,7 +43,7 @@ test('restores structured sub-agent state from a history payload', () => {
       steps: [
         {
           action: 'sql_query',
-          label: '查询数据库',
+          label: 'Query Database',
           intention: 'Count users by country',
           sql: 'SELECT country, COUNT(*) FROM users GROUP BY country',
           chunks: [{ output_type: 'markdown', content: '| USA | 5 |' }],

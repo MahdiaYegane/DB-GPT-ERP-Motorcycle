@@ -359,9 +359,9 @@ class AgentResource(BaseModel):
         try:
             json_array = json.loads(d)
         except Exception:
-            raise ValueError(f"Illegal AgentResource json string！{d}")
+            raise ValueError(f"Illegal AgentResource json string!{d}")
         if not isinstance(json_array, list):
-            raise ValueError(f"Illegal AgentResource json string！{d}")
+            raise ValueError(f"Illegal AgentResource json string!{d}")
         json_list = []
         for item in json_array:
             r = AgentResource.from_dict(item)

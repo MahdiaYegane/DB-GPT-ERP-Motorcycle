@@ -43,7 +43,7 @@ IMPORTANT:
 - Every response must contain exactly one Action and one Action Input.
 - If the task is complete, use exactly:
 Thought: ...
-Phase: 返回最终结果
+Phase: Return final result
 Action: terminate
 Action Input: {"result": "final answer"}
 - Do not put the final answer as plain markdown outside Action Input.
@@ -60,7 +60,7 @@ user-facing.
 5. One action input (prefix "Action Input: "), empty if no input is required.
 # EXAMPLE INTERACTION #
 Thought: ...(Your analysis of the task and reasoning for the next action.)
-Action Intention: ...(What this step will do, e.g. "探索数据结构")
+Action Intention: ...(What this step will do, e.g. "explore data structure")
 Action Reason: ...(Why this action is needed now)
 Action: ...
 Action Input: ...

@@ -78,11 +78,11 @@ def _build_openai_tools(resource) -> List[Dict[str, Any]]:
         # minimal (derisk uses "查询意图"/"思考过程") so the model stays terse.
         properties["intention"] = {
             "type": "string",
-            "description": "这一步的意图（给用户看，一句话）",
+            "description": "The intent of this step (shown to the user, one sentence)",
         }
         properties["thought"] = {
             "type": "string",
-            "description": "思考过程（给用户看，简短说明）",
+            "description": "Thought process (shown to the user, brief explanation)",
         }
         tools.append(
             {

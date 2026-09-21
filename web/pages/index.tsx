@@ -135,17 +135,17 @@ const _formatFileSize = (bytes: number): string => {
 const _getFileTypeLabel = (fileName: string, mimeType?: string): string => {
   const ext = fileName.toLowerCase().split('.').pop() || '';
   if (['xlsx', 'xls'].includes(ext) || mimeType?.includes('spreadsheet') || mimeType?.includes('excel')) {
-    return '电子表格';
+    return 'Spreadsheet';
   }
   if (ext === 'csv' || mimeType?.includes('csv')) {
-    return '电子表格';
+    return 'Spreadsheet';
   }
   if (ext === 'pdf' || mimeType?.includes('pdf')) return 'PDF';
-  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext) || mimeType?.includes('image')) return '图片';
-  if (['doc', 'docx'].includes(ext) || mimeType?.includes('word')) return 'Word 文档';
-  if (['txt', 'md'].includes(ext) || mimeType?.includes('text')) return '文本文件';
+  if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext) || mimeType?.includes('image')) return 'Image';
+  if (['doc', 'docx'].includes(ext) || mimeType?.includes('word')) return 'Word Document';
+  if (['txt', 'md'].includes(ext) || mimeType?.includes('text')) return 'Text File';
   if (['json'].includes(ext)) return 'JSON';
-  return '文件';
+  return 'File';
 };
 
 const _getFileIcon = (fileName: string, mimeType?: string) => {
@@ -491,10 +491,10 @@ const EXAMPLE_CARDS = [
   {
     id: 'walmart_sales',
     icon: '📊',
-    title: '沃尔玛销售数据分析',
-    description: '分析沃尔玛销售CSV数据，生成可视化网页报告',
+    title: 'Walmart Sales Data Analysis',
+    description: 'Analyze Walmart sales CSV data, generate visual web report',
     query:
-      '请全面分析这份沃尔玛销售数据，包括各门店销售趋势、假日影响、温度与油价对销售的影响等维度，生成一份精美的交互式网页分析报告。',
+      'Please comprehensively analyze this Walmart sales data, including sales trends across stores, holiday impacts, and the effects of temperature and fuel prices on sales, and generate a beautifully interactive web analysis report.',
     fileName: 'Walmart_Sales.csv',
     fileType: 'text/csv',
     fileSize: 98304, // ~96 KB
@@ -506,10 +506,10 @@ const EXAMPLE_CARDS = [
   {
     id: 'db_profile_report',
     icon: '🗄️',
-    title: '数据库画像与分析报告',
-    description: '连接数据库后，生成数据库画像并生成可视化网页报告',
+    title: 'Database Profile & Analysis Report',
+    description: 'Connect to a database, generate database profile and visual web report',
     query:
-      '请分析当前连接的数据库，生成数据库画像（包括表结构、字段信息、数据量统计等），并生成一份精美的交互式网页分析报告。',
+      'Please analyze the currently connected database, generate a database profile (including table structure, field information, data volume statistics, etc.), and generate a beautifully interactive web analysis report.',
     dbName: 'Walmart_Sales',
     color: 'from-emerald-500/10 to-teal-500/10',
     borderColor: 'border-emerald-200/60 dark:border-emerald-800/40',
@@ -518,10 +518,10 @@ const EXAMPLE_CARDS = [
   {
     id: 'fin_report',
     icon: '📈',
-    title: '金融财报深度分析',
-    description: '分析浙江海翔药业年度报告，生成数据可视化报告',
+    title: 'Financial Report In-depth Analysis',
+    description: 'Analyze Zhejiang Haixiang Pharmaceutical annual report, generate data visualization report',
     query:
-      '请深度分析这份浙江海翔药业2019年年度报告，包括营收利润趋势、资产负债结构、现金流分析、关键财务指标等，生成一份专业的交互式网页分析报告。',
+      'Please deeply analyze this Zhejiang Haixiang Pharmaceutical 2019 annual report, including revenue and profit trends, asset and liability structure, cash flow analysis, and key financial indicators, and generate a professional interactive web analysis report.',
     fileName: '2020-01-23__浙江海翔药业股份有限公司__002099__海翔药业__2019年__年度报告.pdf',
     fileType: 'application/pdf',
     fileSize: 2621440, // ~2.5 MB
@@ -533,10 +533,10 @@ const EXAMPLE_CARDS = [
   {
     id: 'create_sql_skill',
     icon: '🛠️',
-    title: '创建SQL分析技能',
-    description: '使用skill-creator创建一个实用的SQL数据分析技能',
+    title: 'Create SQL Analysis Skill',
+    description: 'Use skill-creator to create a practical SQL data analysis skill',
     query:
-      '请使用 skill-creator 帮我创建一个实用的SQL数据分析技能，包含连接数据库、执行SQL查询和数据可视化等核心功能。',
+      'Please use skill-creator to help me create a practical SQL data analysis skill, including core functions like connecting to a database, executing SQL queries, and data visualization.',
     color: 'from-amber-500/10 to-orange-500/10',
     borderColor: 'border-amber-200/60 dark:border-amber-800/40',
     iconBg: 'bg-amber-100 dark:bg-amber-900/40',
@@ -787,7 +787,7 @@ const Playground: NextPage = () => {
       );
     }
     if (sessionFilePreview.error) {
-      return <Alert type='error' showIcon message='预览失败' description={sessionFilePreview.error} />;
+      return <Alert type='error' showIcon message='Preview failed' description={sessionFilePreview.error} />;
     }
     return <AttachmentPreview snapshot={sessionFilePreview.snapshot} size={sessionFilePreview.size} />;
   };
@@ -1447,7 +1447,7 @@ const Playground: NextPage = () => {
             const blob = await resp.blob();
             triggerBlobDownload(blob, artifact.name || imgName || 'file');
           } catch {
-            message.warning('文件暂不可下载');
+            message.warning('File is not available for download yet');
           }
         } else if (filePath) {
           // Download via backend file download endpoint (for agent-created files)
@@ -1456,16 +1456,16 @@ const Playground: NextPage = () => {
             const resp = await fetch(downloadUrl);
             if (!resp.ok) {
               const errData = await resp.json().catch(() => ({}));
-              message.warning(errData.detail || '文件暂不可下载');
+              message.warning(errData.detail || 'File is not available for download yet');
               break;
             }
             const blob = await resp.blob();
             triggerBlobDownload(blob, artifact.name || filePath.split('/').pop() || 'file');
           } catch {
-            message.warning('文件下载失败');
+            message.warning('File download failed');
           }
         } else {
-          message.warning('文件暂不可下载');
+          message.warning('File is not available for download yet');
         }
         break;
       }
@@ -1925,17 +1925,17 @@ const Playground: NextPage = () => {
     if (explicitLegacyFile) {
       const staged = sessionFiles.stageLegacyForSend(explicitLegacyFile, currentConvId);
       if (!staged.ok) {
-        message.error('加载示例失败: ' + staged.error);
+        message.error('Failed to load example: ' + staged.error);
         return;
       }
       sendSnapshot = staged.snapshot;
     } else if (hasSessionFileDrafts || hasLegacyFile) {
       if (sessionFiles.files.some(draft => draft.validation.status !== 'ok')) {
-        message.error('存在未通过校验的附件，请先移除后再发送');
+        message.error('Some attachments failed validation, please remove them before sending');
         return;
       }
       if (sessionFiles.hasHardFailures) {
-        message.error('有附件上传失败，请重试或移除后再发送');
+        message.error('Some attachments failed to upload, please retry or remove them before sending');
         return;
       }
       try {
@@ -1943,7 +1943,7 @@ const Playground: NextPage = () => {
         sendSnapshot = await sessionFiles.prepare(currentConvId);
       } catch (prepareErr: any) {
         if (taskEpochRef.current !== taskEpoch) return;
-        message.error(prepareErr?.message || '附件校验失败，请重试');
+        message.error(prepareErr?.message || 'Attachment validation failed, please retry');
         return;
       } finally {
         if (taskEpochRef.current === taskEpoch) setQueuedSendAfterUpload(false);
@@ -2582,7 +2582,7 @@ const Playground: NextPage = () => {
     let exampleController: AbortController | null = null;
 
     try {
-      message.loading({ content: '正在加载示例...', key: 'example-loading', duration: 0 });
+      message.loading({ content: 'Loading example...', key: 'example-loading', duration: 0 });
       let exampleLegacyFile: LegacyServerFile | null = null;
 
       // Example files already exist on the server: materialize the selected
@@ -2591,7 +2591,7 @@ const Playground: NextPage = () => {
       if (example.fileName) {
         if (hasSessionFileDrafts) {
           message.destroy('example-loading');
-          message.warning('示例文件与本地上传的附件不能混用，请先移除已选附件');
+          message.warning('Example files cannot be mixed with locally uploaded attachments, please remove selected attachments first');
           return;
         }
         exampleController = new AbortController();
@@ -2619,7 +2619,7 @@ const Playground: NextPage = () => {
         } else {
           message.destroy('example-loading');
           const errMsg = res?.err_msg || 'Unknown error';
-          message.error('加载示例失败: ' + errMsg);
+          message.error('Failed to load example: ' + errMsg);
           return;
         }
       }
@@ -2656,7 +2656,7 @@ const Playground: NextPage = () => {
       message.destroy('example-loading');
       console.error('Example click error:', err);
       const errMessage = err instanceof Error ? err.message : 'Unknown error';
-      message.error('加载示例失败: ' + errMessage);
+      message.error('Failed to load example: ' + errMessage);
     } finally {
       if (exampleAbortControllerRef.current === exampleController) {
         exampleAbortControllerRef.current = null;
@@ -2671,7 +2671,7 @@ const Playground: NextPage = () => {
   const handleClearChat = useCallback(() => {
     void startNewTask().catch(error => {
       console.error('Failed to clear the current task', error);
-      message.error('新建任务失败');
+      message.error('Failed to create new task');
     });
   }, [startNewTask]);
 
@@ -2901,7 +2901,7 @@ const Playground: NextPage = () => {
     } catch (e) {
       if (historyRequestRef.current !== requestVersion || taskEpochRef.current !== taskEpoch) return;
       console.error('Failed to load conversation', e);
-      message.error('加载历史对话失败');
+      message.error('Failed to load conversation history');
     } finally {
       if (historyAbortControllerRef.current === controller) {
         historyAbortControllerRef.current = null;
@@ -2916,7 +2916,7 @@ const Playground: NextPage = () => {
   // Share current conversation — create share link and copy to clipboard
   const handleShare = async () => {
     if (!conversationId) {
-      message.warning('请先开始一段对话再分享');
+      message.warning('Please start a conversation before sharing');
       return;
     }
     try {
@@ -2925,10 +2925,10 @@ const Playground: NextPage = () => {
       if (!shareUrl) throw new Error('No share URL returned');
       const fullUrl = `${window.location.origin}${shareUrl}`;
       await navigator.clipboard.writeText(fullUrl);
-      message.success('分享链接已复制到剪贴板！');
+      message.success('Share link copied to clipboard!');
     } catch (e) {
       console.error('Failed to create share link', e);
-      message.error('创建分享链接失败，请稍后重试');
+      message.error('Failed to create share link, please try again later');
     }
   };
 
@@ -2992,7 +2992,7 @@ const Playground: NextPage = () => {
       // legacy example file must never mix with local uploads (file_path vs
       // file_ids), so the pick is refused before a draft is created.
       if (hasLegacyFile) {
-        message.warning('示例文件与本地上传的附件不能混用，请先清除示例文件');
+        message.warning('Example files cannot be mixed with locally uploaded attachments, please clear the example file first');
         return false;
       }
       void sessionFiles.addFiles([file as File], ensureSessionFilesConvId());
@@ -3042,7 +3042,7 @@ const Playground: NextPage = () => {
           {/* When from_task mode and loading history, show loading spinner instead of Hero */}
           {router.query.from_task && historyLoading && messages.length === 0 ? (
             <div className='flex-1 flex items-center justify-center'>
-              <Spin size='large' tip='加载对话历史...' />
+              <Spin size='large' tip='Loading conversation history...' />
             </div>
           ) : messages.length > 0 ? (
             <div className={`flex-1 min-h-0 flex overflow-hidden ${rightPanelCollapsed ? 'justify-center' : ''}`}>
@@ -3776,7 +3776,7 @@ const Playground: NextPage = () => {
                                       : undefined
                                   }
                                 >
-                                  {queuedSendAfterUpload && <span className='text-[13px] font-medium'>上传后发送</span>}
+                                  {queuedSendAfterUpload && <span className='text-[13px] font-medium'>Send after upload</span>}
                                   {(query.trim() || hasSessionFileDrafts || hasLegacyFile) && (
                                     <span
                                       className='absolute inset-0 opacity-0 group-hover/send:opacity-100 transition-opacity duration-300 pointer-events-none'
@@ -4725,7 +4725,7 @@ const Playground: NextPage = () => {
                                 : undefined
                             }
                           >
-                            {queuedSendAfterUpload && <span className='text-[13px] font-medium'>上传后发送</span>}
+                            {queuedSendAfterUpload && <span className='text-[13px] font-medium'>Send after upload</span>}
                             {(query.trim() || hasSessionFileDrafts || hasLegacyFile) && (
                               <span
                                 className='absolute inset-0 opacity-0 group-hover/send:opacity-100 transition-opacity duration-300 pointer-events-none'

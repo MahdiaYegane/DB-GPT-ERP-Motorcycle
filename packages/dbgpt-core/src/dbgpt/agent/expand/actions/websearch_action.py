@@ -77,8 +77,8 @@ def get_page_content(url, worker=None):
     支持中断功能：使用流式下载数据，并在每个块读取时检测 worker 的中断标志。
     """
     if worker and not worker.is_running:
-        logging.info(f"中断获取页面内容：{url}")
-        return "任务已中断，无法获取内容"
+        logging.info(f"Interrupted page content fetch: {url}")
+        return "Task interrupted, content unavailable"
 
     headers = {
         "User-Agent": (
@@ -89,23 +89,23 @@ def get_page_content(url, worker=None):
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     }
     try:
-        logging.info(f"请求页面内容: {url}")
+        logging.info(f"Requesting page content: {url}")
         # 使用 stream=True 以便分块读取数据
         response = requests.get(url, headers=headers, stream=True, timeout=10)
         response.raise_for_status()
 
         content_type = response.headers.get("Content-Type", "")
         if "text/html" not in content_type:
-            logging.warning(f"非HTML内容，跳过: {url}，Content-Type: {content_type}")
-            return "非HTML内容，无法提取"
+            logging.warning(f"Non-HTML content, skipped: {url}, Content-Type: {content_type}")
+            return "Non-HTML content, cannot extract"
 
         chunks = []
         # 以 1KB 为单位读取响应数据，并在每个块时检查中断标志
         for chunk in response.iter_content(chunk_size=1024):
             if worker and not worker.is_running:
-                logging.info(f"中断获取页面内容：{url}")
+                logging.info(f"Interrupted page content fetch: {url}")
                 response.close()
-                return "任务已中断，无法获取内容"
+                return "Task interrupted, content unavailable"
             chunks.append(chunk)
         content_bytes = b"".join(chunks)
 
@@ -113,11 +113,11 @@ def get_page_content(url, worker=None):
         encoding = detected.encoding if detected and detected.encoding else "utf-8"
         text = content_bytes.decode(encoding, errors="replace")
     except requests.RequestException as e:
-        logging.error(f"获取页面内容失败 ({url}): {e}")
-        return "无法获取内容"
+        logging.error(f"Failed to fetch page content ({url}): {e}")
+        return "Content unavailable"
     except Exception as e:
-        logging.error(f"解码页面内容失败 ({url}): {e}")
-        return "无法提取内容"
+        logging.error(f"Failed to decode page content ({url}): {e}")
+        return "Content extraction failed"
 
     soup = BeautifulSoup(text, "html.parser")
 
@@ -139,7 +139,7 @@ def get_page_content(url, worker=None):
 
     extracted_text = clean_text(extracted_text)
     if len(extracted_text) < 200:
-        logging.debug(f"提取内容过短 ({len(extracted_text)} 字符), 使用备用方法。")
+        logging.debug(f"Extracted content too short ({len(extracted_text)} chars), using fallback method.")
         extracted_text = "\n\n".join(
             [
                 p.get_text(separator="\n", strip=True)
@@ -148,13 +148,13 @@ def get_page_content(url, worker=None):
         )
         extracted_text = clean_text(extracted_text)
 
-    return extracted_text if extracted_text else "无法提取内容"
+    return extracted_text if extracted_text else "Content extraction failed"
 
 
 def get_bing_search_results(query, num_results=5, worker=None):
     query_encoded = urllib.parse.quote_plus(query)
     url = f"https://www.bing.com/search?q={query_encoded}"
-    logging.info(f"发送请求到Bing URL: {url}")
+    logging.info(f"Sending request to Bing URL: {url}")
     try:
         headers = {
             "User-Agent": random.choice(USER_AGENTS),
@@ -174,18 +174,18 @@ def get_bing_search_results(query, num_results=5, worker=None):
         content_type = response.headers.get("Content-Type", "")
         if "text/html" not in content_type:
             logging.error(
-                f"搜索结果页面非HTML内容: {url}，Content-Type: {content_type}"
+                f"Search result page is non-HTML content: {url}, Content-Type: {content_type}"
             )
-            raise Exception("搜索结果页面非HTML内容")
+            raise Exception("Search result page is non-HTML content")
 
         detected = charset_normalizer.from_bytes(response.content).best()
         encoding = detected.encoding if detected and detected.encoding else "utf-8"
 
         text = response.content.decode(encoding, errors="replace")
-        logging.info(f"检测到编码: {encoding}，Bing搜索结果页面URL: {url}")
+        logging.info(f"Detected encoding: {encoding}, Bing search result page URL: {url}")
     except Exception as e:
-        logging.error(f"请求或解码Bing搜索结果失败：{e}")
-        raise Exception(f"请求或解码Bing搜索结果失败：{e}")
+        logging.error(f"Failed to request or decode Bing search results: {e}")
+        raise Exception(f"Failed to request or decode Bing search results: {e}")
 
     soup = BeautifulSoup(text, "html.parser")
     processed_count = 0
@@ -214,7 +214,7 @@ def get_bing_search_results(query, num_results=5, worker=None):
         if link.startswith("https://www.zhihu.com"):
             continue  # 过滤知乎链接
 
-        logging.info(f"候选结果: {title} - {link}")
+        logging.info(f"Candidate result: {title} - {link}")
         # 只保存必要的基础信息，不包含内容字段
         links.append({"title": title, "link": link, "snippet": snippet})
 
@@ -222,7 +222,7 @@ def get_bing_search_results(query, num_results=5, worker=None):
         if len(links) >= num_results:
             break
 
-    logging.info(f"处理候选数: {processed_count}, 收集链接数: {len(links)}")
+    logging.info(f"Processed candidates: {processed_count}, collected links: {len(links)}")
 
     # 后续需要时，再从链接获取内容
     results = []
@@ -230,7 +230,7 @@ def get_bing_search_results(query, num_results=5, worker=None):
         future_to_link = {}
         for link_info in links:
             if worker and not worker.is_running:
-                logging.info("抓取内容任务被中断。")
+                logging.info("Content fetch task was interrupted.")
                 break
             # 提交任务获取内容
             future = executor.submit(get_page_content, link_info["link"], worker)
@@ -238,7 +238,7 @@ def get_bing_search_results(query, num_results=5, worker=None):
 
         for future in as_completed(future_to_link):
             if worker and not worker.is_running:
-                logging.info("抓取内容任务被中断，取消剩余任务。")
+                logging.info("Content fetch task was interrupted, cancelling remaining tasks.")
                 for fut in future_to_link:
                     if not fut.done():
                         fut.cancel()
@@ -255,8 +255,8 @@ def get_bing_search_results(query, num_results=5, worker=None):
                     }
                 )
             except Exception as e:
-                logging.error(f"抓取内容时出错 ({link_info['link']}): {e}")
-                results.append({**link_info, "content": "无法获取内容"})
+                logging.error(f"Error fetching content ({link_info['link']}): {e}")
+                results.append({**link_info, "content": "Content unavailable"})
 
     return results
 

@@ -1,12 +1,12 @@
-# SKILL 机制集成指南
+# SKILL Integration Guide
 
-本文档说明如何将 SKILL 机制集成到现有的 DB-GPT agent 中。
+This document explains how to integrate the SKILL system into an existing DB-GPT agent.
 
-## 集成步骤
+## Integration Steps
 
-### 1. 导入 SKILL 模块
+### 1. Import the SKILL Module
 
-在需要使用 SKILL 的文件中添加导入：
+Add the import to any file that uses SKILL:
 
 ```python
 from dbgpt.agent.skill import (
@@ -20,9 +20,9 @@ from dbgpt.agent.skill import (
 )
 ```
 
-### 2. 修改 Agent 类以支持 Skill
+### 2. Modify the Agent Class to Support Skills
 
-在你的 Agent 类中添加 Skill 支持：
+Add Skill support to your Agent class:
 
 ```python
 from dbgpt.agent.expand.tool_assistant_agent import ToolAssistantAgent
@@ -84,9 +84,9 @@ class SkillEnabledAgent(ToolAssistantAgent):
                     )
 ```
 
-### 3. 初始化 Skill Manager
+### 3. Initialize the Skill Manager
 
-在应用启动时初始化 Skill Manager：
+Initialize the Skill Manager at application startup:
 
 ```python
 from dbgpt.component import SystemApp
@@ -97,7 +97,7 @@ def initialize_app():
     return system_app
 ```
 
-### 4. 注册 Skill
+### 4. Register Skills
 
 ```python
 from dbgpt.agent.skill import get_skill_manager
@@ -119,7 +119,7 @@ def register_my_skills(system_app):
     )
 ```
 
-### 5. 使用 Skill 创建 Agent
+### 5. Create an Agent with a Skill
 
 ```python
 from dbgpt.agent import AgentContext, LLMConfig, AgentMemory
@@ -142,11 +142,11 @@ async def create_agent_with_skill():
     return agent
 ```
 
-## 修改现有 Agent 示例
+## Example: Modifying an Existing Agent
 
-### 示例：修改 IntentRecognitionAgent
+### Example: Modifying IntentRecognitionAgent
 
-原始文件：`packages/dbgpt-serve/src/dbgpt_serve/agent/agents/expand/intent_recognition_agent.py`
+Original file: `packages/dbgpt-serve/src/dbgpt_serve/agent/agents/expand/intent_recognition_agent.py`
 
 ```python
 import logging
@@ -180,9 +180,9 @@ agent_manage = get_agent_manager()
 agent_manage.register_agent(IntentRecognitionAgent)
 ```
 
-## SKILL 文件格式
+## SKILL File Formats
 
-### JSON 格式
+### JSON Format
 
 ```json
 {
@@ -204,7 +204,7 @@ agent_manage.register_agent(IntentRecognitionAgent)
 }
 ```
 
-### Python 格式
+### Python Format
 
 ```python
 from dbgpt.agent.skill import Skill, SkillMetadata, SkillType
@@ -229,7 +229,7 @@ class IntentRecognitionSkill(Skill):
         )
 ```
 
-## 测试 SKILL 集成
+## Testing the SKILL Integration
 
 ```python
 import pytest
@@ -250,19 +250,19 @@ def test_skill_integration():
     assert agent.skill.metadata.name == "test_skill"
 ```
 
-## 最佳实践
+## Best Practices
 
-1. **分离关注点**：Skill 应该专注于特定领域的能力
-2. **版本管理**：为 Skill 使用语义化版本号
-3. **依赖声明**：清晰声明 Skill 所需的工具和知识
-4. **文档完善**：为 Skill 编写详细的文档和示例
-5. **测试覆盖**：为每个 Skill 编写单元测试
+1. **Separation of concerns**: a Skill should focus on capabilities in one specific domain
+2. **Versioning**: use semantic version numbers for Skills
+3. **Dependency declaration**: clearly declare the tools and knowledge a Skill requires
+4. **Documentation**: write thorough documentation and examples for each Skill
+5. **Test coverage**: write unit tests for each Skill
 
-## 常见问题
+## FAQ
 
-### Q: 如何动态切换 Skill？
+### Q: How do I switch Skills dynamically?
 
-A: 在 Agent 中添加 `switch_skill` 方法：
+A: Add a `switch_skill` method to the Agent:
 
 ```python
 def switch_skill(self, skill: Skill):
@@ -270,9 +270,9 @@ def switch_skill(self, skill: Skill):
     self._apply_skill_to_profile()
 ```
 
-### Q: Skill 可以包含多个工具吗？
+### Q: Can a Skill include multiple tools?
 
-A: 可以，使用 `with_required_tool` 多次添加：
+A: Yes, call `with_required_tool` multiple times:
 
 ```python
 skill = (
@@ -284,9 +284,9 @@ skill = (
 )
 ```
 
-### Q: 如何从文件加载 Skill？
+### Q: How do I load a Skill from a file?
 
-A: 使用 `SkillLoader`：
+A: Use `SkillLoader`:
 
 ```python
 from dbgpt.agent.skill import SkillLoader

@@ -16,12 +16,13 @@ assistant, who very familiar with database related knowledge.
     user's questions. """
 
 
-_DEFAULT_TEMPLATE_ZH = """ 基于以下已知的信息, 专业、简要的回答用户的问题,
-如果无法从提供的内容中获取答案, 请说: "知识库中提供的内容不足以回答此问题" \
-禁止胡乱编造。 
-            已知内容: 
+_DEFAULT_TEMPLATE_ZH = """ Based on the known information below, answer the user's question \
+professionally and concisely.
+If the answer cannot be obtained from the provided content, please say: "The content provided in the knowledge base \
+is not sufficient to answer this question." Do not fabricate information. 
+            Known information: 
             {context}
-            问题:
+            Question:
             {question}
 """
 _DEFAULT_TEMPLATE_EN = """ Based on the known information below, provide users with \

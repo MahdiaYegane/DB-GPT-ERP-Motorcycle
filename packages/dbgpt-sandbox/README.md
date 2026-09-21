@@ -1,18 +1,18 @@
 # DB-GPT Sandbox
 
-背景：AI Agent 逐步成为使用 AI 解决真实环境中各类问题的有力工具，然而真实环境的任务隔离性和安全性是企业落地中必然要考虑的问题。 DB-GPT Agent 目前不支持统一、可扩展的安全沙箱环境。 
+Background: AI agents are becoming a powerful tool for using AI to solve diverse problems in real-world environments. However, task isolation and security in real environments are essential considerations for enterprise adoption. DB-GPT Agent currently does not provide a unified, extensible, secure sandbox environment.
 
-#### 预期目标：
+#### Objectives
 
- 为 DB-GPT Agent 实现一个安全的沙箱执行环境（支持 Agent、工具的运行和多语言代码的执行）。 分三个部分：
+Implement a secure sandbox execution environment for DB-GPT Agent (supporting the execution of agents and tools, as well as multi-language code execution). This consists of three parts:
 
-1. 基于 DB-GPT Agent + Docker 容器实现安全的代码执行环境，支持 Python、Shell、Node.js 等代码的执行，改造 DB-GPT 现有的代码执行智能体。 
-2. 支持有状态的沙箱环境，多次代码执行可以在相同的环境中，并且上次环境的变更能影响下次的执行（例如第一次执行安装 pypi 依赖，第二次执行安装后的依赖能正常使用） 
-3. 插件化的安全沙箱环境实现，设计统一的沙箱环境接口，支持 Docker、Podman、本地进程（基Cgroup/Namespace/WebAssembly等）等沙箱环境的实现。
+1. Build a secure code execution environment based on DB-GPT Agent + Docker containers, supporting the execution of Python, Shell, Node.js, and other code, and refactor the existing DB-GPT code-execution agent accordingly.
+2. Support a stateful sandbox environment: repeated code executions can run in the same environment, and changes from a previous execution carry over to the next execution (for example, a PyPI dependency installed in the first execution remains available in the second execution).
+3. Implement a pluggable secure sandbox environment with a unified sandbox interface, supporting Docker, Podman, local processes (based on Cgroup/Namespace/WebAssembly, etc.), and other sandbox backends.
 
-#### 产出要求：
+#### Deliverables
 
-1. 项目设计文档（含架构图、原理图、实现细节等）
-2. 实现安全沙箱环境的核心模块（统一沙箱环境接口，Docker 实现和本地进程的实现）
-3. 提供完整的使用教程文档说明
-4. 基于沙箱环境，开发一个支持 Python 等代码执行的 Agent 案例
+1. Project design document (including architecture diagrams, conceptual diagrams, implementation details, etc.)
+2. Core modules of the secure sandbox environment (unified sandbox interface, Docker implementation, and local-process implementation)
+3. Complete usage tutorial documentation
+4. An agent example built on the sandbox environment that supports the execution of Python and other code

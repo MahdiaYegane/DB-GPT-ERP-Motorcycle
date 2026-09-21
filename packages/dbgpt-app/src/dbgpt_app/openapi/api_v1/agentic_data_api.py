@@ -259,8 +259,8 @@ async def _execute_skill_script_impl(
 
 
 @tool(
-    description='执行技能中的脚本。参数: {"skill_name": "技能名称", '
-    '"script_name": "脚本名称", "args": {参数}}'
+    description='Execute a script from a skill. Parameters: {"skill_name": "skill name", '
+    '"script_name": "script name", "args": {args}}'
 )
 async def execute_skill_script(skill_name: str, script_name: str, args: dict) -> str:
     """Execute a script from a skill."""
@@ -268,13 +268,13 @@ async def execute_skill_script(skill_name: str, script_name: str, args: dict) ->
 
 
 @tool(
-    description="获取技能资源文件内容。"
-    "根据路径读取技能中的参考文档、配置文件等非脚本资源。"
-    '参数: {"skill_name": "技能名称", "resource_path": "资源路径"}'
-    "\\n示例:"
-    '\\n- 读取参考文档: {"skill_name": "my-skill", '
+    description="Read a skill resource file. "
+    "Reads reference docs, configs, and other non-script resources from a skill. "
+    'Parameters: {"skill_name": "skill name", "resource_path": "resource path"}'
+    "\\nExample:"
+    '\\n- Read a reference doc: {"skill_name": "my-skill", '
     '"resource_path": "references/analysis_framework.md"}'
-    "\n注意: 执行脚本请使用 shell_interpreter 工具"
+    "\nNote: use the shell_interpreter tool to execute scripts"
 )
 async def get_skill_resource(
     skill_name: str, resource_path: str, args: Optional[dict] = None
@@ -295,8 +295,8 @@ async def get_skill_resource(
 
 
 @tool(
-    description="执行技能scripts目录下的脚本文件。参数: "
-    '{"skill_name": "技能名称", "script_file_name": "脚本文件名", "args": {参数}}'
+    description="Execute a script file under the skill scripts directory. Parameters: "
+    '{"skill_name": "skill name", "script_file_name": "script file name", "args": {args}}'
 )
 async def execute_skill_script_file(
     skill_name: str, script_file_name: str, args: Optional[dict] = None
@@ -1191,7 +1191,7 @@ async def _react_agent_stream_inner(
         if not final_emitted and not done_emitted:
             yield _sse_event(
                 AgentFinalAnswer(
-                    content="抱歉，回答生成过程中发生错误，请重试。"
+                    content="Sorry, an error occurred while generating the answer. Please try again."
                 ).to_sse_payload()
             )
         if not done_emitted:
@@ -1463,15 +1463,15 @@ async def _react_agent_stream_impl(
 
         action_lower = (action or "").lower()
         if action_lower == "sql_query":
-            return "正在查询数据库信息"
+            return "Querying the database"
         if action_lower == "code_interpreter":
-            return "正在生成分析代码"
+            return "Generating analysis code"
         if action_lower == "html_interpreter":
-            return "正在生成并渲染 HTML 报告"
+            return "Generating and rendering the HTML report"
         if action_lower == "todowrite":
-            return "正在更新任务计划"
+            return "Updating the task plan"
         if action_lower in {"execute_skill_script", "execute_skill_script_file"}:
-            return "正在执行分析脚本"
+            return "Executing the analysis script"
 
         return text
 
@@ -1551,13 +1551,13 @@ async def _react_agent_stream_impl(
             table_names = list(database_connector.get_table_names())
             table_info = database_connector.get_table_info_no_throw()
             database_context = f"""
-## 数据库信息
-- 数据库名: {database_name}
-- 可用表: {", ".join(table_names)}
-- 表结构:
+## Database Info
+- Database name: {database_name}
+- Available tables: {", ".join(table_names)}
+- Table schemas:
 {table_info}
-- 使用 'sql_query' 工具执行 SQL 查询
-- **只允许 SELECT 查询，禁止 INSERT/UPDATE/DELETE/DROP/ALTER/TRUNCATE**
+- Use the 'sql_query' tool to execute SQL queries
+- **Only SELECT queries are allowed. INSERT/UPDATE/DELETE/DROP/ALTER/TRUNCATE are prohibited.**
 """
             logger.info(
                 f"Loaded database connector: {database_name} "
@@ -1566,8 +1566,8 @@ async def _react_agent_stream_impl(
         except Exception as e:
             logger.warning(f"Failed to load database connector: {e}", exc_info=e)
             database_context = f"""
-## 数据库
-- 警告: 加载数据库 '{database_name}' 失败。错误: {str(e)}
+## Database
+- Warning: failed to load database '{database_name}'. Error: {str(e)}
 """
 
     react_state: Dict[str, Any] = {
@@ -1670,7 +1670,7 @@ async def _react_agent_stream_impl(
     @tool(
         description="Load skill content by skill name and file path. "
         "Returns the SKILL.md content of the specified skill. "
-        '参数: {"skill_name": "技能名称", "file_path": "技能文件路径"}'
+        'Parameters: {"skill_name": "skill name", "file_path": "skill file path"}'
     )
     def load_skill(skill_name: str, file_path: str) -> str:
         """Load the skill content (SKILL.md) by skill name and file path.
@@ -1917,7 +1917,7 @@ print(json.dumps(summary, ensure_ascii=False))
                         "confirm_id": _confirm_id,
                         "tool_name": tool_name,
                         "args_summary": _interceptor._summarize_args(args),
-                        "message": f"即将执行写操作 {tool_name}，是否确认？",
+                        "message": f"About to execute write operation {tool_name}. Confirm?",
                         "timeout": 300,
                     }
                     try:
@@ -1934,7 +1934,7 @@ print(json.dumps(summary, ensure_ascii=False))
                                 "chunks": [
                                     {
                                         "output_type": "text",
-                                        "content": "用户拒绝了此操作，工具执行已取消。",
+                                        "content": "User rejected this operation. Tool execution cancelled.",
                                     }
                                 ]
                             },
@@ -2395,17 +2395,17 @@ print(json.dumps(summary, ensure_ascii=False))
             else str(skill_template)
         )
         skill_prompt_context = f"""
-## 已加载技能指令（{pre_matched_skill.metadata.name}）
-以下是用户选择的技能的完整指令，请严格按照这些指令进行操作：
+## Loaded Skill Instructions ({pre_matched_skill.metadata.name})
+The following are the complete instructions of the user-selected skill. Please follow them strictly:
 
 {skill_text}
 """
         execution_instruction = f"""
-## 执行要求
-1. 用户已明确选择技能：{pre_matched_skill.metadata.name}
-2. 你必须严格按照上述技能指令的步骤执行
-3. 阅读技能指令，理解每一步需要调用的工具
-4. 按顺序执行工具调用，完成技能目标
+## Execution Requirements
+1. The user has explicitly selected the skill: {pre_matched_skill.metadata.name}
+2. You must strictly follow the steps in the skill instructions above
+3. Read the skill instructions and understand which tool each step requires
+4. Execute the tool calls in order to accomplish the skill goal
 """
 
     # Build a hint listing all images currently available in
@@ -3023,13 +3023,13 @@ Thought/Action/Action Input format shown above.
         skill_step_id, skill_step_event = build_step(
             f"Load Skill: {pre_matched_skill.metadata.name}",
             "Pre-loaded skill from user selection",
-            phase="加载技能",
+            phase="Loading skill",
         )
         current_history_step = {
             "id": skill_step_id,
             "title": f"Load Skill: {pre_matched_skill.metadata.name}",
             "detail": "Pre-loaded skill from user selection",
-            "phase": "加载技能",
+            "phase": "Loading skill",
             "thought": None,
             "action": None,
             "action_input": None,
@@ -3142,7 +3142,7 @@ Thought/Action/Action Input format shown above.
                     pending_thoughts[round_num].append(clean_chunk)
                     if round_num not in round_step_map:
                         pending_step_id, pending_step_event = build_step(
-                            "思考中",
+                            "Thinking",
                             "Thought/Action/Observation",
                         )
                         round_step_map[round_num] = pending_step_id
@@ -3573,7 +3573,7 @@ Thought/Action/Action Input format shown above.
             flags=re.MULTILINE,
         ).strip()
         if not final_content:
-            final_content = "任务执行已达到最大步数限制，请查看上方各步骤的执行结果。"
+            final_content = "Task execution reached the maximum step limit. Please review the step results above."
     else:
         final_content = reply.content or ""
 

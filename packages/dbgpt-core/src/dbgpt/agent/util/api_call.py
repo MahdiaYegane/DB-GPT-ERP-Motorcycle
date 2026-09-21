@@ -395,10 +395,10 @@ class ApiCall:
                                 value.status = Status.COMPLETE.value
                             else:
                                 value.status = Status.FAILED.value
-                                value.err_msg = "No executable sql！"
+                                value.err_msg = "No executable sql!"
 
                         except Exception as e:
-                            logger.error(f"data prepare exception！{str(e)}")
+                            logger.error(f"data prepare exception!{str(e)}")
                             value.status = Status.FAILED.value
                             value.err_msg = str(e)
                         value.end_time = datetime.now().timestamp() * 1000
@@ -481,7 +481,7 @@ class ApiCall:
 
         except Exception as e:
             logger.error("parse_view_response error!" + str(e))
-            return f"```error\nReport rendering exception！{str(e)}\n```"
+            return f"```error\nReport rendering exception!{str(e)}\n```"
 
         result = f"```vis-dashboard\n{view_json_str}\n```"
         if err_msg:

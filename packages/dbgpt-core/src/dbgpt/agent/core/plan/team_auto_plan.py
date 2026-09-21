@@ -184,7 +184,7 @@ class AutoPlanChatManager(ManagerAgent):
                     return ActionOutput(
                         is_exe_success=False,
                         content="Retrying 3 times based on current application "
-                        "resources still fails to build a valid plan！",
+                        "resources still fails to build a valid plan!",
                     )
                 planner: ConversableAgent = (
                     await PlannerAgent()

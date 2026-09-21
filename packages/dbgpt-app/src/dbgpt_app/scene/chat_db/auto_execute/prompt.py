@@ -14,7 +14,7 @@ CFG = Config()
 
 
 _PROMPT_SCENE_DEFINE_EN = "You are a database expert. "
-_PROMPT_SCENE_DEFINE_ZH = "你是一个数据库专家. "
+_PROMPT_SCENE_DEFINE_ZH = "You are a database expert. "
 
 _DEFAULT_TEMPLATE_EN = """
 Please answer the user's question based on the database selected by the user and some \
@@ -53,29 +53,30 @@ Ensure the response is correct json and can be parsed by Python json.loads.
 """
 
 _DEFAULT_TEMPLATE_ZH = """
-请根据用户选择的数据库和该库的部分可用表结构定义来回答用户问题.
-数据库名:
+Please answer the user's question based on the database selected by the user and some \
+of the available table definitions in that database.
+Database name:
     {db_name}
-表结构定义:
+Table definitions:
     {table_info}
 
-约束:
-    1. 请根据用户问题理解用户意图，使用给出表结构定义\
-    创建一个语法正确的{dialect} sql，如果不需要sql，则直接回答用户问题。
-    2. 除非用户在问题中指定了他希望获得的具体数据行数，否则始终将查询限制为最多\
-     {top_k} 个结果。
-    3. 只能使用表结构信息中提供的表来生成 sql，如果无法根据提供的表结构中生成 sql ，\
-    请说：“提供的表结构信息不足以生成 sql 查询。” 禁止随意捏造信息。
-    4. 请注意生成SQL时不要弄错表和列的关系
-    5. 请检查SQL的正确性，并保证正确的情况下优化查询性能
-    6.请从如下给出的展示方式种选择最优的一种用以进行数据渲染，\
-    将类型名称放入返回要求格式的name参数值中，如果找不到最合适的\
-    则使用'Table'作为展示方式，可用数据展示方式如下: {display_type}
-用户问题:
+Constraints:
+    1. Understand the user's intent from the question and use the given table definitions \
+    to create a grammatically correct {dialect} SQL statement. If no SQL is needed, answer the question directly.
+    2. Unless the user specifies the exact number of rows desired, \
+     always limit the query to at most {top_k} results.
+    3. Only use tables from the provided schema to generate SQL. If SQL cannot be generated \
+    from the provided schema, please say: "The provided schema information is not sufficient to generate a SQL query." Do not fabricate information.
+    4. Take care not to confuse table-column relationships when generating SQL
+    5. Verify SQL correctness and optimize query performance once correctness is ensured
+    6.Please select the best display method from those listed below for data rendering, \
+    put the type name in the name parameter of the required return format, and use \
+    'Table' if no suitable option exists. Available display methods: {display_type}
+User question:
     {user_input}
-请一步步思考并按照以下JSON格式回复：
+Please think step by step and reply in the following JSON format:
       {response}
-确保返回正确的json并且可以被Python json.loads方法解析.
+Ensure the response is valid JSON parseable by Python json.loads.
 
 """
 

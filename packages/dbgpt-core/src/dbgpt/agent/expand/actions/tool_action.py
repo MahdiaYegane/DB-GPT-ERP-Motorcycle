@@ -172,7 +172,7 @@ async def run_tool(
     try:
         tool_packs = ToolPack.from_resource(resource)
         if not tool_packs:
-            raise ValueError("The tool resource is not found！")
+            raise ValueError("The tool resource is not found!")
         tool_pack: ToolPack = tool_packs[0]
         response_success = True
         status = Status.RUNNING.value
@@ -250,7 +250,7 @@ async def run_tool(
             persisted_path=persisted_path,
         )
     except Exception as e:
-        logger.exception("Tool Action Run Failed！")
+        logger.exception("Tool Action Run Failed!")
         return ActionOutput(
             is_exe_success=False,
             content=f"Tool action run failed!{str(e)}",

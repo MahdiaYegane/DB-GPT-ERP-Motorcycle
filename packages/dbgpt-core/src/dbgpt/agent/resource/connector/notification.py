@@ -38,12 +38,12 @@ class TaskNotificationManager:
         status = "success" if result.success else "failed"
         if result.success:
             message = (
-                f"[定时任务] {task_name} 执行成功\n"
-                f"耗时: {result.execution_time_ms}ms\n"
-                f"结果: {result.result_summary}"
+                f"[Scheduled task] {task_name} executed successfully\n"
+                f"Duration: {result.execution_time_ms}ms\n"
+                f"Result: {result.result_summary}"
             )
         else:
-            message = f"[定时任务] {task_name} 执行失败\n错误: {result.error_message}"
+            message = f"[Scheduled task] {task_name} execution failed\nError: {result.error_message}"
         channel = "log"
         logger.info("Task notification [%s]: %s", task_id, message)
         _notification_history.append(
@@ -62,7 +62,7 @@ class TaskNotificationManager:
         task_name: str,
         rollback_result: str,
     ) -> None:
-        message = f"[定时任务回滚] {task_name}: {rollback_result}"
+        message = f"[Scheduled task rollback] {task_name}: {rollback_result}"
         logger.info("Rollback notification [%s]: %s", task_id, message)
         _notification_history.append(
             NotificationRecord(
