@@ -58,7 +58,6 @@ import { sendGetRequest, sendSpacePostRequest } from '@/utils/request';
 import {
   ApiOutlined,
   ArrowUpOutlined,
-  AudioOutlined,
   BarChartOutlined,
   BellOutlined,
   BookOutlined,
@@ -3724,17 +3723,6 @@ const Playground: NextPage = () => {
                                 />
                               )}
 
-                              {/* Voice Button */}
-                              <Tooltip title={t('voice_input')}>
-                                <Button
-                                  type='text'
-                                  shape='circle'
-                                  icon={<AudioOutlined className='text-gray-500 text-[18px]' />}
-                                  onClick={() => message.info(t('voice_input_coming_soon'))}
-                                  className='flex-shrink-0 h-9 w-9 transition-all duration-200 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800'
-                                />
-                              </Tooltip>
-
                               {/* Send Button with blue gradient + gloss animation.
                                   While a reply is streaming it becomes a stop button. */}
                               {loading && !queuedSendAfterUpload ? (
@@ -4687,19 +4675,7 @@ const Playground: NextPage = () => {
                         </div>
 
                         <div className='flex items-center gap-3'>
-                          {/* Voice Button */}
-                          <Tooltip title={t('voice_input')}>
-                            <Button
-                              type='text'
-                              shape='circle'
-                              size='large'
-                              icon={<AudioOutlined className='text-gray-500 text-xl' />}
-                              onClick={() => message.info(t('voice_input_coming_soon'))}
-                              className='flex-shrink-0 transition-all duration-200 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-800'
-                            />
-                          </Tooltip>
-
-                          {/* Send Button with blue gradient + gloss */}
+                           {/* Send Button with blue gradient + gloss */}
                           <Button
                             type='primary'
                             shape={queuedSendAfterUpload ? 'round' : 'circle'}

@@ -196,8 +196,6 @@ export const ChatZh: Resources['translation'] = {
   database_selected: '数据库：{{name}}',
   select_knowledge: '选择知识库',
   knowledge_selected: '知识库：{{name}}',
-  voice_input: '语音输入',
-  voice_input_coming_soon: '语音输入即将上线',
   expand_panel: '展开面板',
   stop_generating: '停止生成',
   generation_stopped: '已停止生成',

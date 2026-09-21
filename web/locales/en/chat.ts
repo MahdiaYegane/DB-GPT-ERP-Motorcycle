@@ -191,8 +191,6 @@ export const ChatEn = {
   database_selected: 'Database: {{name}}',
   select_knowledge: 'Select Knowledge Base',
   knowledge_selected: 'Knowledge Base: {{name}}',
-  voice_input: 'Voice Input',
-  voice_input_coming_soon: 'Voice input coming soon',
   expand_panel: 'Expand Panel',
   stop_generating: 'Stop generating',
   generation_stopped: 'Generation stopped',

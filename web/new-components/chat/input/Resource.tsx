@@ -128,7 +128,6 @@ const Resource: React.FC<{
     case 'excel_file':
     case 'text_file':
     case 'image_file':
-    case 'audio_file':
     case 'video_file': {
       // Dynamically set accept attribute based on resource type
       const getAcceptTypes = () => {
@@ -139,8 +138,6 @@ const Resource: React.FC<{
             return '.txt,.doc,.docx,.pdf,.md';
           case 'image_file':
             return '.jpg,.jpeg,.png,.gif,.bmp,.webp';
-          case 'audio_file':
-            return '.mp3,.wav,.ogg,.aac';
           case 'video_file':
             return '.mp4,.wav,.wav';
           default:
