@@ -100,6 +100,84 @@ class MSSQLConnector(RDBMSConnector):
             )
         return cls.from_uri(db_url, engine_args, **kwargs)
 
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        """Init the MSSQL connector without eager full reflection.
+
+        ``RDBMSConnector.__init__`` runs ``MetaData.reflect(bind=engine)``
+        eagerly, which the legacy ``SQL Server`` ODBC driver cannot serve
+        (``HY104`` on the reflection queries). Reflection targets all 1241
+        tables here and is never needed up front: the table set is synced
+        lazily on first use via :meth:`_sync_tables_from_db`, and per-table
+        columns/keys are read on demand (``get_fields``/``get_columns``/
+        ``get_indexes``). Skipping the base ``__init__`` entirely and
+        initializing only the session/metadata state keeps construction to a
+        single cheap connection.
+        """
+        import weakref
+
+        from sqlalchemy import MetaData, inspect
+        from sqlalchemy.orm import scoped_session, sessionmaker
+
+        engine = kwargs.get("engine", args[0] if args else None)
+        schema = kwargs.get("schema", args[1] if len(args) > 1 else None)
+        metadata = kwargs.get("metadata")
+        ignore_tables = kwargs.get("ignore_tables")
+        include_tables = kwargs.get("include_tables")
+        sample_rows_in_table_info = kwargs.get("sample_rows_in_table_info", 3)
+        indexes_in_table_info = kwargs.get("indexes_in_table_info", False)
+        custom_table_info = kwargs.get("custom_table_info") or {}
+        view_support = kwargs.get("view_support", False)
+
+        self._is_closed = False
+        self._engine = engine
+        self._schema = schema
+        if include_tables and ignore_tables:
+            raise ValueError("Cannot specify both include_tables and ignore_tables")
+
+        self._inspector = inspect(engine)
+        session_factory = sessionmaker(bind=engine)
+        session_manages = scoped_session(session_factory)
+        self._db_sessions = session_manages
+        self._sessions = weakref.WeakSet()
+
+        self.view_support = view_support
+        self._usable_tables = set()
+        self._include_tables = set(include_tables) if include_tables else set()
+        self._ignore_tables = set(ignore_tables) if ignore_tables else set()
+        self._custom_table_info = custom_table_info
+        self._sample_rows_in_table_info = sample_rows_in_table_info
+        self._indexes_in_table_info = indexes_in_table_info
+
+        self._metadata = metadata or MetaData()
+        # Lazy table set: synced on first get_table_names() call.
+        self._all_tables = set()
+        self._tables_synced = False
+
+    def _sync_tables_from_db(self) -> Iterable[str]:
+        """Read table information without SQLAlchemy reflection.
+
+        The default ``RDBMSConnector`` implementation uses SQLAlchemy
+        reflection (``inspector.get_table_names``), which the legacy
+        ``SQL Server`` ODBC driver (SQLSRV32) cannot serve — its parameter
+        binding fails with ``HY104 Invalid precision value`` on the
+        reflection queries. A plain ``INFORMATION_SCHEMA.TABLES`` query
+        works fine on the same driver, so override the sync to use it.
+
+        ``_schema`` semantics mirror the base: reflect tables for the
+        connected catalog (the engine URL database).
+        """
+        with self.session_scope() as session:
+            cursor = session.execute(
+                text(
+                    "SELECT TABLE_SCHEMA + '.' + TABLE_NAME "
+                    "FROM INFORMATION_SCHEMA.TABLES "
+                    "WHERE TABLE_TYPE = 'BASE TABLE'"
+                )
+            )
+            self._all_tables = {row[0] for row in cursor.fetchall()}
+            self._tables_synced = True
+            return self._all_tables
+
     def table_simple_info(self) -> Iterable[str]:
         """Get table simple info."""
         _tables_sql = """
@@ -187,36 +265,56 @@ class MSSQLConnector(RDBMSConnector):
             ]
 
     def get_users(self):
-        with self.session_scope() as session:
-            cursor = session.execute(
-                text(
-                    "SELECT name FROM sys.server_principals "
-                    "WHERE type_desc = 'SQL_LOGIN'"
+        # sys.server_principals via SQLAlchemy reflection parameters trips
+        # the same legacy-driver HY104 binding bug; raw result access is fine.
+        try:
+            with self.session_scope() as session:
+                cursor = session.execute(
+                    text(
+                        "SELECT name FROM sys.server_principals "
+                        "WHERE type_desc = 'SQL_LOGIN'"
+                    )
                 )
+                return [row[0] for row in cursor.fetchall()]
+        except Exception:
+            logger = __import__("logging").getLogger(__name__)
+            logger.warning(
+                "MSSQL get_users unavailable on this driver; returning []",
+                exc_info=True,
             )
-            return [row[0] for row in cursor.fetchall()]
+            return []
 
     def get_grants(self):
-        with self.session_scope() as session:
-            query = """
-            SELECT 
-                CASE WHEN perm.state <> 'W' THEN perm.state_desc ELSE 'GRANT WITH
-                 GRANT OPTION' END AS [Permission],
-                perm.permission_name AS [Permission Name],
-                CASE 
-                    WHEN perm.class = 0 THEN 'SERVER'
-                    WHEN perm.class = 1 THEN OBJECT_NAME(perm.major_id)
-                    WHEN perm.class = 3 THEN SCHEMA_NAME(perm.major_id) 
-                    ELSE CAST(perm.class AS VARCHAR)
-                END AS [Securable],
-                princ.name AS [Principal]
-            FROM 
-                sys.server_permissions perm
-                JOIN sys.server_principals princ ON perm.grantee_principal_id = 
-                princ.principal_id
-            """
-            cursor = session.execute(text(query))
-            return cursor.fetchall()
+        # Server-level permission catalog; guard the same way as get_users:
+        # a driver that cannot run it must not break db-summary indexing.
+        try:
+            with self.session_scope() as session:
+                query = """
+                SELECT
+                    CASE WHEN perm.state <> 'W' THEN perm.state_desc ELSE 'GRANT WITH
+                     GRANT OPTION' END AS [Permission],
+                    perm.permission_name AS [Permission Name],
+                    CASE
+                        WHEN perm.class = 0 THEN 'SERVER'
+                        WHEN perm.class = 1 THEN OBJECT_NAME(perm.major_id)
+                        WHEN perm.class = 3 THEN SCHEMA_NAME(perm.major_id)
+                        ELSE CAST(perm.class AS VARCHAR)
+                    END AS [Securable],
+                    princ.name AS [Principal]
+                FROM
+                    sys.server_permissions perm
+                    JOIN sys.server_principals princ ON perm.grantee_principal_id =
+                    princ.principal_id
+                """
+                cursor = session.execute(text(query))
+                return cursor.fetchall()
+        except Exception:
+            logger = __import__("logging").getLogger(__name__)
+            logger.warning(
+                "MSSQL get_grants unavailable on this driver; returning []",
+                exc_info=True,
+            )
+            return []
 
     def _decode_if_bytes(self, value):
         if isinstance(value, bytes):
@@ -249,6 +347,14 @@ class MSSQLConnector(RDBMSConnector):
             return collation
 
     def get_table_names(self):
+        # Prefer the already-synced in-memory table set (populated by the
+        # HY104-safe _sync_tables_from_db above) over re-running reflection.
+        if self._include_tables:
+            return self._include_tables
+        if not getattr(self, "_tables_synced", False):
+            self._sync_tables_from_db()
+        if getattr(self, "_all_tables", None):
+            return sorted(self._all_tables - self._ignore_tables)
         tables = []
 
         with self.session_scope() as session:
