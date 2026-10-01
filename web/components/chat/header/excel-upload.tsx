@@ -22,11 +22,11 @@ function ExcelUpload({ convUid, chatMode, onComplete, ...props }: PropsWithChild
 
   const onChange: UploadProps['onChange'] = async info => {
     if (!info) {
-      message.error('Please select the *.(csv|xlsx|xls) file');
+      message.error('لطفاً فایل ‎*.(csv|xlsx|xls)‎ را انتخاب کنید');
       return;
     }
     if (!/\.(csv|xlsx|xls)$/.test(info.file.name ?? '')) {
-      message.error('File type must be csv, xlsx or xls');
+      message.error('نوع فایل باید csv یا xlsx یا xls باشد');
       return;
     }
 
@@ -61,7 +61,7 @@ function ExcelUpload({ convUid, chatMode, onComplete, ...props }: PropsWithChild
       message.success('success');
       onComplete?.();
     } catch (e: any) {
-      message.error(e?.message || 'Upload Error');
+      message.error(e?.message || 'خطای بارگذاری');
     } finally {
       setLoading(false);
       messageApi.destroy();
@@ -72,7 +72,7 @@ function ExcelUpload({ convUid, chatMode, onComplete, ...props }: PropsWithChild
     <>
       <div className='flex items-start gap-2'>
         {contextHolder}
-        <Tooltip placement='bottom' title='File cannot be changed after upload'>
+        <Tooltip placement='bottom' title='فایل پس از بارگذاری قابل تغییر نیست'>
           <Upload
             disabled={loading}
             className='mr-1'
@@ -96,7 +96,7 @@ function ExcelUpload({ convUid, chatMode, onComplete, ...props }: PropsWithChild
               disabled={loading}
               icon={<SelectOutlined />}
             >
-              Select File
+              انتخاب فایل
             </Button>
           </Upload>
         </Tooltip>

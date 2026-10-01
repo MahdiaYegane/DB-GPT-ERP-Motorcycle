@@ -20,5 +20,5 @@ export const renderTimePicker = (params: Props) => {
     );
   };
 
-  return <TimePicker {...attr} onChange={onChangeTime} className='w-full' placeholder='please select a moment' />;
+  return <TimePicker {...attr} onChange={onChangeTime} className='w-full' placeholder='لطفاً زمان را انتخاب کنید' />;
 };

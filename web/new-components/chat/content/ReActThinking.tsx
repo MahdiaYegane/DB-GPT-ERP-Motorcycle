@@ -138,9 +138,9 @@ function getSectionTitle(type: ReActSection['type'], actionName?: string): strin
     case 'thought':
       return 'Thought';
     case 'action':
-      return actionName ? `Action: ${actionName}` : 'Action';
+      return actionName ? `Action: ${actionName}` : 'عملیات';
     case 'action_input':
-      return 'Action Input';
+      return 'ورودی عملیات';
     case 'observation':
       return 'Observation';
     case 'error':
@@ -329,15 +329,15 @@ const CopyButton: React.FC<{ text: string }> = ({ text }) => {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
-      message.success('Copied!');
+      message.success('کپی شد!');
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      message.error('Failed to copy');
+      message.error('کپی ناموفق بود');
     }
   };
 
   return (
-    <Tooltip title={copied ? 'Copied!' : 'Copy'}>
+    <Tooltip title={copied ? 'کپی شد!' : 'کپی'}>
       <button
         onClick={handleCopy}
         className='p-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/10 transition-colors'
@@ -502,7 +502,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ error, toolName, cla
               onClick={() => setShowDetails(!showDetails)}
               className='text-xs text-red-500 hover:text-red-600 dark:text-red-400 dark:hover:text-red-300 mt-1 underline'
             >
-              {showDetails ? 'Hide details' : 'Show details'}
+              {showDetails ? 'پنهان کردن جزئیات' : 'نمایش جزئیات'}
             </button>
           )}
         </div>
@@ -510,7 +510,7 @@ export const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ error, toolName, cla
         <div className='flex items-center gap-1 flex-shrink-0'>
           <CopyButton text={error} />
           {showRetry && onRetry && (
-            <Tooltip title='Retry'>
+            <Tooltip title='تلاش مجدد'>
               <button
                 onClick={onRetry}
                 className='p-1 rounded hover:bg-red-100 dark:hover:bg-red-800/50 transition-colors text-red-500'

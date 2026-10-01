@@ -44,7 +44,7 @@ const Resource: React.FC = () => {
     return [];
   }, [resourceList, setResource]);
 
-  // 上传文件
+  // بارگذاری فایل
   const { run: uploadFile, loading } = useRequest(
     async formData => {
       const [, res] = await apiInterceptors(
@@ -71,20 +71,20 @@ const Resource: React.FC = () => {
     },
   );
 
-  // 上传文件变化
+  // بارگذاری فایل变化
   const handleFileChange = async (info: any) => {
     const formData = new FormData();
     formData.append('doc_file', info?.file);
     await uploadFile(formData);
   };
 
-  // 上传文件展示内容
+  // بارگذاری فایل展示内容
   const uploadContent = useMemo(() => {
     if (loading) {
       return (
         <div className='flex items-center gap-1'>
           <Spin size='small' indicator={<LoadingOutlined spin />} />
-          <span className='text-xs'>上传中</span>
+          <span className='text-xs'>در حال بارگذاری</span>
         </div>
       );
     }
@@ -99,7 +99,7 @@ const Resource: React.FC = () => {
     return (
       <div className='flex items-center gap-1'>
         <FolderAddOutlined className='text-base' />
-        <span className='text-xs'>上传文件</span>
+        <span className='text-xs'>بارگذاری فایل</span>
       </div>
     );
   }, [loading, resource]);

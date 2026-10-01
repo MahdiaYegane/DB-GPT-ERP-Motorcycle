@@ -195,13 +195,13 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
   const exportMenuItems = [
     {
       key: 'pdf',
-      label: 'Export as PDF',
+      label: 'خروجی به‌صورت PDF',
       icon: <FilePdfOutlined />,
       onClick: () => handleExport('pdf'),
     },
     {
       key: 'png',
-      label: 'Export as Image',
+      label: 'خروجی به‌صورت تصویر',
       icon: <FileImageOutlined />,
       onClick: () => handleExport('png'),
     },
@@ -210,7 +210,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
     },
     {
       key: 'print',
-      label: 'Print Report',
+      label: 'چاپ گزارش',
       icon: <PrinterOutlined />,
       onClick: () => window.print(),
     },
@@ -254,10 +254,10 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
               loading={exporting}
               className='bg-gradient-to-r from-blue-600 to-indigo-600 border-none'
             >
-              {exporting ? `Exporting ${exportFormat?.toUpperCase()}...` : 'Export Report'}
+              {exporting ? `Exporting ${exportFormat?.toUpperCase()}...` : 'خروجی گزارش'}
             </Button>
           </Dropdown>
-          <Button icon={<ShareAltOutlined />}>Share</Button>
+          <Button icon={<ShareAltOutlined />}>اشتراک‌گذاری</Button>
         </Space>
       </div>
 
@@ -274,7 +274,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
               {generatedAt.toLocaleDateString()}
             </span>
             <span>•</span>
-            <span>Powered by DB-GPT Intelligence</span>
+            <span>قدرت‌گرفته از هوش مصنوعی DB-GPT</span>
           </div>
         </div>
 
@@ -283,7 +283,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
             <section className='executive-summary'>
               <h2 className='text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2'>
                 <FileTextOutlined className='text-blue-500' />
-                Executive Summary
+                خلاصه مدیریتی
               </h2>
               <div className='prose prose-sm dark:prose-invert max-w-none bg-gray-50 dark:bg-[#1a1b1e] rounded-xl p-6 border border-gray-100 dark:border-gray-700'>
                 <p className='text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap'>
@@ -297,7 +297,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
             <section className='key-metrics'>
               <h2 className='text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2'>
                 <BarChartOutlined className='text-green-500' />
-                Key Metrics
+                شاخص‌های کلیدی
               </h2>
               <Row gutter={[16, 16]}>
                 {keyMetrics.map((metric, index) => (
@@ -313,7 +313,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
             <section className='data-analysis-section'>
               <h2 className='text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2'>
                 <TableOutlined className='text-purple-500' />
-                Data Analysis Overview
+                نمای کلی تحلیل داده
               </h2>
               <Card size='small' className='mb-4'>
                 <DatasetAnalysisSummary analyses={dataAnalysis} />
@@ -333,27 +333,27 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
                   >
                     <div className='space-y-2 text-sm'>
                       <div className='flex justify-between'>
-                        <span className='text-gray-500'>Records:</span>
+                        <span className='text-gray-500'>رکوردها:</span>
                         <span className='font-medium'>{analysis.stats.count}</span>
                       </div>
                       <div className='flex justify-between'>
-                        <span className='text-gray-500'>Unique:</span>
+                        <span className='text-gray-500'>یکتا:</span>
                         <span className='font-medium'>{analysis.stats.uniqueCount}</span>
                       </div>
                       {analysis.type === 'number' && analysis.stats.mean !== undefined && (
                         <>
                           <div className='flex justify-between'>
-                            <span className='text-gray-500'>Mean:</span>
+                            <span className='text-gray-500'>میانگین:</span>
                             <span className='font-medium'>{analysis.stats.mean.toFixed(2)}</span>
                           </div>
                           <div className='flex justify-between'>
-                            <span className='text-gray-500'>Std Dev:</span>
+                            <span className='text-gray-500'>انحراف معیار:</span>
                             <span className='font-medium'>{analysis.stats.stdDev?.toFixed(2)}</span>
                           </div>
                         </>
                       )}
                       <div className='flex justify-between items-center'>
-                        <span className='text-gray-500'>Quality:</span>
+                        <span className='text-gray-500'>کیفیت:</span>
                         <Progress
                           percent={analysis.quality.score}
                           size='small'
@@ -378,7 +378,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
             <section className='visualizations'>
               <h2 className='text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2'>
                 <BarChartOutlined className='text-indigo-500' />
-                Visualizations
+                تصاویر تجسمی
               </h2>
               <div className='grid grid-cols-1 lg:grid-cols-2 gap-6'>
                 {charts.map(chart => (
@@ -408,7 +408,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
             <section className='data-tables'>
               <h2 className='text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2'>
                 <TableOutlined className='text-cyan-500' />
-                Data Tables
+                جدول‌های داده
               </h2>
               {tables.map(table => (
                 <Card key={table.id} size='small' title={table.title} className='mb-4'>
@@ -429,7 +429,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
             <section className='insights'>
               <h2 className='text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 flex items-center gap-2'>
                 <CheckCircleOutlined className='text-emerald-500' />
-                Key Insights
+                بینش‌های کلیدی
               </h2>
               <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
                 {insights.map((insight, index) => (
@@ -451,7 +451,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
 
         <div className='report-footer bg-gray-50 dark:bg-[#1a1b1e] border-t border-gray-200 dark:border-gray-800 p-6'>
           <div className='flex items-center justify-between text-xs text-gray-400'>
-            <span>Generated by DB-GPT Intelligent Data Analysis Platform</span>
+            <span>تولیدشده توسط پلتفرم تحلیل داده هوشمند DB-GPT</span>
             <span>© {new Date().getFullYear()} All rights reserved</span>
           </div>
         </div>

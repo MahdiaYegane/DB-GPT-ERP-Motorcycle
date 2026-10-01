@@ -422,7 +422,7 @@ export default function DocPanel(props: IProps) {
               icon={<PlusOutlined />}
               onClick={handleAddDocument}
             >
-              Create Now
+              ایجاد کن
             </Button>
           </Empty>
         )}
@@ -460,7 +460,7 @@ export default function DocPanel(props: IProps) {
           </Button>
         </Tooltip>
         <Button size='middle' className='flex items-center mx-2' icon={<ToolFilled />} onClick={handleArguments}>
-          Arguments
+          آرگومان‌ها
         </Button>
         {space.vector_type === 'KnowledgeGraph' && (
           <Button
@@ -530,7 +530,7 @@ export default function DocPanel(props: IProps) {
                   {fields.map(({ key, name }) => (
                     <div key={key} className={cls('flex flex-1 items-center gap-8 mb-6')}>
                       <Form.Item label='' name={[name, 'question']} className='grow'>
-                        <Input placeholder='请输入' />
+                        <Input placeholder='وارد کنید' />
                       </Form.Item>
                       <Form.Item>
                         <MinusCircleOutlined

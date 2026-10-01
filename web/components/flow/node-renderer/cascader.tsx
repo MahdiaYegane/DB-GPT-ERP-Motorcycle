@@ -5,5 +5,5 @@ import { Cascader } from 'antd';
 export const renderCascader = (data: IFlowNodeParameter) => {
   const attr = convertKeysToCamelCase(data.ui?.attr || {});
 
-  return <Cascader {...attr} options={data.options} placeholder='please select' className='w-full nodrag' />;
+  return <Cascader {...attr} options={data.options} placeholder='لطفاً انتخاب کنید' className='w-full nodrag' />;
 };

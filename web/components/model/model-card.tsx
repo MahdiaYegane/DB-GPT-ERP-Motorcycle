@@ -56,7 +56,7 @@ function ModelCard({ info }: Props) {
           children: (
             <div>
               <PauseCircleOutlined className='mr-2' />
-              <span className='text-sm'>Stop Model</span>
+              <span className='text-sm'>توقف مدل</span>
             </div>
           ),
           onClick: () => {
@@ -67,17 +67,17 @@ function ModelCard({ info }: Props) {
     >
       <div className='flex flex-col gap-1 px-4 pb-4 text-xs'>
         <div className='flex overflow-hidden'>
-          <p className='w-28 text-gray-500 mr-2'>Host:</p>
+          <p className='w-28 text-gray-500 mr-2'>میزبان:</p>
           <p className='flex-1 text-ellipsis'>{info.host}</p>
         </div>
         <div className='flex overflow-hidden'>
-          <p className='w-28 text-gray-500 mr-2'>Manage Host:</p>
+          <p className='w-28 text-gray-500 mr-2'>میزبان مدیریت:</p>
           <p className='flex-1 text-ellipsis'>
             {info.manager_host}:{info.manager_port}
           </p>
         </div>
         <div className='flex overflow-hidden'>
-          <p className='w-28 text-gray-500 mr-2'>Last Heart Beat:</p>
+          <p className='w-28 text-gray-500 mr-2'>آخرین علامت حیات:</p>
           <p className='flex-1 text-ellipsis'>{moment(info.last_heartbeat).format('YYYY-MM-DD HH:mm:ss')}</p>
         </div>
       </div>

@@ -100,14 +100,14 @@ const getToolIcon = (tool?: string): React.ReactNode => {
 };
 
 const STATUS_TEXT_MAP: Record<string, string> = {
-  read: 'Gathering context...',
-  search: 'Searching codebase...',
-  grep: 'Searching codebase...',
-  glob: 'Searching codebase...',
-  edit: 'Making edits...',
-  write: 'Making edits...',
-  bash: 'Running commands...',
-  task: 'Delegating task...',
+  read: 'در حال جمع‌آوری زمینه...',
+  search: 'در حال جستجوی پایگاه کد...',
+  grep: 'در حال جستجوی پایگاه کد...',
+  glob: 'در حال جستجوی پایگاه کد...',
+  edit: 'در حال ویرایش...',
+  write: 'در حال ویرایش...',
+  bash: 'در حال اجرای دستورات...',
+  task: 'در حال تفویض وظیفه...',
 };
 
 const computeStatusText = (step: ExecutionStep): string => {
@@ -219,7 +219,7 @@ const SessionTurn: React.FC<SessionTurnProps> = ({
       return computeStatusText(runningStep);
     }
 
-    return 'Considering next steps...';
+    return 'در حال بررسی گام‌های بعدی...';
   }, [isWorking, steps]);
 
   const hasSteps = steps.length > 0;
@@ -248,8 +248,8 @@ const SessionTurn: React.FC<SessionTurnProps> = ({
 
   const getStepsButtonText = () => {
     if (isWorking) return currentStatus;
-    if (stepsExpanded) return 'Hide steps';
-    return 'Show steps';
+    if (stepsExpanded) return 'پنهان کردن مراحل';
+    return 'نمایش مراحل';
   };
 
   return (

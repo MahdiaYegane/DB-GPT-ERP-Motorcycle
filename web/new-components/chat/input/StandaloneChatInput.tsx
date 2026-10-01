@@ -31,11 +31,11 @@ const defaultCommands: SlashCommand[] = [
   {
     id: 'clear',
     trigger: 'clear',
-    title: 'Clear chat',
-    description: 'Clear the conversation history',
+    title: 'پاک کردن گفتگو',
+    description: 'پاک کردن تاریخچه گفتگو',
     type: 'builtin',
   },
-  { id: 'help', trigger: 'help', title: 'Help', description: 'Show available commands', type: 'builtin' },
+  { id: 'help', trigger: 'help', title: 'راهنما', description: 'نمایش دستورات موجود', type: 'builtin' },
 ];
 
 const StandaloneChatInput = forwardRef<StandaloneChatInputRef, StandaloneChatInputProps>(
@@ -118,22 +118,21 @@ const StandaloneChatInput = forwardRef<StandaloneChatInputRef, StandaloneChatInp
                 'hover:border-[var(--oc-error-base)]',
               )}
             >
-              {t('stop_generating', 'Stop generating')}
+              {t('stop_generating', 'توقف تولید')}
             </Button>
           </div>
         )}
 
         <div className='flex items-center justify-center mt-2 text-xs text-[var(--oc-text-weaker)]'>
           <span>
-            Press{' '}
+            برای ارسال{' '}
             <kbd className='px-1.5 py-0.5 mx-0.5 rounded bg-[var(--oc-surface-base)] border border-[var(--oc-border-weak)] font-mono text-[10px]'>
               Enter
-            </kbd>{' '}
-            to send,{' '}
+            </kbd>
+            و برای جدید کردن خط{' '}
             <kbd className='px-1.5 py-0.5 mx-0.5 rounded bg-[var(--oc-surface-base)] border border-[var(--oc-border-weak)] font-mono text-[10px]'>
               Shift+Enter
-            </kbd>{' '}
-            for new line
+            </kbd>
           </span>
         </div>
       </div>

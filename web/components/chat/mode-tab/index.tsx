@@ -24,11 +24,11 @@ export default function ModeTab() {
     >
       <Radio.Button value={false}>
         <Icon component={StarsSvg} className='mr-1' />
-        Preview
+        پیش‌نمایش
       </Radio.Button>
       <Radio.Button value={true}>
         <AppstoreFilled className='mr-1' />
-        Editor
+        ویرایشگر
       </Radio.Button>
     </Radio.Group>
   );

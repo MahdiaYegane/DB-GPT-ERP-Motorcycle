@@ -16,7 +16,7 @@ const USE_ENHANCED_INPUT = false;
 
 const defaultCommands: SlashCommand[] = [
   { id: 'clear', trigger: 'clear', title: 'Clear chat history', type: 'builtin' },
-  { id: 'help', trigger: 'help', title: 'Show available commands', type: 'builtin' },
+  { id: 'help', trigger: 'help', title: 'نمایش دستورات موجود', type: 'builtin' },
   { id: 'model', trigger: 'model', title: 'Switch AI model', type: 'builtin' },
 ];
 

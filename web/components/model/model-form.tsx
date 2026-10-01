@@ -160,7 +160,7 @@ function ModelForm({ onCancel, onSuccess }: { onCancel: () => void; onSuccess: (
   return (
     <Form form={form} labelCol={{ span: 8 }} wrapperCol={{ span: 16 }} onFinish={onFinish}>
       <FormItem
-        label='Worker Type'
+        label='نوع کارگر'
         name='worker_type'
         rules={[{ required: true, message: t('worker_type_select_tips') }]}
       >
@@ -174,7 +174,7 @@ function ModelForm({ onCancel, onSuccess }: { onCancel: () => void; onSuccess: (
       </FormItem>
 
       {selectedWorkerType && (
-        <FormItem label='Provider' name='provider' rules={[{ required: true, message: t('provider_select_tips') }]}>
+        <FormItem label='ارائه‌دهنده' name='provider' rules={[{ required: true, message: t('provider_select_tips') }]}>
           <Select onChange={handleProviderChange} placeholder={t('model_select_provider')} value={selectedProvider}>
             {providers.map(provider => (
               <Option key={provider} value={provider}>

@@ -39,19 +39,19 @@ const MarkdownContext = dynamic(() => import('@/new-components/common/MarkdownCo
 const TypeOptions = [
   {
     value: 'Agent',
-    label: 'AGENT',
+    label: 'عامل',
   },
   {
     value: 'Scene',
-    label: 'SCENE',
+    label: 'سناریو',
   },
   {
     value: 'Normal',
-    label: 'NORMAL',
+    label: 'عادی',
   },
   {
     value: 'Evaluate',
-    label: 'EVALUATE',
+    label: 'ارزیابی',
   },
 ];
 
@@ -291,7 +291,7 @@ const AddOrEditPrompt: React.FC = () => {
         });
       } catch {
         setLlmLoading(false);
-        tempHistory[index].context = 'Sorry, we meet some error, please try again later';
+        tempHistory[index].context = 'متأسفانه خطایی رخ داد، لطفاً بعداً دوباره تلاش کنید';
         setHistory([...tempHistory]);
       }
     });
@@ -309,7 +309,7 @@ const AddOrEditPrompt: React.FC = () => {
       manual: true,
       onSuccess: res => {
         if (res?.data?.success) {
-          setErrorMessage({ msg: 'Verification passed', status: 'success' });
+          setErrorMessage({ msg: 'تأیید شد', status: 'success' });
         } else {
           setErrorMessage({ msg: res?.data?.err_msg, status: 'error' });
         }
@@ -422,7 +422,7 @@ const AddOrEditPrompt: React.FC = () => {
             <Form form={topForm}>
               <div className='flex w-full gap-1 justify-between'>
                 <Form.Item
-                  label='Type'
+                  label='نوع'
                   name='prompt_type'
                   className='w-2/5'
                   rules={[{ required: true, message: t('select_type') }]}
@@ -448,12 +448,12 @@ const AddOrEditPrompt: React.FC = () => {
                 </Form.Item>
               </div>
               {type === 'edit' && (
-                <Form.Item label='Code' name='prompt_code'>
+                <Form.Item label='کد' name='prompt_code'>
                   <Input disabled />
                 </Form.Item>
               )}
               <Form.Item
-                label='Name'
+                label='نام'
                 name='prompt_name'
                 className='m-0'
                 rules={[{ required: true, message: t('Please_input_prompt_name') }]}

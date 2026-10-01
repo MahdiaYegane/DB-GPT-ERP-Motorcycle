@@ -227,7 +227,7 @@ const OpenCodeChatCompletion: React.FC = () => {
       {renderStreamingTurn()}
 
       <Modal
-        title='JSON Editor'
+        title='ویرایشگر JSON'
         open={jsonModalOpen}
         width='60%'
         cancelButtonProps={{ hidden: true }}

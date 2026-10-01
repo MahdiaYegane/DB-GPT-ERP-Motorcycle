@@ -104,12 +104,12 @@ const ExtraAppInfo: React.FC = () => {
 
   const submit = async () => {
     if (!dataReady) {
-      message.warning('Please wait, data is loading');
+      message.warning('لطفاً صبر کنید، داده در حال بارگذاری است');
       return;
     }
 
     if (loading) {
-      message.warning('Please wait, data is loading');
+      message.warning('لطفاً صبر کنید، داده در حال بارگذاری است');
       return;
     }
 

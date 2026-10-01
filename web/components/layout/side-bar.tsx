@@ -4,14 +4,13 @@ import { apiInterceptors } from '@/client/api/tools/interceptors';
 import { DarkSvg, ModelSvg, SunnySvg } from '@/components/icons';
 import { useStartNewTask } from '@/modules/new-task';
 import type { IChatDialogueSchema } from '@/types/chat';
-import { STORAGE_LANG_KEY, STORAGE_THEME_KEY } from '@/utils/constants/index';
+import { STORAGE_THEME_KEY } from '@/utils/constants/index';
 import Icon, {
   ApartmentOutlined,
   ApiOutlined,
   ClockCircleOutlined,
   DashboardOutlined,
   DeleteOutlined,
-  GlobalOutlined,
   LineChartOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -22,11 +21,10 @@ import Icon, {
 } from '@ant-design/icons';
 import { Popover, Skeleton, Tooltip, message } from 'antd';
 import cls from 'classnames';
-import moment from 'moment';
-import 'moment/locale/zh-cn';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { DIALOGUES_CHANGED_EVENT } from '@/utils/dialogue-events';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -39,10 +37,8 @@ type RouteItem = {
   isActive?: boolean;
 };
 
-function smallMenuItemStyle(active?: boolean) {
-  return `flex items-center justify-center mx-auto rounded w-14 h-14 text-xl hover:bg-blue-50/50 dark:hover:bg-blue-900/10 transition-colors cursor-pointer ${
-    active ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 shadow-sm' : ''
-  }`;
+function smallMenuItemStyle(_active?: boolean) {
+  return 'flex items-center justify-center mx-auto rounded w-12 h-12 text-xl hover:bg-[#F3F4F6] dark:hover:bg-white/10 transition-colors cursor-pointer';
 }
 
 function SidebarPictureIcon({
@@ -58,7 +54,7 @@ function SidebarPictureIcon({
   alt: string;
   size?: number;
 }) {
-  return <Image src={active && activeSrc ? activeSrc : src} alt={alt} width={size} height={size} />;
+  return <Image src={active && activeSrc ? activeSrc : src} alt={alt} width={size} height={size} className='dark:invert' />;
 }
 
 function SideBar() {
@@ -74,22 +70,36 @@ function SideBar() {
     pathname.startsWith('/construct/scheduled-tasks') ||
     pathname === '/models_evaluation' ||
     pathname.startsWith('/observability');
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const startNewTask = useStartNewTask();
-  const [logo, setLogo] = useState<string>('/logo_zh_latest.png');
+  const [logo, setLogo] = useState<string>('/LOGO.png');
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [today, setToday] = useState<{ day: string; weekday: string; month: string; year: string } | null>(null);
+
+  useEffect(() => {
+    const now = new Date();
+    const parts = new Intl.DateTimeFormat('fa-IR-u-ca-persian-nu-latn', {
+      year: 'numeric',
+      month: 'long',
+      day: '2-digit',
+    }).formatToParts(now);
+    const get = (type: string) => parts.find(p => p.type === type)?.value ?? '';
+    const weekday = new Intl.DateTimeFormat('fa-IR', { weekday: 'long' }).format(now);
+    setToday({ day: get('day'), weekday, month: get('month'), year: get('year') });
+  }, []);
   const [dialogueList, setDialogueList] = useState<IChatDialogueSchema[]>([]);
   const [loadingDialogues, setLoadingDialogues] = useState(false);
 
   const handleStartNewTask = useCallback(() => {
     void startNewTask().catch(error => {
-      console.error('Failed to start a new task', error);
-      message.error(i18n.language === 'en' ? 'Failed to start a new task' : '新建任务失败');
+      console.error('شروع وظیفه جدید ناموفق بود', error);
+      message.error(t('Failed_to_start_a_new_task') || 'شروع وظیفه جدید ناموفق بود');
     });
-  }, [i18n.language, startNewTask]);
+  }, [startNewTask, t]);
 
-  const fetchDialogueList = useCallback(async () => {
-    setLoadingDialogues(true);
+  const fetchDialogueList = useCallback(async (silent = false) => {
+    // silent: background refresh without swapping the list for a loading skeleton
+    if (!silent) setLoadingDialogues(true);
     try {
       const [, data] = await apiInterceptors(getDialogueList());
       if (data && Array.isArray(data)) {
@@ -98,7 +108,7 @@ function SideBar() {
     } catch (e) {
       console.error('Failed to fetch dialogue list', e);
     } finally {
-      setLoadingDialogues(false);
+      if (!silent) setLoadingDialogues(false);
     }
   }, []);
 
@@ -109,7 +119,7 @@ function SideBar() {
       const [err] = await apiInterceptors(delDialogue(convUid));
       if (!err) {
         setDialogueList(prev => prev.filter(d => d.conv_uid !== convUid));
-        message.success('已删除');
+        message.success('Deleted');
       }
     } catch (error) {
       console.error('Failed to delete dialogue', error);
@@ -124,11 +134,11 @@ function SideBar() {
     const diffMins = Math.floor(diffMs / 60000);
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
-    if (diffMins < 1) return '刚刚';
-    if (diffMins < 60) return `${diffMins}分钟前`;
-    if (diffHours < 24) return `${diffHours}小时前`;
-    if (diffDays < 7) return `${diffDays}天前`;
-    return date.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
+    if (diffMins < 1) return 'همین حالا';
+    if (diffMins < 60) return `${diffMins} دقیقه پیش`;
+    if (diffHours < 24) return `${diffHours} ساعت پیش`;
+    if (diffDays < 7) return `${diffDays} روز پیش`;
+    return date.toLocaleDateString('fa-IR', { month: 'short', day: 'numeric' });
   }, []);
 
   const handleToggleMenu = useCallback(() => {
@@ -141,22 +151,13 @@ function SideBar() {
     localStorage.setItem(STORAGE_THEME_KEY, theme);
   }, [mode, setMode]);
 
-  const handleChangeLang = useCallback(() => {
-    const language = i18n.language === 'en' ? 'zh' : 'en';
-    i18n.changeLanguage(language);
-    if (language === 'zh') moment.locale('zh-cn');
-    if (language === 'en') moment.locale('en');
-    localStorage.setItem(STORAGE_LANG_KEY, language);
-  }, [i18n]);
-
   const functions = useMemo(() => {
     const items: RouteItem[] = [
       {
         key: 'explore',
         name: t('explore'),
         isActive: pathname === '/',
-        iconSrc: '/pictures/explore.png',
-        activeIconSrc: '/pictures/explore_active.png',
+        iconSrc: '/pictures/explore.svg',
         path: '/',
       },
       {
@@ -164,7 +165,6 @@ function SideBar() {
         name: t('skills'),
         isActive: pathname.startsWith('/construct/skills'),
         iconSrc: '/pictures/skills.svg',
-        activeIconSrc: '/pictures/skills_active.svg',
         path: '/construct/skills',
       },
       {
@@ -172,7 +172,6 @@ function SideBar() {
         name: t('datasources'),
         isActive: pathname.startsWith('/construct/database'),
         iconSrc: '/pictures/datasource.svg',
-        activeIconSrc: '/pictures/datasource_active.svg',
         path: '/construct/database',
       },
       {
@@ -180,7 +179,6 @@ function SideBar() {
         name: t('knowledge'),
         isActive: pathname.startsWith('/construct/knowledge'),
         iconSrc: '/pictures/knowledge_sidebar.svg',
-        activeIconSrc: '/pictures/knowledge_sidebar_active.svg',
         path: '/construct/knowledge',
       },
     ];
@@ -195,12 +193,7 @@ function SideBar() {
           router.push('/construct/models');
           setSettingsOpen(false);
         }}
-        className={cls(
-          'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors',
-          {
-            'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400': pathname.startsWith('/construct/models'),
-          },
-        )}
+        className={'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'}
       >
         <Icon component={ModelSvg} className='text-cyan-500' />
         <span>{t('model_manage')}</span>
@@ -210,12 +203,7 @@ function SideBar() {
           router.push('/construct/flow');
           setSettingsOpen(false);
         }}
-        className={cls(
-          'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors',
-          {
-            'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400': pathname.startsWith('/construct/flow'),
-          },
-        )}
+        className={'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'}
       >
         <ApartmentOutlined className='text-green-500' />
         <span>{t('awel_workflow')}</span>
@@ -225,13 +213,7 @@ function SideBar() {
           router.push('/construct/connectors');
           setSettingsOpen(false);
         }}
-        className={cls(
-          'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors',
-          {
-            'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400':
-              pathname.startsWith('/construct/connectors'),
-          },
-        )}
+        className={'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'}
       >
         <ApiOutlined className='text-violet-500' />
         <span>{t('connectors')}</span>
@@ -241,13 +223,7 @@ function SideBar() {
           router.push('/construct/scheduled-tasks');
           setSettingsOpen(false);
         }}
-        className={cls(
-          'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors',
-          {
-            'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400':
-              pathname.startsWith('/construct/scheduled-tasks'),
-          },
-        )}
+        className={'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'}
       >
         <ClockCircleOutlined className='text-teal-500' />
         <span>{t('scheduled_tasks')}</span>
@@ -257,12 +233,7 @@ function SideBar() {
           router.push('/models_evaluation');
           setSettingsOpen(false);
         }}
-        className={cls(
-          'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors',
-          {
-            'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400': pathname === '/models_evaluation',
-          },
-        )}
+        className={'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'}
       >
         <LineChartOutlined className='text-red-500' />
         <span>{t('models_evaluation')}</span>
@@ -272,12 +243,7 @@ function SideBar() {
           router.push('/observability');
           setSettingsOpen(false);
         }}
-        className={cls(
-          'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors',
-          {
-            'bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400': pathname.startsWith('/observability'),
-          },
-        )}
+        className={'flex items-center gap-3 px-3 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'}
       >
         <DashboardOutlined className='text-indigo-500' />
         <span>{t('observability')}</span>
@@ -286,29 +252,34 @@ function SideBar() {
   );
 
   useEffect(() => {
-    const language = i18n.language;
-    if (language === 'zh') moment.locale('zh-cn');
-    if (language === 'en') moment.locale('en');
-  }, [i18n.language]);
-
-  useEffect(() => {
-    setLogo(mode === 'dark' ? '/logo_s_latest.png' : '/logo_zh_latest.png');
+    setLogo('/LOGO.png');
   }, [mode]);
 
   useEffect(() => {
     fetchDialogueList();
   }, [fetchDialogueList]);
 
+  // keep the history list live: refetch whenever a page reports the conversation list changed
+  useEffect(() => {
+    const onChanged = () => void fetchDialogueList(true);
+    window.addEventListener(DIALOGUES_CHANGED_EVENT, onChanged);
+    return () => window.removeEventListener(DIALOGUES_CHANGED_EVENT, onChanged);
+  }, [fetchDialogueList]);
+
   // ============ COLLAPSED SIDEBAR ============
   if (!isMenuExpand) {
     return (
-      <div className='flex flex-col justify-between pt-4 h-screen bg-bar dark:bg-[#232734] animate-fade animate-duration-300'>
+      <div className='flex flex-col justify-between pt-4 h-screen bg-white dark:bg-[#151622] border-e border-[#D1D5DB] dark:border-gray-700 animate-fade animate-duration-300'>
         <div>
-          <div className='flex flex-col items-center pb-2'>
-            <Link href='/' className='flex justify-center items-center pb-2'>
-              <Image src='/LOGO_SMALL.png' alt='DB-GPT' width={40} height={40} />
+          {/* Logo slot */}
+          <div className='flex justify-center items-center px-2 pt-2 pb-4'>
+            <Link href='/' className='flex justify-center items-center h-8'>
+              <Image src='/LOGO_SMALL.png' alt='DB-GPT' width={32} height={32} className='object-contain' />
             </Link>
-            <Tooltip title={t('Show_Sidebar') || '展开侧栏'} placement='right'>
+          </div>
+          {/* Title slot */}
+          <div className='flex justify-center items-start h-9'>
+            <Tooltip title={t('Show_Sidebar') || 'نمایش نوار کناری'} placement='right'>
               <div
                 onClick={handleToggleMenu}
                 className='flex items-center justify-center w-7 h-7 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 dark:hover:text-gray-300 cursor-pointer transition-colors'
@@ -317,7 +288,19 @@ function SideBar() {
               </div>
             </Tooltip>
           </div>
-          <div className='flex flex-col gap-4 items-center'>
+          {/* New Task slot */}
+          <div className='flex justify-center h-14'>
+            <Tooltip title={t('new_task')} placement='right'>
+              <button
+                type='button'
+                onClick={handleStartNewTask}
+                className='flex items-center justify-center w-10 h-10 border-0 bg-[#DB0A16] text-white rounded-xl hover:opacity-90 transition-opacity cursor-pointer'
+              >
+                <PlusOutlined className='text-xs' />
+              </button>
+            </Tooltip>
+          </div>
+          <div className='flex flex-col gap-1 items-center px-2'>
             {functions.map(item => (
               <Link key={item.key} className='h-12 flex items-center' href={item.path}>
                 <Tooltip title={item.name} placement='right'>
@@ -363,13 +346,13 @@ function SideBar() {
 
   // ============ EXPANDED SIDEBAR ============
   return (
-    <div className='flex flex-col h-screen w-[240px] min-w-[240px] px-4 pt-4 bg-bar dark:bg-[#232734] animate-fade animate-duration-300'>
+    <div className='flex flex-col h-screen w-[240px] min-w-[240px] px-4 pt-4 bg-white dark:bg-[#151622] border-e border-[#D1D5DB] dark:border-gray-700 animate-fade animate-duration-300'>
       {/* LOGO + Collapse Toggle */}
-      <div className='flex items-center justify-between p-2 pb-4'>
+      <div className='flex items-center justify-between p-2 pt-8 pb-1 h-[176px]'>
         <Link href='/' className='flex items-center'>
           <Image src={logo} alt='DB-GPT' width={140} height={32} />
         </Link>
-        <Tooltip title={t('Close_Sidebar') || '收起侧栏'}>
+        <Tooltip title={t('Close_Sidebar') || 'بستن نوار کناری'}>
           <div
             onClick={handleToggleMenu}
             className='flex items-center justify-center w-7 h-7 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-200 dark:hover:bg-gray-700 dark:hover:text-gray-300 cursor-pointer transition-colors'
@@ -379,11 +362,28 @@ function SideBar() {
         </Tooltip>
       </div>
 
+      {/* Today's Date */}
+      <div className='-mt-6 pb-4 h-[60px]'>
+        {today && (
+          <div className='flex items-center gap-3 h-11 px-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-white/5'>
+            <div className='flex items-center justify-center w-8 h-8 rounded-lg bg-[#DB0A16] text-white text-sm font-bold tabular-nums'>
+              {today.day}
+            </div>
+            <div className='flex flex-col leading-tight'>
+              <span className='text-sm font-semibold text-gray-800 dark:text-gray-100'>{today.weekday}</span>
+              <span className='text-xs text-gray-500 dark:text-gray-400'>
+                {today.month} {today.year}
+              </span>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* New Task Button */}
       <button
         type='button'
         onClick={handleStartNewTask}
-        className='flex items-center justify-center gap-2 w-full px-4 py-2.5 mb-4 border-0 bg-black dark:bg-white dark:text-black text-white rounded-xl text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer'
+        className='flex items-center justify-center gap-2 w-full px-4 py-2.5 mb-4 border-0 bg-[#DB0A16] text-white rounded-xl text-sm font-medium hover:opacity-90 transition-opacity cursor-pointer'
       >
         <PlusOutlined className='text-xs' />
         <span>{t('new_task')}</span>
@@ -395,9 +395,9 @@ function SideBar() {
           <Link
             href={item.path}
             className={cls(
-              'flex items-center w-full h-12 px-4 cursor-pointer hover:bg-blue-50/50 dark:hover:bg-blue-900/10 hover:rounded-xl',
+              'flex items-center w-full h-12 px-4 cursor-pointer text-[#1f1f1f] hover:text-[#1f1f1f] dark:text-gray-200 dark:hover:text-gray-200 hover:bg-[#F3F4F6] dark:hover:bg-white/10 hover:rounded-xl',
               {
-                'bg-blue-50 rounded-xl text-blue-600 dark:bg-blue-900/20 dark:text-blue-400': item.isActive,
+                'rounded-xl': item.isActive,
               },
             )}
             key={item.key}
@@ -443,14 +443,14 @@ function SideBar() {
                 <div className='flex-1 min-w-0'>
                   <div className='font-medium truncate leading-5 text-gray-700 dark:text-gray-300'>
                     {typeof conv.user_input === 'string'
-                      ? conv.user_input.slice(0, 40) || 'New Conversation'
-                      : 'New Conversation'}
+                      ? conv.user_input.slice(0, 40) || 'مکالمه جدید'
+                      : 'مکالمه جدید'}
                   </div>
                   {conv.gmt_created && (
                     <div className='text-[11px] text-gray-400 mt-0.5'>{formatRelativeTime(conv.gmt_created)}</div>
                   )}
                 </div>
-                <Tooltip title='删除'>
+                <Tooltip title={t('Delete')}>
                   <DeleteOutlined
                     onClick={e => handleDeleteDialogue(e, conv.conv_uid)}
                     className='text-gray-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-1'
@@ -483,8 +483,8 @@ function SideBar() {
         >
           <div
             className={cls(
-              'flex items-center w-full h-12 px-4 mb-2 cursor-pointer hover:bg-blue-50/50 dark:hover:bg-blue-900/10 hover:rounded-xl',
-              { 'bg-blue-50 rounded-xl text-blue-600 dark:bg-blue-900/20 dark:text-blue-400': isSettingsActive },
+              'flex items-center w-full h-12 px-4 mb-2 cursor-pointer text-[#1f1f1f] hover:text-[#1f1f1f] dark:text-gray-200 dark:hover:text-gray-200 hover:bg-[#F3F4F6] dark:hover:bg-white/10 hover:rounded-xl',
+              { 'rounded-xl': isSettingsActive },
             )}
           >
             <div className='mr-3 w-8 flex justify-center'>
@@ -494,14 +494,9 @@ function SideBar() {
           </div>
         </Popover>
         <div className='flex items-center justify-around py-4 mt-2 border-t border-dashed border-gray-200 dark:border-gray-700'>
-          <Popover content={mode === 'dark' ? 'Light' : 'Dark'}>
+          <Popover content={mode === 'dark' ? 'روشن' : 'تاریک'}>
             <div className='flex-1 flex items-center justify-center cursor-pointer text-xl' onClick={handleToggleTheme}>
               {mode === 'dark' ? <Icon component={DarkSvg} /> : <Icon component={SunnySvg} />}
-            </div>
-          </Popover>
-          <Popover content={t('language')}>
-            <div className='flex-1 flex items-center justify-center cursor-pointer text-xl' onClick={handleChangeLang}>
-              <GlobalOutlined />
             </div>
           </Popover>
           <Popover content={t(isMenuExpand ? 'Close_Sidebar' : 'Show_Sidebar')}>

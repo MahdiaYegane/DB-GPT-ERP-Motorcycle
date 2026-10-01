@@ -79,7 +79,7 @@ function MarketPlugins() {
   //       return <LoadingOutlined />;
   //     }
   //     return agent.installed ? (
-  //       <Tooltip title='Uninstall'>
+  //       <Tooltip title='حذف نصب'>
   //         <div
   //           className='w-full h-full'
   //           onClick={() => {
@@ -90,7 +90,7 @@ function MarketPlugins() {
   //         </div>
   //       </Tooltip>
   //     ) : (
-  //       <Tooltip title='Install'>
+  //       <Tooltip title='نصب'>
   //         <div
   //           className='w-full h-full'
   //           onClick={() => {
@@ -110,7 +110,7 @@ function MarketPlugins() {
   return (
     <Spin spinning={loading}>
       <Form form={form} layout='inline' onFinish={refresh} className='mb-2'>
-        <Form.Item className='!mb-2' name='name' label={'Name'}>
+        <Form.Item className='!mb-2' name='name' label={'نام'}>
           <Input allowClear className='w-48' />
         </Form.Item>
         <Form.Item>

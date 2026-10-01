@@ -118,7 +118,7 @@ function Default() {
               }}
             />
             <span className='flex items-center text-gray-500 gap-1 dark:text-slate-300'>
-              <span>没有心仪的应用？去</span>
+              <span>برنامه مورد نظرتان را پیدا نکردید؟ به</span>
               <span
                 className='flex items-center cursor-pointer'
                 onClick={() => {
@@ -132,15 +132,15 @@ function Default() {
                   width={24}
                   height={24}
                 />
-                <span className='text-default'>探索广场</span>
+                <span className='text-default'>صفحه کاوش</span>
               </span>
-              <span>发现更多</span>
+              <span>بروید و بیشتر ببینید</span>
             </span>
           </div>
           <TabContent apps={apps?.app_list || []} loading={loading} refresh={refresh} />
           {helps && helps.length > 0 && (
             <div>
-              <h2 className='font-medium text-xl my-4'>我可以帮您：</h2>
+              <h2 className='font-medium text-xl my-4'>می‌توانم در این موارد کمکتان کنم:</h2>
               <div className='flex justify-start gap-4'>
                 {helps.map(help => (
                   <span

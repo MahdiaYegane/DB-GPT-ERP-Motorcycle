@@ -127,26 +127,26 @@ export const SaveFlowModal: React.FC<Props> = ({
           autoComplete='off'
         >
           <Form.Item
-            label='Title'
+            label='عنوان'
             name='label'
             initialValue={flowInfo?.label}
-            rules={[{ required: true, message: 'Please input flow title!' }]}
+            rules={[{ required: true, message: 'لطفاً عنوان فلو را وارد کنید!' }]}
           >
             <Input onChange={onLabelChange} />
           </Form.Item>
 
           <Form.Item
-            label='Name'
+            label='نام'
             name='name'
             initialValue={flowInfo?.name}
             rules={[
-              { required: true, message: 'Please input flow name!' },
+              { required: true, message: 'لطفاً نام فلو را وارد کنید!' },
               () => ({
                 validator(_, value) {
                   // eslint-disable-next-line no-useless-escape
                   const regex = /^[a-zA-Z0-9_\-]+$/;
                   if (!regex.test(value)) {
-                    return Promise.reject('Can only contain numbers, letters, underscores, and dashes');
+                    return Promise.reject('فقط می‌تواند شامل اعداد، حروف، زیرخط و خط تیره باشد');
                   }
                   return Promise.resolve();
                 },
@@ -156,11 +156,11 @@ export const SaveFlowModal: React.FC<Props> = ({
             <Input />
           </Form.Item>
 
-          <Form.Item label='Description' initialValue={flowInfo?.description} name='description'>
+          <Form.Item label='توضیحات' initialValue={flowInfo?.description} name='description'>
             <TextArea rows={3} />
           </Form.Item>
 
-          <Form.Item label='Editable' name='editable' initialValue={flowInfo?.editable || true} valuePropName='checked'>
+          <Form.Item label='قابل ویرایش' name='editable' initialValue={flowInfo?.editable || true} valuePropName='checked'>
             <Checkbox />
           </Form.Item>
 
@@ -168,7 +168,7 @@ export const SaveFlowModal: React.FC<Props> = ({
             <Input />
           </Form.Item>
 
-          <Form.Item label='Deploy'>
+          <Form.Item label='استقرار'>
             <Checkbox
               checked={deploy}
               onChange={e => {

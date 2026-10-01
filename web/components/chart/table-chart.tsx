@@ -78,7 +78,7 @@ export default function TableChart({ chart, columnNameMap, renderCell }: TableCh
         <div className='mb-2'>{chart.chart_name}</div>
         <div className='opacity-80 text-sm mb-2'>{chart.chart_desc}</div>
         <div className='flex-1 overflow-auto'>
-          <Table aria-label='dashboard table' stripe='odd' hoverRow borderAxis='bothBetween'>
+          <Table aria-label='جدول داشبورد' stripe='odd' hoverRow borderAxis='bothBetween'>
             <thead>
               <tr>
                 {columns.map(col => (

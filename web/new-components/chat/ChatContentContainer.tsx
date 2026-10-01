@@ -193,7 +193,7 @@ const ChatContentContainer = ({ className }: { className?: string }, ref: React.
             <button
               onClick={scrollToTop}
               className='w-9 h-9 md:w-10 md:h-10 bg-white dark:bg-[rgba(255,255,255,0.2)] border border-gray-200 dark:border-[rgba(255,255,255,0.2)] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200'
-              aria-label='Scroll to top'
+              aria-label='پیمایش به بالا'
             >
               <VerticalAlignTopOutlined className='text-[#525964] dark:text-[rgba(255,255,255,0.85)] text-sm md:text-base' />
             </button>
@@ -202,7 +202,7 @@ const ChatContentContainer = ({ className }: { className?: string }, ref: React.
             <button
               onClick={scrollToBottom}
               className='w-9 h-9 md:w-10 md:h-10 bg-white dark:bg-[rgba(255,255,255,0.2)] border border-gray-200 dark:border-[rgba(255,255,255,0.2)] rounded-full flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-200'
-              aria-label='Scroll to bottom'
+              aria-label='پیمایش به پایین'
             >
               <VerticalAlignBottomOutlined className='text-[#525964] dark:text-[rgba(255,255,255,0.85)] text-sm md:text-base' />
             </button>

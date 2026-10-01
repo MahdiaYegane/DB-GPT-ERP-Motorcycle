@@ -203,8 +203,8 @@ const getTypeLabel = (type: StepType, t: any): string => {
     sql: t('step_type_sql'),
     python: t('step_type_python'),
     html: t('step_type_html'),
-    question: t('step_type_question') || 'Ask User',
-    kb: t('step_type_kb') || 'Knowledge',
+    question: t('step_type_question') || 'پرسیدن از کاربر',
+    kb: t('step_type_kb') || 'دانش',
     code_graph: t('step_type_code_graph') || 'Code Graph',
     other: t('step_type_other'),
   };
@@ -581,10 +581,10 @@ const StepCard: React.FC<{
           </div>
           <div className='flex flex-col min-w-0 flex-1'>
             <span className='text-[10px] font-semibold uppercase tracking-wider text-amber-600/80 dark:text-amber-400/80'>
-              {isWaiting ? t('waiting_for_user') || 'Waiting for User' : t('step_type_question') || 'Ask User'}
+              {isWaiting ? t('waiting_for_user') || 'در انتظار کاربر' : t('step_type_question') || 'پرسیدن از کاربر'}
             </span>
             <span className='text-sm font-medium text-slate-800 dark:text-slate-200 truncate'>
-              {step.title === 'question' ? t('user_confirmation') || 'Needs your confirmation' : step.title}
+              {step.title === 'question' ? t('user_confirmation') || 'نیازمند تأیید شما' : step.title}
             </span>
           </div>
           <div className='flex-shrink-0'>
@@ -1304,7 +1304,7 @@ const ManusLeftPanel: React.FC<ManusLeftPanelProps> = ({
           <div className='flex items-center justify-between text-[10px] text-gray-400'>
             <span>{`Model: ${modelName}`}</span>
             <div className='flex items-center gap-2'>
-              {isWorking && <span className='animate-pulse'>Processing...</span>}
+              {isWorking && <span className='animate-pulse'>در حال پردازش...</span>}
             </div>
           </div>
         </div>

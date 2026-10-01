@@ -36,7 +36,7 @@ export default function ObservabilityTracesPage() {
     <div className='flex flex-col h-full w-full dark:bg-gradient-dark bg-gradient-light'>
       <div className='flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-800'>
         <h1 className='text-xl font-semibold text-gray-800 dark:text-gray-100'>
-          {t('observability_traces') || 'Observability · Traces'}
+          {t('observability_traces') || 'پایش · ردیابی‌ها'}
         </h1>
         <Input
           placeholder={t('observability_filter_status') || 'filter status: OK / ERROR'}
@@ -62,26 +62,26 @@ export default function ObservabilityTracesPage() {
             })}
             columns={[
               {
-                title: 'Trace',
+                title: 'ردیابی',
                 dataIndex: 'trace_id',
                 render: (id: string) => <span className='text-blue-500'>{id.slice(0, 16)}…</span>,
               },
-              { title: 'Operation', dataIndex: 'root_operation_name' },
-              { title: 'Agent', dataIndex: 'agent_name' },
+              { title: 'عملیات', dataIndex: 'root_operation_name' },
+              { title: 'عامل', dataIndex: 'agent_name' },
               {
-                title: 'Status',
+                title: 'وضعیت',
                 dataIndex: 'status',
                 render: (s: string) => <Tag color={s === 'ERROR' ? 'red' : 'green'}>{s || 'OK'}</Tag>,
               },
               {
-                title: 'Duration',
+                title: 'مدت',
                 dataIndex: 'duration_ms',
                 render: (d?: number) => (d != null ? `${(d / 1000).toFixed(2)}s` : '-'),
               },
-              { title: 'Spans', dataIndex: 'span_count' },
-              { title: 'Model', dataIndex: 'model_name' },
+              { title: 'اسپن‌ها', dataIndex: 'span_count' },
+              { title: 'مدل', dataIndex: 'model_name' },
               {
-                title: 'Time',
+                title: 'زمان',
                 dataIndex: 'start_time',
                 render: (s?: string) => (s ? moment(s).fromNow() : '-'),
               },

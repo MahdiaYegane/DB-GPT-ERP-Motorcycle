@@ -89,7 +89,7 @@ function Database() {
 
   const onDelete = (item: DBItem) => {
     Modal.confirm({
-      title: 'Tips',
+      title: 'نکته',
       content: `Do you Want to delete the database connection?`,
       onOk() {
         return new Promise<void>((resolve, reject) => {
@@ -234,7 +234,7 @@ function Database() {
                   setModal({ open: true, dbType: draw.type });
                 }}
               >
-                Create
+                ایجاد
               </Button>
               {dbListByType[draw.type].map(item => (
                 <Card
@@ -292,7 +292,7 @@ function Database() {
                   setModal({ open: true, dbType: draw.type });
                 }}
               >
-                Create Now
+                ایجاد کن
               </Button>
             </Empty>
           )}

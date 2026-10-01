@@ -48,12 +48,12 @@ function SpanRow({ node, depth = 0 }: { node: SpanNode; depth?: number }) {
           </div>
           {node.agent_name && (
             <div className='font-mono text-[11px] text-gray-500'>
-              agent: <span className='text-gray-700 dark:text-gray-300'>{node.agent_name}</span>
+              عامل: <span className='text-gray-700 dark:text-gray-300'>{node.agent_name}</span>
             </div>
           )}
           {node.cost != null && (
             <div className='font-mono text-[11px] text-gray-500'>
-              cost: <span className='text-gray-700 dark:text-gray-300'>${node.cost}</span>
+              هزینه: <span className='text-gray-700 dark:text-gray-300'>${node.cost}</span>
             </div>
           )}
           {isError && node.error && (
@@ -63,7 +63,7 @@ function SpanRow({ node, depth = 0 }: { node: SpanNode; depth?: number }) {
           )}
           {hasMeta && (
             <details className='text-[11px]'>
-              <summary className='cursor-pointer text-gray-400'>metadata</summary>
+              <summary className='cursor-pointer text-gray-400'>فراداده</summary>
               <pre className='mt-1 font-mono text-gray-600 dark:text-gray-300 bg-white/60 dark:bg-black/20 rounded p-2 overflow-x-auto whitespace-pre-wrap break-all max-h-60'>
                 {JSON.stringify(node.metadata, null, 2)}
               </pre>
@@ -97,29 +97,29 @@ export default function TraceDetailPage() {
     <div className='flex flex-col h-full w-full dark:bg-gradient-dark bg-gradient-light overflow-y-auto'>
       <div className='px-6 py-5 border-b border-gray-100 dark:border-gray-800'>
         <h1 className='text-xl font-semibold text-gray-800 dark:text-gray-100'>
-          {t('observability_trace') || 'Trace'}
+          {t('observability_trace') || 'ردیابی'}
         </h1>
         <div className='text-xs text-gray-400 mt-1 font-mono'>{traceId as string}</div>
       </div>
       <div className='px-6 py-4 space-y-4'>
         <Spin spinning={loading}>
           {!loading && !trace ? (
-            <Empty description={t('observability_no_trace') || 'Trace not found'} />
+            <Empty description={t('observability_no_trace') || 'ردیابی یافت نشد'} />
           ) : trace ? (
             <>
               <Card size='small'>
                 <Descriptions size='small' column={2}>
-                  <Descriptions.Item label={t('observability_status') || 'Status'}>
+                  <Descriptions.Item label={t('observability_status') || 'وضعیت'}>
                     <Tag color={trace.status === 'ERROR' ? 'red' : 'green'}>{trace.status || 'OK'}</Tag>
                   </Descriptions.Item>
-                  <Descriptions.Item label={t('observability_spans') || 'Spans'}>{trace.span_count}</Descriptions.Item>
-                  <Descriptions.Item label={t('observability_duration') || 'Duration'}>
+                  <Descriptions.Item label={t('observability_spans') || 'اسپن‌ها'}>{trace.span_count}</Descriptions.Item>
+                  <Descriptions.Item label={t('observability_duration') || 'مدت'}>
                     {trace.duration_ms != null ? `${(trace.duration_ms / 1000).toFixed(2)}s` : '-'}
                   </Descriptions.Item>
                   <Descriptions.Item label={t('observability_time') || 'Start'}>
                     {trace.start_time ? moment(trace.start_time).format('YYYY-MM-DD HH:mm:ss') : '-'}
                   </Descriptions.Item>
-                  <Descriptions.Item label={t('observability_conversation_id') || 'Conversation ID'} span={2}>
+                  <Descriptions.Item label={t('observability_conversation_id') || 'شناسه گفتگو'} span={2}>
                     {trace.conversation_id ? (
                       <Text code copyable className='text-xs'>
                         {trace.conversation_id}
@@ -130,7 +130,7 @@ export default function TraceDetailPage() {
                   </Descriptions.Item>
                 </Descriptions>
               </Card>
-              <Card size='small' title={t('observability_span_tree') || 'Span tree'}>
+              <Card size='small' title={t('observability_span_tree') || 'درخت اسپن'}>
                 {trace.root ? <SpanRow node={trace.root} /> : <Empty />}
               </Card>
             </>

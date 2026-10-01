@@ -15,7 +15,7 @@ interface IProps {
 }
 
 const getLocalizedName = (item: IRetrieveStrategy, currentLang: string): string => {
-  return currentLang === 'zh' ? item.name_cn : item.name;
+  return item.name;
 };
 
 export default function ArgumentsModal({ space, argumentsShow, setArgumentsShow }: IProps) {
@@ -61,7 +61,7 @@ export default function ArgumentsModal({ space, argumentsShow, setArgumentsShow 
             label={t('recall_score')}
             name={['embedding', 'recall_score']}
           >
-            <Input className='mb-5  h-12' placeholder='请输入' />
+            <Input className='mb-5  h-12' placeholder='وارد کنید' />
           </Form.Item>
         </Col>
         <Col span={12}>

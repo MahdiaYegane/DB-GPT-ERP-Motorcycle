@@ -136,17 +136,17 @@ function Models() {
               description={
                 <div className='flex flex-col gap-1 relative text-xs bottom-4'>
                   <div className='flex overflow-hidden'>
-                    <p className='w-28 text-gray-500 mr-2'>Host:</p>
+                    <p className='w-28 text-gray-500 mr-2'>میزبان:</p>
                     <p className='flex-1 text-ellipsis'>{item.host}</p>
                   </div>
                   <div className='flex overflow-hidden'>
-                    <p className='w-28 text-gray-500 mr-2'>Manage Host:</p>
+                    <p className='w-28 text-gray-500 mr-2'>میزبان مدیریت:</p>
                     <p className='flex-1 text-ellipsis'>
                       {item.manager_host}:{item.manager_port}
                     </p>
                   </div>
                   <div className='flex overflow-hidden'>
-                    <p className='w-28 text-gray-500 mr-2'>Last Heart Beat:</p>
+                    <p className='w-28 text-gray-500 mr-2'>آخرین علامت حیات:</p>
                     <p className='flex-1 text-ellipsis'>{moment(item.last_heartbeat).format('YYYY-MM-DD HH:mm:ss')}</p>
                   </div>
                 </div>

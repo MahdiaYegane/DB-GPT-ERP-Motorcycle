@@ -12,11 +12,12 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Josefin Sans"', ...defaultTheme.fontFamily.sans],
+        sans: ['"Arad"', ...defaultTheme.fontFamily.sans],
+        serif: ['"Arad"', ...defaultTheme.fontFamily.serif],
       },
       colors: {
         theme: {
-          primary: '#0069fe',
+          primary: '#E30613',
           light: '#f7f7f7',
           dark: '#151622',
           'dark-container': '#232734',
@@ -25,13 +26,13 @@ module.exports = {
           warning: '#FAAD14',
         },
         gradientL: '#00DAEF',
-        gradientR: '#105EFF',
+        gradientR: '#E30613',
       },
       backgroundColor: {
-        bar: '#e0e7f2',
+        bar: '#ffffff',
       },
       textColor: {
-        default: '#0C75FC',
+        default: '#E30613',
       },
       backgroundImage: {
         'gradient-light': "url('/images/bg.png')",

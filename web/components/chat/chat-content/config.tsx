@@ -319,7 +319,7 @@ const basicComponents: MarkdownComponent = {
           alt={alt}
           placeholder={
             <Tag icon={<SyncOutlined spin />} color='processing'>
-              Image Loading...
+              در حال بارگذاری تصویر...
             </Tag>
           }
           fallback='/pictures/fallback.png'
@@ -446,7 +446,7 @@ const extraComponents: MarkdownComponent = {
       <div>
         <p className='mb-2'>
           <ReadOutlined className='mr-2' />
-          <span className='font-semibold'>Document Summary</span>
+          <span className='font-semibold'>خلاصه سند</span>
         </p>
         <div>{children}</div>
       </div>

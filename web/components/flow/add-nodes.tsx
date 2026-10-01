@@ -123,7 +123,7 @@ const AddNodes: React.FC = () => {
       content={
         <div className='w-[320px] overflow-hidden overflow-y-auto scrollbar-default'>
           <p className='my-2 font-bold'>{t('add_node')}</p>
-          <Search placeholder='Search node' onSearch={searchNode} />
+          <Search placeholder='جستجوی گره' onSearch={searchNode} />
 
           <h2 className='my-2 ml-2 font-semibold'>{t('operators')}</h2>
           <Collapse

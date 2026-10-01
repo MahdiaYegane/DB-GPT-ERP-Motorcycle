@@ -230,37 +230,37 @@ const Evaluation = () => {
 
   const columns: TableProps<DataSetItemType>['columns'] = [
     {
-      title: 'Name',
+      title: 'نام',
       dataIndex: 'name',
       key: 'name',
       width: '10%',
       fixed: 'left',
     },
     {
-      title: 'Code',
+      title: 'کد',
       dataIndex: 'code',
       key: 'code',
       width: '20%',
       // render: (text) => <a>{text}</a>,
     },
     {
-      title: 'Storage Type',
+      title: 'نوع ذخیره‌سازی',
       dataIndex: 'storage_type',
       key: 'storage_type',
     },
     {
-      title: 'Dataset Count',
+      title: 'تعداد مجموعه داده',
       dataIndex: 'datasets_count',
       key: 'datasets_count',
     },
 
     {
-      title: 'Create Time',
+      title: 'تاریخ ایجاد',
       dataIndex: 'gmt_create',
       key: 'gmt_create',
     },
     {
-      title: 'Members',
+      title: 'اعضا',
       dataIndex: 'members',
       key: 'members',
       width: '10%',
@@ -271,17 +271,17 @@ const Evaluation = () => {
       },
     },
     {
-      title: 'Update Time',
+      title: 'تاریخ بروزرسانی',
       dataIndex: 'gmt_modified',
       key: 'gmt_modified',
     },
     {
-      title: 'Action',
+      title: 'عملیات',
       key: 'action',
       render: (_, record) => (
         <Space size='middle'>
           <Popconfirm
-            title='Confirm deletion?'
+            title='تأیید حذف؟'
             onConfirm={async () => {
               const [, , res] = await apiInterceptors(
                 delDataSet({
@@ -289,12 +289,12 @@ const Evaluation = () => {
                 }),
               );
               if (res?.success == true) {
-                message.success('Deleted successfully');
+                message.success('با موفقیت حذف شد');
                 getDataSetsRefresh();
               }
             }}
           >
-            <Button type='link'>Delete</Button>
+            <Button type='link'>حذف</Button>
           </Popconfirm>
           <Button
             type='link'
@@ -360,7 +360,7 @@ const Evaluation = () => {
               setCommonLoading(false);
             }}
           >
-            Download
+            دانلود
           </Button>
         </Space>
       ),
@@ -370,7 +370,7 @@ const Evaluation = () => {
    */
   const evaluationsColumns: TableProps<EvaluationItemType>['columns'] = [
     {
-      title: 'Dataset Name',
+      title: 'نام مجموعه داده',
       dataIndex: 'datasets_name',
       key: 'datasets_name',
       fixed: 'left',
@@ -387,7 +387,7 @@ const Evaluation = () => {
       ),
     },
     {
-      title: 'Evaluation Status',
+      title: 'وضعیت ارزیابی',
       dataIndex: 'state',
       key: 'state',
       render: text => {
@@ -395,28 +395,28 @@ const Evaluation = () => {
       },
     },
     {
-      title: 'Evaluation Code',
+      title: 'کد ارزیابی',
       dataIndex: 'evaluate_code',
       key: 'evaluate_code',
     },
     {
-      title: 'Scene',
+      title: 'سناریو',
       dataIndex: 'scene_key',
       key: 'scene_key',
     },
 
     {
-      title: 'Evaluation Metrics',
+      title: 'معیارهای ارزیابی',
       dataIndex: 'evaluate_metrics',
       key: 'evaluate_metrics',
     },
     {
-      title: 'Create Time',
+      title: 'تاریخ ایجاد',
       dataIndex: 'gmt_create',
       key: 'gmt_create',
     },
     {
-      title: 'Update Time',
+      title: 'تاریخ بروزرسانی',
       dataIndex: 'gmt_modified',
       key: 'gmt_modified',
     },
@@ -424,8 +424,8 @@ const Evaluation = () => {
     {
       title: (
         <span className='w-[50px]'>
-          <span className='text-nowrap'>Details</span>
-          <Tooltip placement='topLeft' title='View logs and scores'>
+          <span className='text-nowrap'>جزئیات</span>
+          <Tooltip placement='topLeft' title='مشاهده گزارش‌ها و امتیازها'>
             <InfoCircleOutlined />
           </Tooltip>
         </span>
@@ -439,7 +439,7 @@ const Evaluation = () => {
       ),
     },
     {
-      title: 'Evaluation Result',
+      title: 'نتیجه ارزیابی',
       key: 'result',
       render: (_, record) => (
         <>
@@ -452,7 +452,7 @@ const Evaluation = () => {
               });
             }}
           >
-            Score Details
+            جزئیات امتیاز
           </Button>
           <Button
             type='link'
@@ -505,19 +505,19 @@ const Evaluation = () => {
               setCommonLoading(false);
             }}
           >
-            Download
+            دانلود
           </Button>
         </>
       ),
     },
     {
-      title: 'Operation',
+      title: 'عملیات',
       key: 'action',
       width: '25%',
       render: (_, record) => (
         <>
           <Popconfirm
-            title='Confirm deletion?'
+            title='تأیید حذف؟'
             onConfirm={async () => {
               const [, , res] = await apiInterceptors(
                 delEvaluation({
@@ -525,12 +525,12 @@ const Evaluation = () => {
                 }),
               );
               if (res?.success == true) {
-                message.success('Deleted successfully');
+                message.success('با موفقیت حذف شد');
                 getEvaluationsRefresh();
               }
             }}
           >
-            <Button type='link'>Delete</Button>
+            <Button type='link'>حذف</Button>
           </Popconfirm>
         </>
       ),
@@ -556,11 +556,11 @@ const Evaluation = () => {
             className='backdrop-filter backdrop-blur-lg bg-white bg-opacity-30 border-2 border-white rounded-lg shadow p-1 dark:border-[#6f7f95] dark:bg-[#6f7f95] dark:bg-opacity-60'
             options={[
               {
-                label: 'Evaluation Data',
+                label: 'داده‌های ارزیابی',
                 value: 'evaluations',
               },
               {
-                label: 'Datasets',
+                label: 'مجموعه‌داده‌ها',
                 value: 'dataSet',
               },
             ]}
@@ -579,7 +579,7 @@ const Evaluation = () => {
                     setIsAddDataSet(true);
                   }}
                 >
-                  Add Dataset
+                  افزودن مجموعه داده
                 </Button>
               </div>
               <Table
@@ -605,7 +605,7 @@ const Evaluation = () => {
                     setIsModalOpen(true);
                   }}
                 >
-                  Start Evaluation
+                  شروع ارزیابی
                 </Button>
               </div>
               <Table
@@ -654,7 +654,7 @@ const Evaluation = () => {
             </>
           )}
           <Modal
-            title='Start Evaluation'
+            title='شروع ارزیابی'
             open={isModalOpen}
             onOk={async () => {
               const values = await form.validateFields();
@@ -666,7 +666,7 @@ const Evaluation = () => {
                   }),
                 );
                 if (res?.success) {
-                  message.success('Started successfully');
+                  message.success('با موفقیت آغاز شد');
                   getEvaluationsRefresh();
                   form.resetFields();
                 }
@@ -687,7 +687,7 @@ const Evaluation = () => {
               labelCol={{ span: 4 }}
               wrapperCol={{ span: 20 }}
             >
-              <Form.Item name='scene_key' label='Scene Type' rules={[{ required: true }]}>
+              <Form.Item name='scene_key' label='نوع صحنه' rules={[{ required: true }]}>
                 <Select
                   options={[
                     {
@@ -728,7 +728,7 @@ const Evaluation = () => {
                   }}
                 ></Select>
               </Form.Item>
-              <Form.Item name='scene_value' label='Scene Params' rules={[{ required: true }]}>
+              <Form.Item name='scene_value' label='پارامترهای صحنه' rules={[{ required: true }]}>
                 <Select
                   loading={sceneValueOptionLoading}
                   disabled={sceneValueOptionLoading}
@@ -743,15 +743,15 @@ const Evaluation = () => {
                   }}
                 ></Select>
               </Form.Item>
-              <Form.Item name='parallel_num' label='Parallel Params' rules={[{ required: true }]} initialValue={1}>
+              <Form.Item name='parallel_num' label='پارامترهای موازی' rules={[{ required: true }]} initialValue={1}>
                 <Input></Input>
               </Form.Item>
-              <Form.Item name='datasets' label='Datasets' rules={[{ required: true }]}>
+              <Form.Item name='datasets' label='مجموعه‌داده‌ها' rules={[{ required: true }]}>
                 <Select options={dataSetsOptions}></Select>
               </Form.Item>
               <Form.Item
                 name='evaluate_metrics'
-                label='Evaluation Metrics'
+                label='معیارهای ارزیابی'
                 rules={[{ required: useWatch('scene_key', form) === 'app' }]}
               >
                 <Select loading={getMetricsLoading} disabled={getMetricsLoading} options={metricOptions}></Select>
@@ -759,7 +759,7 @@ const Evaluation = () => {
             </Form>
           </Modal>
           <Modal
-            title={isAddDataSet ? 'Add Dataset' : 'Edit Dataset'}
+            title={isAddDataSet ? 'افزودن مجموعه داده' : 'ویرایش مجموعه داده'}
             open={isDataSetModalOpen}
             confirmLoading={dataSetModalLoading}
             onOk={() => {
@@ -779,15 +779,15 @@ const Evaluation = () => {
                     uploadDataSetsFile(formData)
                       .then(response => {
                         if (response.data.success) {
-                          message.success('Upload successful');
+                          message.success('بارگذاری موفقیت‌آمیز بود');
                           runGetDataSets();
                         } else {
                           message.error(response.data.err_msg);
                         }
                       })
                       .catch(error => {
-                        console.error('Upload failed', error);
-                        message.error(error?.response?.data?.err_msg || 'Upload failed');
+                        console.error('بارگذاری ناموفق بود', error);
+                        message.error(error?.response?.data?.err_msg || 'بارگذاری ناموفق بود');
                       })
                       .finally(() => {
                         setIsDataSetModalOpen(false);
@@ -801,7 +801,7 @@ const Evaluation = () => {
                     })
                       .then(res => {
                         if (res.data.success) {
-                          message.success('Upload successful');
+                          message.success('بارگذاری موفقیت‌آمیز بود');
                           runGetDataSets();
                         } else {
                           message.error(res.data.err_msg);
@@ -809,7 +809,7 @@ const Evaluation = () => {
                       })
                       .catch(err => {
                         console.log(err);
-                        message.error(err?.response?.data?.err_msg || 'Upload failed');
+                        message.error(err?.response?.data?.err_msg || 'بارگذاری ناموفق بود');
                       })
                       .finally(() => {
                         setIsDataSetModalOpen(false);
@@ -824,7 +824,7 @@ const Evaluation = () => {
                   })
                     .then(res => {
                       if (res.data.success) {
-                          message.success('Updated successfully');
+                          message.success('با موفقیت بروزرسانی شد');
                         runGetDataSets();
                       } else {
                         message.error(res.data.err_msg);
@@ -832,7 +832,7 @@ const Evaluation = () => {
                     })
                     .catch(err => {
                       console.log(err);
-                      message.error('Update failed');
+                      message.error('بروزرسانی ناموفق بود');
                     })
                     .finally(() => {
                       setIsDataSetModalOpen(false);
@@ -853,19 +853,19 @@ const Evaluation = () => {
               labelCol={{ span: 4 }}
               wrapperCol={{ span: 20 }}
             >
-              <Form.Item name='dataset_name' label='Name' rules={[{ required: true }]}>
+              <Form.Item name='dataset_name' label='نام' rules={[{ required: true }]}>
                 <Input disabled={!isAddDataSet} />
               </Form.Item>
-              <Form.Item name='members' label='Members'>
+              <Form.Item name='members' label='اعضا'>
                 <Select mode='tags' />
               </Form.Item>
               {isAddDataSet && (
-                <Form.Item name='storage_type' label='Storage Type' rules={[{ required: true }]}>
+                <Form.Item name='storage_type' label='نوع ذخیره‌سازی' rules={[{ required: true }]}>
                   <Select options={storageTypeOptions} />
                 </Form.Item>
               )}
               {useWatch('storage_type', dataSetForm) === 'oss' && isAddDataSet && (
-                <Form.Item name='doc_file' label='doc_file' rules={[{ required: true }]}>
+                <Form.Item name='doc_file' label='فایل سند' rules={[{ required: true }]}>
                   <Upload
                     name='dataSet'
                     maxCount={1}
@@ -881,19 +881,19 @@ const Evaluation = () => {
                       });
                     }}
                   >
-                    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+                    <Button icon={<UploadOutlined />}>برای بارگذاری کلیک کنید</Button>
                   </Upload>
                 </Form.Item>
               )}
               {useWatch('storage_type', dataSetForm) === 'db' && isAddDataSet && (
-                <Form.Item name='content' label='content' rules={[{ required: true }]}>
+                <Form.Item name='content' label='محتوا' rules={[{ required: true }]}>
                   <TextArea rows={8} />
                 </Form.Item>
               )}
             </Form>
           </Modal>
           <Modal
-            title='Score Details'
+            title='جزئیات امتیاز'
             open={isModalVisible}
             onOk={handleModalClose}
             onCancel={handleModalClose}

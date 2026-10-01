@@ -107,7 +107,7 @@ const PromptBot: React.FC<PromptBotProps> = ({ submit, chat_scene }) => {
     >
       <Popover
         title={
-          <Form.Item label={'Prompt ' + t('Type')}>
+          <Form.Item label={'پرامپت ' + t('Type')}>
             <Select
               style={{ width: 150 }}
               value={current}

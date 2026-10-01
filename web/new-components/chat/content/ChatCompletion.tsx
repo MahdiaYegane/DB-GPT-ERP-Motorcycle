@@ -94,7 +94,7 @@ const ChatCompletion: React.FC = () => {
           );
         })}
       <Modal
-        title='JSON Editor'
+        title='ویرایشگر JSON'
         open={jsonModalOpen}
         width='60%'
         cancelButtonProps={{

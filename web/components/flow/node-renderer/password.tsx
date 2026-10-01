@@ -7,5 +7,5 @@ const { Password } = Input;
 export const renderPassword = (data: IFlowNodeParameter) => {
   const attr = convertKeysToCamelCase(data.ui?.attr || {});
 
-  return <Password {...attr} placeholder='input password' />;
+  return <Password {...attr} placeholder='رمز عبور را وارد کنید' />;
 };

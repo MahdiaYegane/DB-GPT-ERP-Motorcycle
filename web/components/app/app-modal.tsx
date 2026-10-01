@@ -51,10 +51,7 @@ export default function AppModal(props: IProps) {
 
   const [form] = Form.useForm();
 
-  const languageOptions = [
-    { value: 'zh', label: t('Chinese') },
-    { value: 'en', label: t('English') },
-  ];
+  const languageOptions = [{ value: 'en', label: t('English') }];
 
   const onChange = (newActiveKey: string) => {
     setActiveKey(newActiveKey);
@@ -308,7 +305,7 @@ export default function AppModal(props: IProps) {
     <div>
       <Modal
         okText={t('Submit')}
-        title={type === 'edit' ? 'edit application' : 'add application'}
+        title={type === 'edit' ? 'ویرایش برنامه' : 'افزودن برنامه'}
         open={open}
         width={'65%'}
         onCancel={handleCancel}
@@ -334,7 +331,7 @@ export default function AppModal(props: IProps) {
             onFinish={handleSubmit}
           >
             <Form.Item<FieldType>
-              label={'App Name'}
+              label={'نام برنامه'}
               name='app_name'
               rules={[{ required: true, message: t('Please_input_the_name') }]}
             >
@@ -375,7 +372,7 @@ export default function AppModal(props: IProps) {
             </div>
             {curTeamModal !== 'awel_layout' ? (
               <>
-                <div className='mb-5'>Agents</div>
+                <div className='mb-5'>عامل‌ها</div>
                 <Tabs
                   addIcon={renderAddIcon()}
                   type='editable-card'

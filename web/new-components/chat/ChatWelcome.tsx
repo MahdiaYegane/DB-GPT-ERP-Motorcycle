@@ -22,23 +22,23 @@ interface ChatWelcomeProps {
 const defaultSuggestions: SuggestionItem[] = [
   {
     icon: <DatabaseOutlined className='text-blue-500' />,
-    title: 'Database Analysis',
-    description: 'Connect to your database and explore data with natural language',
+    title: 'تحلیل پایگاه داده',
+    description: 'به پایگاه داده خود متصل شوید و با زبان طبیعی داده‌ها را کاوش کنید',
   },
   {
     icon: <FileTextOutlined className='text-green-500' />,
-    title: 'Knowledge Base',
-    description: 'Chat with your documents and knowledge base',
+    title: 'پایگاه دانش',
+    description: 'با اسناد و پایگاه دانش خود گفتگو کنید',
   },
   {
     icon: <ThunderboltOutlined className='text-amber-500' />,
-    title: 'Agent Tasks',
-    description: 'Let AI agents help you complete complex tasks',
+    title: 'وظایف عامل',
+    description: 'اجازه دهید عوامل هوش مصنوعی در تکمیل وظایف پیچیده کمک کنند',
   },
   {
     icon: <RobotOutlined className='text-purple-500' />,
-    title: 'Code Assistant',
-    description: 'Get help with coding, debugging, and code review',
+    title: 'دستیار کد',
+    description: 'در کدنویسی، اشکال‌زدایی و بازبینی کد کمک بگیرید',
   },
 ];
 
@@ -53,9 +53,9 @@ const ChatWelcome: React.FC<ChatWelcomeProps> = ({
 
   const getGreeting = (): string => {
     const hour = new Date().getHours();
-    if (hour < 12) return String(t('good_morning', 'Good morning'));
-    if (hour < 18) return String(t('good_afternoon', 'Good afternoon'));
-    return String(t('good_evening', 'Good evening'));
+    if (hour < 12) return String(t('good_morning', 'صبح بخیر'));
+    if (hour < 18) return String(t('good_afternoon', 'عصر بخیر'));
+    return String(t('good_evening', 'شب بخیر'));
   };
 
   return (
@@ -87,7 +87,7 @@ const ChatWelcome: React.FC<ChatWelcomeProps> = ({
         </h1>
 
         <p className='text-base text-[var(--oc-text-weak)] mb-8 text-center max-w-md'>
-          {t('welcome_message', 'How can I help you today? Ask me anything or try one of the suggestions below.')}
+          {t('welcome_message', 'چطور می‌توانم امروز کمکتان کنم؟ هر چه می‌خواهید بپرسید یا یکی از پیشنهادهای زیر را امتحان کنید.')}
         </p>
 
         {children}
@@ -126,7 +126,7 @@ const ChatWelcome: React.FC<ChatWelcomeProps> = ({
         </div>
 
         <div className='mt-8 flex items-center gap-2 text-xs text-[var(--oc-text-weaker)]'>
-          <span>Powered by</span>
+          <span>قدرت گرفته از</span>
           <span className='font-medium text-[var(--oc-text-weak)]'>DB-GPT</span>
         </div>
       </div>

@@ -69,7 +69,7 @@ export const multi_measure_line_chart: CustomChart = {
   /* 图表知识 */
   chartKnowledge: ckb as ChartKnowledge,
   /** 图表中文名 */
-  chineseName: '折线图',
+  chineseName: 'نمودار خطی',
 };
 
 export default multi_measure_line_chart;

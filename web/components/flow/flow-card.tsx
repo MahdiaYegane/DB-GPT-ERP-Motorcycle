@@ -76,7 +76,7 @@ const FlowCard: React.FC<FlowCardProps> = ({ flow, onCopy, deleteCallback }) => 
         desc={flow.description}
         tags={[
           { text: flow.source, border: true, color: flow.source === 'DBGPT-WEB' ? 'green' : 'blue' },
-          { text: flow.editable ? 'Editable' : 'Can not Edit', color: flow.editable ? 'green' : 'gray' },
+          { text: flow.editable ? 'قابل ویرایش' : 'قابل ویرایش نیست', color: flow.editable ? 'green' : 'gray' },
           {
             text: (
               <>

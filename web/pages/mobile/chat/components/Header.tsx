@@ -17,7 +17,7 @@ const Header: React.FC = () => {
 
   const shareApp = async () => {
     const success = copy(`dingtalk://dingtalkclient/page/link?url=${encodeURIComponent(location.href)}&pc_slide=true`);
-    message[success ? 'success' : 'error'](success ? '复制成功' : '复制失败');
+    message[success ? 'success' : 'error'](success ? 'کپی شد' : 'کپی ناموفق بود');
   };
 
   if (count > 6) {

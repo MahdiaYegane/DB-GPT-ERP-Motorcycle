@@ -91,7 +91,7 @@ export const ImportFlowModal: React.FC<Props> = ({ isImportModalOpen, setIsImpor
             label={t('Select_File')}
             valuePropName='fileList'
             getValueFromEvent={e => (Array.isArray(e) ? e : e && e.fileList)}
-            rules={[{ required: true, message: 'Please upload a file' }]}
+            rules={[{ required: true, message: 'لطفاً یک فایل بارگذاری کنید' }]}
           >
             <Upload {...props} accept='.json,.zip' maxCount={1}>
               <Button icon={<UploadOutlined />}> {t('Upload')}</Button>

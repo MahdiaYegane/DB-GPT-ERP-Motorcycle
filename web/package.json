@@ -53,6 +53,7 @@
     "copy-to-clipboard": "^3.3.3",
     "cytoscape": "^3.29.2",
     "cytoscape-euler": "^1.2.2",
+    "d3-array": "3.2.4",
     "dayjs": "^1.11.12",
     "eslint-plugin-prettier": "^5.2.1",
     "framer-motion": "^10.16.4",

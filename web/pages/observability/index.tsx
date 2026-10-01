@@ -115,7 +115,7 @@ export default function ObservabilityOverviewPage() {
 
   const traceColumns = [
     {
-      title: t('observability_trace_id') || 'Trace',
+      title: t('observability_trace_id') || 'ردیابی',
       dataIndex: 'trace_id',
       render: (id: string) => (
         <a className='text-blue-500' onClick={() => router.push(`/observability/traces/${id}`)}>
@@ -123,18 +123,18 @@ export default function ObservabilityOverviewPage() {
         </a>
       ),
     },
-    { title: t('observability_operation') || 'Operation', dataIndex: 'root_operation_name' },
+    { title: t('observability_operation') || 'عملیات', dataIndex: 'root_operation_name' },
     {
-      title: t('observability_status') || 'Status',
+      title: t('observability_status') || 'وضعیت',
       dataIndex: 'status',
       render: (s: string) => <Tag color={s === 'ERROR' ? 'red' : 'green'}>{s || 'OK'}</Tag>,
     },
     {
-      title: t('observability_duration') || 'Duration',
+      title: t('observability_duration') || 'مدت',
       dataIndex: 'duration_ms',
       render: (d?: number) => (d != null ? `${(d / 1000).toFixed(2)}s` : '-'),
     },
-    { title: t('observability_spans') || 'Spans', dataIndex: 'span_count' },
+    { title: t('observability_spans') || 'اسپن‌ها', dataIndex: 'span_count' },
     {
       title: t('observability_time') || 'Time',
       dataIndex: 'start_time',
@@ -146,53 +146,53 @@ export default function ObservabilityOverviewPage() {
     <div className='flex flex-col h-full w-full dark:bg-gradient-dark bg-gradient-light overflow-y-auto'>
       <div className='px-6 py-5 border-b border-gray-100 dark:border-gray-800'>
         <h1 className='text-xl font-semibold text-gray-800 dark:text-gray-100'>
-          {t('observability_overview') || 'Observability · Overview'}
+          {t('observability_overview') || 'پایش · نمای کلی'}
         </h1>
-        <div className='text-xs text-gray-400 mt-1'>{t('observability_last_24h') || 'Last 24 hours'}</div>
+        <div className='text-xs text-gray-400 mt-1'>{t('observability_last_24h') || '۲۴ ساعت گذشته'}</div>
       </div>
 
       <div className='px-6 py-4 space-y-4'>
         <div className='flex gap-4 flex-wrap'>
           <Kpi title={t('observability_agents') || 'Agents'} value={agents.length} />
-          <Kpi title={t('observability_events') || 'Events (24h)'} value={totalEvents} />
+          <Kpi title={t('observability_events') || 'رویدادها (۲۴ ساعت)'} value={totalEvents} />
           <Kpi
-            title={t('observability_tokens') || 'Tokens (24h)'}
+            title={t('observability_tokens') || 'توکن‌ها (۲۴ ساعت)'}
             value={totalTokens.toLocaleString()}
             hint={tokensLoading ? '…' : undefined}
           />
           <Kpi
-            title={t('observability_latency') || 'Latency P95'}
+            title={t('observability_latency') || 'تأخیر P95'}
             value={maxLatency ? `${(maxLatency / 1000).toFixed(2)}s` : '-'}
             hint={latencyLoading ? '…' : undefined}
           />
-          <Kpi title={t('observability_error_rate') || 'Error rate'} value={`${errorRate.toFixed(1)}%`} />
+          <Kpi title={t('observability_error_rate') || 'نرخ خطا'} value={`${errorRate.toFixed(1)}%`} />
         </div>
 
         {/* AntCC-style token breakdown panel */}
-        <Card size='small' title={t('observability_token_total') || 'Token usage (input + cache + output)'}>
+        <Card size='small' title={t('observability_token_total') || 'مصرف توکن (ورودی + کش + خروجی)'}>
           <Spin spinning={modelUsageLoading}>
             <div className='flex gap-4 flex-wrap'>
               <div className='flex-1 min-w-[150px] rounded-lg bg-gray-50 dark:bg-gray-800/60 p-4'>
-                <div className='text-xs text-gray-400'>{t('observability_input_tokens') || 'Input Tokens'}</div>
+                <div className='text-xs text-gray-400'>{t('observability_input_tokens') || 'توکن‌های ورودی'}</div>
                 <div className='text-2xl font-semibold mt-1 text-gray-800 dark:text-gray-100'>
                   {tokenInput.toLocaleString()}
                 </div>
               </div>
               <div className='flex-1 min-w-[150px] rounded-lg bg-amber-50 dark:bg-amber-900/20 p-4'>
-                <div className='text-xs text-gray-400'>{t('observability_output_tokens') || 'Output Tokens'}</div>
+                <div className='text-xs text-gray-400'>{t('observability_output_tokens') || 'توکن‌های خروجی'}</div>
                 <div className='text-2xl font-semibold mt-1 text-gray-800 dark:text-gray-100'>
                   {tokenOutput.toLocaleString()}
                 </div>
               </div>
               <div className='flex-1 min-w-[150px] rounded-lg bg-emerald-50 dark:bg-emerald-900/20 p-4'>
-                <div className='text-xs text-gray-400'>{t('observability_cache_hit_tokens') || 'Cache-hit Tokens'}</div>
+                <div className='text-xs text-gray-400'>{t('observability_cache_hit_tokens') || 'توکن‌های کش‌شده'}</div>
                 <div className='text-2xl font-semibold mt-1 text-gray-800 dark:text-gray-100'>
                   {tokenCacheHit.toLocaleString()}
                 </div>
               </div>
               <div className='flex-1 min-w-[150px] rounded-lg bg-violet-50 dark:bg-violet-900/20 p-4'>
                 <div className='text-xs text-gray-400'>
-                  {t('observability_cache_miss_tokens') || 'Cache-miss Tokens'}
+                  {t('observability_cache_miss_tokens') || 'توکن‌های کش‌نشده'}
                 </div>
                 <div className='text-2xl font-semibold mt-1 text-gray-800 dark:text-gray-100'>
                   {tokenCacheMiss.toLocaleString()}
@@ -200,12 +200,12 @@ export default function ObservabilityOverviewPage() {
               </div>
             </div>
             <div className='text-xs text-gray-400 mt-3'>
-              {t('observability_token_total') || 'Token usage'}: <b>{tokenGrand.toLocaleString()}</b>
+              {t('observability_token_total') || 'مصرف توکن'}: <b>{tokenGrand.toLocaleString()}</b>
             </div>
           </Spin>
         </Card>
 
-        <Card size='small' title={t('observability_model_usage') || 'Model usage'}>
+        <Card size='small' title={t('observability_model_usage') || 'مصرف مدل'}>
           <Spin spinning={modelUsageLoading}>
             <Table
               size='small'
@@ -213,8 +213,8 @@ export default function ObservabilityOverviewPage() {
               dataSource={modelUsage}
               rowKey='model_name'
               columns={[
-                { title: t('observability_model') || 'Model', dataIndex: 'model_name' },
-                { title: t('observability_calls') || 'Calls', dataIndex: 'call_count' },
+                { title: t('observability_model') || 'مدل', dataIndex: 'model_name' },
+                { title: t('observability_calls') || 'فراخوانی‌ها', dataIndex: 'call_count' },
                 {
                   title: t('observability_input_tokens') || 'Input',
                   dataIndex: 'prompt_tokens',
@@ -226,12 +226,12 @@ export default function ObservabilityOverviewPage() {
                   render: (v: number) => v.toLocaleString(),
                 },
                 {
-                  title: 'Total',
+                  title: 'مجموع',
                   dataIndex: 'total_tokens',
                   render: (v: number) => v.toLocaleString(),
                 },
                 {
-                  title: t('observability_avg_latency') || 'Avg latency',
+                  title: t('observability_avg_latency') || 'میانگین تأخیر',
                   dataIndex: 'avg_duration_ms',
                   render: (v?: number) => (v != null ? `${(v / 1000).toFixed(2)}s` : '-'),
                 },
@@ -241,7 +241,7 @@ export default function ObservabilityOverviewPage() {
         </Card>
 
         <div className='flex gap-4'>
-          <Card size='small' className='flex-1' title={t('observability_event_volume') || 'Event volume (24h)'}>
+          <Card size='small' className='flex-1' title={t('observability_event_volume') || 'حجم رویداد (۲۴ ساعت)'}>
             <Spin spinning={metricsLoading}>
               {chartData.length === 0 ? (
                 <Empty />
@@ -262,7 +262,7 @@ export default function ObservabilityOverviewPage() {
               )}
             </Spin>
           </Card>
-          <Card size='small' className='flex-1' title={t('observability_latency_trend') || 'Latency trend (P95)'}>
+          <Card size='small' className='flex-1' title={t('observability_latency_trend') || 'روند تأخیر (P95)'}>
             <Spin spinning={latencyLoading}>
               {latencyChartData.length === 0 ? (
                 <Empty />
@@ -288,7 +288,7 @@ export default function ObservabilityOverviewPage() {
           </Card>
         </div>
 
-        <Card size='small' title={t('observability_agent_health') || 'Agent health'}>
+        <Card size='small' title={t('observability_agent_health') || 'سلامت عامل'}>
           <Spin spinning={healthLoading}>
             <Table
               size='small'
@@ -296,10 +296,10 @@ export default function ObservabilityOverviewPage() {
               dataSource={health}
               rowKey='agent_name'
               columns={[
-                { title: t('observability_agent') || 'Agent', dataIndex: 'agent_name' },
-                { title: t('observability_events') || 'Events', dataIndex: 'event_count' },
+                { title: t('observability_agent') || 'عامل', dataIndex: 'agent_name' },
+                { title: t('observability_events') || 'رویدادها', dataIndex: 'event_count' },
                 {
-                  title: t('observability_error_rate') || 'Error rate',
+                  title: t('observability_error_rate') || 'نرخ خطا',
                   dataIndex: 'error_rate',
                   render: (r: number) => `${(r * 100).toFixed(1)}%`,
                 },
@@ -308,7 +308,7 @@ export default function ObservabilityOverviewPage() {
           </Spin>
         </Card>
 
-        <Card size='small' title={t('observability_recent_traces') || 'Recent traces'}>
+        <Card size='small' title={t('observability_recent_traces') || 'ردیابی‌های اخیر'}>
           <Spin spinning={tracesLoading}>
             <Table
               size='small'

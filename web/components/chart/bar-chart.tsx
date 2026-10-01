@@ -55,11 +55,11 @@ export default function BarChart({ chart }: { key: string; chart: ChartData }) {
                 items: [
                   {
                     field: 'name',
-                    name: '名称',
+                    name: 'نام',
                   },
                   {
                     field: 'value',
-                    name: '数值',
+                    name: 'مقدار',
                     valueFormatter: formatNumber,
                   },
                 ],

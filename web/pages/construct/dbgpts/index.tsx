@@ -131,7 +131,7 @@ function Agent() {
     },
     {
       value: 'agents',
-      label: 'Agent',
+      label: 'عامل',
     },
     {
       value: 'resources',

@@ -130,7 +130,7 @@ const InputContainer: React.FC = () => {
       });
     } catch {
       ctrl.current?.abort();
-      tempHistory[index].context = 'Sorry, we meet some error, please try again later.';
+      tempHistory[index].context = 'متأسفانه خطایی رخ داد، لطفاً بعداً دوباره تلاش کنید.';
       tempHistory[index].thinking = false;
       setHistory([...tempHistory]);
       setCanNewChat(true);
@@ -243,7 +243,7 @@ const InputContainer: React.FC = () => {
           {paramType?.includes('temperature') && <Thermometer />}
         </div>
         <div className='flex items-center justify-between text-lg font-bold'>
-          <Popover content='暂停回复' trigger={['hover']}>
+          <Popover content='توقف پاسخ' trigger={['hover']}>
             <PauseCircleOutlined
               className={classnames('p-2 cursor-pointer', {
                 'text-[#0c75fc]': canAbort,
@@ -252,7 +252,7 @@ const InputContainer: React.FC = () => {
               onClick={abort}
             />
           </Popover>
-          <Popover content='再来一次' trigger={['hover']}>
+          <Popover content='تلاش دوباره' trigger={['hover']}>
             <RedoOutlined
               className={classnames('p-2 cursor-pointer', {
                 'text-gray-400': !history.length || !canNewChat,
@@ -263,7 +263,7 @@ const InputContainer: React.FC = () => {
           {loading ? (
             <Spin spinning={loading} indicator={<LoadingOutlined style={{ fontSize: 18 }} spin />} className='p-2' />
           ) : (
-            <Popover content='清除历史' trigger={['hover']}>
+            <Popover content='پاک کردن تاریخچه' trigger={['hover']}>
               <ClearOutlined
                 className={classnames('p-2 cursor-pointer', {
                   'text-gray-400': !history.length || !canNewChat,
@@ -284,7 +284,7 @@ const InputContainer: React.FC = () => {
         )}
       >
         <Input.TextArea
-          placeholder='可以问我任何问题'
+          placeholder='هر سؤالی دارید بپرسید'
           className='w-full resize-none border-0 p-0 focus:shadow-none'
           value={userInput}
           autoSize={{ minRows: 1 }}

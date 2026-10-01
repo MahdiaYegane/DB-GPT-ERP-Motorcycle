@@ -69,7 +69,7 @@ const CommandPopover: React.FC<CommandPopoverProps> = ({
           <Spin size='small' />
         </div>
       ) : commands.length === 0 ? (
-        <div className='px-3 py-2 text-sm text-gray-500 dark:text-gray-400'>No commands found</div>
+        <div className='px-3 py-2 text-sm text-gray-500 dark:text-gray-400'>دستوری پیدا نشد</div>
       ) : (
         <div className='py-1'>
           {commands.map(command => {

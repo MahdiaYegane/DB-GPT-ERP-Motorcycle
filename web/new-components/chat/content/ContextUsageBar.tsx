@@ -26,21 +26,21 @@ const STATE_COLORS: Record<string, { bar: string; bg: string; text: string; ring
     bg: 'bg-green-50 dark:bg-green-950/30',
     text: 'text-green-700 dark:text-green-300',
     ring: '#10b981',
-    label: 'Context',
+    label: 'زمینه',
   },
   WARNING: {
     bar: 'bg-yellow-500',
     bg: 'bg-yellow-50 dark:bg-yellow-950/30',
     text: 'text-yellow-700 dark:text-yellow-300',
     ring: '#f59e0b',
-    label: 'Context (compressing)',
+    label: 'زمینه (در حال فشرده‌سازی)',
   },
   ERROR: {
     bar: 'bg-red-500',
     bg: 'bg-red-50 dark:bg-red-950/30',
     text: 'text-red-700 dark:text-red-300',
     ring: '#ef4444',
-    label: 'Context (critical)',
+    label: 'زمینه (بحرانی)',
   },
 };
 
@@ -106,7 +106,7 @@ const ContextUsageBar: React.FC<ContextUsageBarProps> = ({
           </svg>
         </button>
         <div className='pointer-events-none absolute bottom-full left-1/2 z-30 mb-2 w-[188px] -translate-x-1/2 translate-y-1 rounded-2xl border border-white/10 bg-[#2f2f2f] px-4 py-3 text-center text-white opacity-0 shadow-[0_18px_50px_rgba(15,23,42,0.22)] transition-all duration-150 group-hover:translate-y-0 group-hover:opacity-100 dark:bg-[#2b2b2b]'>
-          <div className='text-[13px] font-medium leading-5 text-white/55'>Context window:</div>
+          <div className='text-[13px] font-medium leading-5 text-white/55'>پنجره زمینه:</div>
           <div className='mt-1 text-[17px] leading-6 text-white/70'>{Math.round(pct)}% full</div>
           <div className='mt-2 text-[15px] font-medium leading-5 tabular-nums text-white'>
             {formatTokens(used)} / {formatTokens(budget)} tokens used

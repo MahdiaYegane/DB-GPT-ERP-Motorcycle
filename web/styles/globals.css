@@ -1,3 +1,66 @@
+@font-face {
+  font-family: 'Arad';
+  src: url('/fonts/Arad-SemiBold.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Arad';
+  src: url('/fonts/Arad-SemiBold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* ============================================
+   CSS VARIABLE OVERRIDES - Force RED theme
+   Override all blue CSS variables with red
+   Using html selector for higher specificity
+   ============================================ */
+html {
+  --antd-primary-color: #096bde;
+  --joy-palette-primary-500: #3b82f6;
+  --joy-palette-primary-400: #60a5fa;
+  --joy-palette-primary-300: #93c5fd;
+  --joy-palette-primary-200: #bfdbfe;
+  --joy-palette-primary-100: #e2e8f0;
+  --blue-500: #096bde;
+  --blue-400: #3b82f6;
+  --blue-3b82f6: #096bde;
+  --blue-600: #60a5fa;
+  --blue-100: #e2e8f0;
+  --colorBgBase: #f8fafc;
+  --colorPrimary: #096bde;
+  --colorPrimaryHover: #3b82f6;
+  --colorPrimaryActive: #60a5fa;
+  --colorPrimaryBorder: #096bde;
+  --antd-color-primary: #096bde;
+}
+
+/* Global blue → red replacement for all elements */
+*, *::before, *::after {
+  accent-color: #096bde !important;
+}
+
+/* Override any inline blue styles */
+*[style*="#096bde"],
+*[style*="#3b82f6"],
+*[style*="#1677ff"],
+*[style*="#2563eb"],
+*[style*="#60a5fa"],
+*[style*="#93c5fd"] {
+  ;
+}
+
+/* Make any blue-colored element red */
+html * {
+  --tw-blue-500: #096bde !important;
+  --tw-blue-400: #096bde !important;
+  --tw-blue-600: #096bde !important;
+  --tw-blue-100: #096bde !important;
+  --tw-blue-50: #fff0f0 !important;
+  --tw-blue-900: #1e1b1b !important;
+}
+
 @import './katex-override.css';
 @import './opencode-theme.css';
 
@@ -5,27 +68,46 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Force sidebar background to always be white - with extremely high specificity */
+.side-bar .bg-white,
+.side-bar .dark\:bg-white,
+.side-bar [style*="background"] {
+  background-color: #ffffff !important;
+}
+
+/* Target the specific sidebar class combinations from side-bar.tsx */
+.flex.flex-col.justify-between.pt-4.h-screen.bg-white.animate-fade.animate-duration-300,
+.flex.flex-col.h-screen.w-[240px].min-w-[240px].px-4.pt-4.bg-white.animate-fade.animate-duration-300 {
+  background-color: #ffffff !important;
+}
+
+/* Fallback: force bg-white to be white everywhere */
+.bg-white {
+  background-color: #ffffff !important;
+}
+
+/* Ensure dark mode also has white */
+.dark .bg-white {
+  background-color: #ffffff !important;
+}
+
 body {
   margin: 0;
-  font-family: var(--joy-fontFamily-body, var(--joy-Josefin Sans, sans-serif));
+  font-family: 'Arad', var(--joy-fontFamily-body, var(--joy-Josefin Sans, sans-serif));
   line-height: var(--joy-lineHeight-md, 1.5);
-  --antd-primary-color: #0069fe;
+  --antd-primary-color: #096bde;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
   -webkit-appearance: none;
 }
 
 .light {
-  color: #333;
-  background-color: #f7f7f7;
+  color: #000;
+  background-color: #ffffff;
 }
 
 .dark {
-  color: #f7f7f7;
-  background-color: #151622;
-}
-
-.dark-sub-bg {
-  background-color: rgb(35, 38, 44);
+  color: #f3f4f6;
+  background-color: #1e1b1b;
 }
 
 .ant-btn-primary {
@@ -57,7 +139,6 @@ body {
   width: 6px;
 }
 
-/* 自定义滚动条样式 */
 ::-webkit-scrollbar {
   display: none;
 }
@@ -74,15 +155,6 @@ body {
   background: #555;
 }
 
-
-
-.dark :where(.css-dev-only-do-not-override-18iikkb).ant-tabs .ant-tabs-tab-btn {
-  color: white;
-}
-
-:where(.css-dev-only-do-not-override-18iikkb).ant-form-item .ant-form-item-label>label {
-  height: 36px;
-}
 
 @keyframes rotate {
   to {
@@ -151,7 +223,6 @@ pre {
   padding-left: 0.5rem;
 }
 
-/* Floating buttons z-index system */
 .z-float-helper {
   z-index: 997;
 }
@@ -164,13 +235,11 @@ pre {
   z-index: 999;
 }
 
-/* Responsive floating button layout */
 @media (max-width: 768px) {
   .float-button-container {
     right: 1rem !important;
     gap: 0.5rem;
   }
-  
   .float-button-container button {
     width: 2.25rem !important;
     height: 2.25rem !important;
@@ -182,7 +251,6 @@ pre {
     right: 1.5rem !important;
     gap: 0.5rem;
   }
-  
   .float-button-container button {
     width: 2.5rem !important;
     height: 2.5rem !important;
@@ -201,4 +269,195 @@ table {
 
 .rc-md-editor .editor-container>.section {
   border-right: none !important;
+}
+
+/* ============================================
+   GLOBAL BLUE -> RED OVERRIDE
+   Force all blue theme colors to red
+   ============================================ */
+
+/* Replace blue-500 accent colors */
+.bg-blue-500,
+.text-blue-500 {
+  background-color: #096bde !important;
+  color: #096bde !important;
+}
+
+/* Replace blue-600 */
+.text-blue-600 {
+  color: #096bde !important;
+}
+
+/* Replace blue-400 */
+.text-blue-400 {
+  color: #096bde !important;
+}
+
+/* Replace blue-300 */
+.text-blue-300 {
+  color: #096bde !important;
+}
+
+/* Replace blue-100 background */
+.bg-blue-100 {
+  background-color: #096bde !important;
+}
+
+/* Replace blue-50 background */
+.bg-blue-50 {
+  background-color: #fff0f0 !important;
+}
+
+/* Replace blue-50/50 */
+.bg-blue-50\/50,
+.hover\:bg-blue-50\/50:hover {
+  background-color: #fff0f050 !important;
+}
+
+/* Replace blue-900 dark backgrounds */
+.dark\:bg-blue-900\/20,
+.dark\:bg-blue-900\/10,
+.dark\:bg-blue-900\/15,
+.dark\:bg-blue-900\/30,
+.dark\:bg-blue-900\/50,
+.dark\:bg-blue-900\/45,
+.dark\:bg-blue-900\/40,
+.dark\:bg-blue-900\/35 {
+  background-color: rgba(227, 6, 19, 0.15) !important;
+}
+
+/* Replace blue-900 dark backgrounds */
+.dark\:bg-blue-950\/25,
+.dark\:bg-blue-950\/30,
+.dark\:bg-blue-950\/50,
+.dark\:bg-blue-950\/35,
+.dark\:bg-blue-950\/40 {
+  background-color: rgba(227, 6, 19, 0.08) !important;
+}
+
+/* Replace blue border colors */
+.border-blue-200,
+.border-blue-300,
+.border-blue-100,
+.dark\:border-blue-700,
+.dark\:border-blue-800,
+.dark\:border-blue-900\/60,
+.dark\:border-blue-900\/50,
+.dark\:border-blue-900\/70,
+.dark\:border-blue-700\/70 {
+  border-color: #096bde !important;
+}
+
+/* Replace blue ring focus */
+.focus-visible\:ring-blue-500\/30,
+.focus-visible\:ring-blue-500\/40 {
+  --tw-ring-color: #096bde !important;
+}
+
+/* Replace blue-500/85 and blue-500/80 backgrounds */
+.bg-blue-500\/85,
+.bg-blue-500\/80,
+.bg-blue-500\/45 {
+  background-color: rgba(227, 6, 19, 0.7) !important;
+}
+
+/* Replace blue-400 animate ping */
+.bg-blue-400 {
+  background-color: #096bde !important;
+}
+
+/* Replace blue-200 */
+.bg-blue-200,
+.bg-blue-200\/50 {
+  background-color: #096bde !important;
+}
+
+/* Replace blue hover states */
+.hover\:bg-blue-50\/60:hover {
+  background-color: #fff0f060 !important;
+}
+
+.hover\:bg-blue-50\/50:hover {
+  background-color: #fff0f050 !important;
+}
+
+.hover\:text-blue-600:hover {
+  color: #096bde !important;
+}
+
+.hover\:text-blue-700:hover {
+  color: #096bde !important;
+}
+
+.hover\:border-blue-300:hover {
+  border-color: #096bde !important;
+}
+
+/* Replace blue text hover */
+.hover\:text-blue-500:hover {
+  color: #096bde !important;
+}
+
+.hover\:text-blue-400:hover {
+  color: #096bde !important;
+}
+
+/* Dark mode blue replacements */
+.dark\:hover\:bg-blue-900\/15:hover {
+  background-color: rgba(227, 6, 19, 0.1) !important;
+}
+
+.dark\:hover\:bg-blue-900\/10:hover {
+  background-color: rgba(227, 6, 19, 0.08) !important;
+}
+
+.dark\:hover\:bg-blue-900\/35:hover {
+  background-color: rgba(227, 6, 19, 0.12) !important;
+}
+
+.dark\:hover\:bg-blue-900\/30:hover {
+  background-color: rgba(227, 6, 19, 0.1) !important;
+}
+
+.dark\:hover\:text-blue-300:hover {
+  color: #096bde !important;
+}
+
+.dark\:hover\:text-blue-400:hover {
+  color: #096bde !important;
+}
+
+/* text-blue-700 */
+.text-blue-700 {
+  color: #096bde !important;
+}
+
+/* Replace specific component blue overrides */
+\[class\*="bg-blue-500"\] {
+  background-color: #096bde !important;
+}
+
+/* Antd radio checked blue */
+\[class\*="border-blue-500"\] {
+  border-color: #096bde !important;
+}
+
+/* Replace #1677ff (antd blue) with red */
+:root {
+  --tw-blue-500: #096bde !important;
+}
+
+/* Conversation trace panel colors */
+\[color="#1677ff"\] {
+  color: #096bde !important;
+}
+
+/* Ensure Arad font is applied to all text */
+* {
+  font-family: 'Arad', sans-serif !important;
+}
+
+/* Ensure RTL for all elements */
+html, body {
+  direction: rtl;
 }

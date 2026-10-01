@@ -18,11 +18,11 @@ test('defines one flat tab row with uploaded inputs as its own tab', () => {
   assert.deepEqual(
     TASK_FILE_TABS.map(tab => [tab.key, tab.label]),
     [
-      ['all', 'All'],
-      ['input', 'Uploaded Materials'],
-      ['document', 'Documents'],
-      ['image', 'Images'],
-      ['code', 'Code Files'],
+      ['all', 'همه'],
+      ['input', 'مواد بارگذاری‌شده'],
+      ['document', 'اسناد'],
+      ['image', 'تصاویر'],
+      ['code', 'فایل‌های کد'],
     ],
   );
 });
@@ -74,8 +74,8 @@ test('keeps empty tabs stable and gives each one a contextual empty state', () =
   const view = buildTaskFileView([], [], 'image');
 
   assert.deepEqual(view.counts, { all: 0, input: 0, document: 0, image: 0, code: 0 });
-  assert.equal(getTaskFileEmptyLabel('input'), 'No uploaded materials');
-  assert.equal(getTaskFileEmptyLabel('image'), 'No generated images');
+  assert.equal(getTaskFileEmptyLabel('input'), 'هیچ ماده بارگذاری‌شده‌ای وجود ندارد');
+  assert.equal(getTaskFileEmptyLabel('image'), 'هیچ تصویر تولیدشده‌ای وجود ندارد');
 });
 
 test('supports wrapped arrow-key navigation across the single tab row', () => {

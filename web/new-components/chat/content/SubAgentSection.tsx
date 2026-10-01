@@ -79,7 +79,7 @@ const SubAgentRow: React.FC<{
         </div>
       </div>
       {agent.artifactCount > 0 && (
-        <Tooltip title={`${agent.artifactCount} 个产物`}>
+        <Tooltip title={`${agent.artifactCount} خروجی`}>
           <span className='text-[10px] text-gray-400 dark:text-gray-500 flex items-center gap-0.5 shrink-0'>
             <FileImageOutlined className='text-[11px]' />
             {agent.artifactCount}
@@ -125,11 +125,11 @@ const SubAgentSection: React.FC<SubAgentSectionProps> = ({
           )}
         </div>
         <span className='text-sm font-medium text-gray-800 dark:text-gray-200 flex-1'>
-          并行执行 {rows.length} 个子任务
+          اجرای موازی {rows.length} زیروظیفه
         </span>
         <span className='text-[10px] text-gray-400'>
           {doneCount}/{rows.length}
-          {artifactCount ? ` · ${artifactCount} 产物` : ''}
+          {artifactCount ? ` · ${artifactCount} خروجی` : ''}
         </span>
         <span className='text-xs text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors'>
           {collapsed ? <CaretRightOutlined /> : <CaretDownOutlined />}

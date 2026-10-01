@@ -51,7 +51,7 @@ const RecallTestModal: React.FC<RecallTestModalProps> = ({ open, setOpen, space 
     }
   }, [open, optionsRun, questionsRun]);
 
-  // 召回测试
+  // 召回آزمون
   const {
     run: recallTestRun,
     data: resultList = [],
@@ -74,7 +74,7 @@ const RecallTestModal: React.FC<RecallTestModalProps> = ({ open, setOpen, space 
 
   return (
     <Modal
-      title='召回测试'
+      title='آزمون بازیابی'
       width={'60%'}
       open={open}
       footer={false}
@@ -83,14 +83,14 @@ const RecallTestModal: React.FC<RecallTestModalProps> = ({ open, setOpen, space 
       destroyOnClose={true}
     >
       <Card
-        title='召回配置'
+        title='تنظیمات بازیابی'
         size='small'
         className='my-4'
         extra={
           <Popover
             placement='bottomRight'
             trigger='hover'
-            title='向量检索设置'
+            title='تنظیمات جستجوی برداری'
             content={
               <Form
                 form={extraForm}
@@ -98,10 +98,10 @@ const RecallTestModal: React.FC<RecallTestModalProps> = ({ open, setOpen, space 
                   recall_top_k: 1,
                 }}
               >
-                <Form.Item label='Topk' tooltip='基于相似度得分的前 k 个向量' name='recall_top_k'>
-                  <InputNumber placeholder='请输入' className='w-full' />
+                <Form.Item label='تعداد K برتر' tooltip='k بردار برتر بر اساس امتیاز شباهت' name='recall_top_k'>
+                  <InputNumber placeholder='وارد کنید' className='w-full' />
                 </Form.Item>
-                <Form.Item label='召回方法' name='recall_retrievers'>
+                <Form.Item label='روش بازیابی' name='recall_retrievers'>
                   <Select
                     mode='multiple'
                     options={options.map(item => {
@@ -112,8 +112,8 @@ const RecallTestModal: React.FC<RecallTestModalProps> = ({ open, setOpen, space 
                     disabled
                   />
                 </Form.Item>
-                <Form.Item label='score阈值' name='recall_score_threshold'>
-                  <InputNumber placeholder='请输入' className='w-full' step={0.1} />
+                <Form.Item label='آستانه امتیاز' name='recall_score_threshold'>
+                  <InputNumber placeholder='وارد کنید' className='w-full' step={0.1} />
                 </Form.Item>
               </Form>
             }
@@ -124,16 +124,16 @@ const RecallTestModal: React.FC<RecallTestModalProps> = ({ open, setOpen, space 
       >
         <Form form={form} layout='vertical' onFinish={onTest}>
           <Form.Item
-            label='测试问题'
+            label='سؤال آزمون'
             required={true}
             name='question'
-            rules={[{ required: true, message: '请输入测试问题' }]}
+            rules={[{ required: true, message: 'سؤال آزمون را وارد کنید' }]}
             className='m-0 p-0'
           >
             <div className='flex w-full items-center gap-8'>
-              <Input placeholder='请输入测试问题' autoComplete='off' allowClear className='w-1/2' />
+              <Input placeholder='سؤال آزمون را وارد کنید' autoComplete='off' allowClear className='w-1/2' />
               <Button type='primary' htmlType='submit'>
-                测试
+                آزمون
               </Button>
             </div>
           </Form.Item>
@@ -160,7 +160,7 @@ const RecallTestModal: React.FC<RecallTestModalProps> = ({ open, setOpen, space 
             )} */}
         </Form>
       </Card>
-      <Card title='召回结果' size='small'>
+      <Card title='نتایج بازیابی' size='small'>
         <Spin spinning={loading}>
           {resultList.length > 0 ? (
             <div
@@ -179,7 +179,7 @@ const RecallTestModal: React.FC<RecallTestModalProps> = ({ open, setOpen, space 
                   }
                   extra={
                     <div className='flex items-center gap-2'>
-                      <span className='font-semibold'>score:</span>
+                      <span className='font-semibold'>امتیاز:</span>
                       <span className='text-blue-500'>{item.score}</span>
                     </div>
                   }

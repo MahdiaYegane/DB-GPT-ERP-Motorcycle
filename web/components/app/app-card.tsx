@@ -31,7 +31,6 @@ export default function AppCard(props: IProps) {
 
   const languageMap = {
     en: t('English'),
-    zh: t('Chinese'),
   };
 
   const showDeleteConfirm = () => {

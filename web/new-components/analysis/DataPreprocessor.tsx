@@ -590,7 +590,7 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
 
   const columnTableColumns = [
     {
-      title: 'Column',
+      title: 'ستون',
       dataIndex: 'name',
       key: 'name',
       render: (name: string, record: ColumnConfig) => (
@@ -601,7 +601,7 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
       ),
     },
     {
-      title: 'Type',
+      title: 'نوع',
       dataIndex: 'detectedType',
       key: 'type',
       render: (type: ColumnType, record: ColumnConfig) => (
@@ -611,17 +611,17 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
           onChange={val => updateColumnConfig(record.name, { selectedType: val })}
           className='w-28'
           options={[
-            { value: 'number', label: '# Number' },
-            { value: 'string', label: 'Aa String' },
-            { value: 'date', label: '📅 Date' },
-            { value: 'boolean', label: '✓ Boolean' },
-            { value: 'category', label: '📋 Category' },
+            { value: 'number', label: '# عدد' },
+            { value: 'string', label: 'Aa رشته' },
+            { value: 'date', label: '📅 تاریخ' },
+            { value: 'boolean', label: '✓ بولی' },
+            { value: 'category', label: '📋 دسته' },
           ]}
         />
       ),
     },
     {
-      title: 'Missing',
+      title: 'گمشده',
       key: 'missing',
       render: (_: any, record: ColumnConfig) => (
         <div className='flex items-center gap-2'>
@@ -631,14 +631,14 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
             </Tag>
           ) : (
             <Tag color='green' icon={<CheckCircleOutlined />}>
-              Clean
+              پاک‌سازی
             </Tag>
           )}
         </div>
       ),
     },
     {
-      title: 'Missing Strategy',
+      title: 'استراتژی مقادیر گمشده',
       key: 'missingStrategy',
       render: (_: any, record: ColumnConfig) => (
         <Select
@@ -648,19 +648,19 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
           className='w-32'
           disabled={record.missingCount === 0}
           options={[
-            { value: 'keep', label: 'Keep as is' },
-            { value: 'drop', label: 'Drop rows' },
-            { value: 'fill_mean', label: 'Fill mean' },
-            { value: 'fill_median', label: 'Fill median' },
-            { value: 'fill_mode', label: 'Fill mode' },
-            { value: 'fill_zero', label: 'Fill zero' },
-            { value: 'interpolate', label: 'Interpolate' },
+            { value: 'keep', label: 'حفظ به همان شکل' },
+            { value: 'drop', label: 'حذف سطرها' },
+            { value: 'fill_mean', label: 'پرکردن با میانگین' },
+            { value: 'fill_median', label: 'پرکردن با میانه' },
+            { value: 'fill_mode', label: 'پرکردن با مد' },
+            { value: 'fill_zero', label: 'پرکردن با صفر' },
+            { value: 'interpolate', label: 'درون‌یابی' },
           ]}
         />
       ),
     },
     {
-      title: 'Outliers',
+      title: 'پرت‌ها',
       key: 'outliers',
       render: (_: any, record: ColumnConfig) =>
         record.selectedType === 'number' ? (
@@ -676,7 +676,7 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
         ),
     },
     {
-      title: 'Normalize',
+      title: 'نرمال‌سازی',
       key: 'normalization',
       render: (_: any, record: ColumnConfig) =>
         record.selectedType === 'number' ? (
@@ -686,7 +686,7 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
             onChange={val => updateColumnConfig(record.name, { normalization: val })}
             className='w-28'
             options={[
-              { value: 'none', label: 'None' },
+              { value: 'none', label: 'هیچ‌کدام' },
               { value: 'minmax', label: 'Min-Max' },
               { value: 'zscore', label: 'Z-Score' },
               { value: 'log', label: 'Log' },
@@ -705,16 +705,16 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
         <div>
           <h3 className='text-lg font-semibold text-gray-800 dark:text-gray-200 flex items-center gap-2'>
             <SettingOutlined />
-            Data Preprocessing
+            پیش‌پردازش داده
           </h3>
           <p className='text-sm text-gray-500 dark:text-gray-400 mt-1'>
-            Configure data cleaning and transformation options
+            پیکربندی گزینه‌های پاک‌سازی و تبدیل داده
           </p>
         </div>
         <div className='flex items-center gap-3'>
           <div className='text-center'>
             <div className='text-2xl font-bold text-blue-600'>{dataQualityScore}</div>
-            <div className='text-xs text-gray-500'>Quality Score</div>
+            <div className='text-xs text-gray-500'>امتیاز کیفیت</div>
           </div>
           <Progress
             type='circle'
@@ -734,33 +734,33 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
             label: (
               <span className='flex items-center gap-1.5'>
                 <EditOutlined className='text-xs' />
-                Column Settings
+                تنظیمات ستون
               </span>
             ),
             children: (
               <div className='space-y-4'>
                 <div className='flex items-center justify-between bg-gray-50 dark:bg-gray-800 rounded-lg p-3'>
                   <div className='flex items-center gap-4'>
-                    <span className='text-sm text-gray-600 dark:text-gray-400'>Apply to all:</span>
+                    <span className='text-sm text-gray-600 dark:text-gray-400'>اعمال بر همه:</span>
                     <Select
                       size='small'
                       value={config.globalMissingStrategy}
                       onChange={val => setConfig(prev => ({ ...prev, globalMissingStrategy: val }))}
                       className='w-32'
                       options={[
-                        { value: 'keep', label: 'Keep missing' },
-                        { value: 'fill_mean', label: 'Fill mean' },
-                        { value: 'fill_median', label: 'Fill median' },
-                        { value: 'drop', label: 'Drop rows' },
+                        { value: 'keep', label: 'حفظ مقادیر گمشده' },
+                        { value: 'fill_mean', label: 'پرکردن با میانگین' },
+                        { value: 'fill_median', label: 'پرکردن با میانه' },
+                        { value: 'drop', label: 'حذف سطرها' },
                       ]}
                     />
                     <Button size='small' onClick={() => applyGlobalStrategy('missing')}>
-                      Apply Missing
+                      اعمال مقادیر گم‌شده
                     </Button>
                   </div>
                   <div className='flex items-center gap-2'>
                     <Badge count={config.columns.filter(c => c.include).length} overflowCount={99}>
-                      <Tag>Selected Columns</Tag>
+                      <Tag>ستون‌های انتخاب‌شده</Tag>
                     </Badge>
                   </div>
                 </div>
@@ -781,22 +781,22 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
             label: (
               <span className='flex items-center gap-1.5'>
                 <FilterOutlined className='text-xs' />
-                Global Options
+                گزینه‌های سراسری
               </span>
             ),
             children: (
               <div className='grid grid-cols-2 gap-6 p-4'>
-                <Card size='small' title='Text Processing' className='shadow-sm'>
+                <Card size='small' title='پردازش متن' className='shadow-sm'>
                   <div className='space-y-3'>
                     <div className='flex items-center justify-between'>
-                      <span className='text-sm'>Trim whitespace</span>
+                      <span className='text-sm'>حذف فاصله‌های اضافه</span>
                       <Switch
                         checked={config.trimWhitespace}
                         onChange={val => setConfig(prev => ({ ...prev, trimWhitespace: val }))}
                       />
                     </div>
                     <div className='flex items-center justify-between'>
-                      <span className='text-sm'>Lowercase strings</span>
+                      <span className='text-sm'>تبدیل به حروف کوچک</span>
                       <Switch
                         checked={config.lowercaseStrings}
                         onChange={val => setConfig(prev => ({ ...prev, lowercaseStrings: val }))}
@@ -805,17 +805,17 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
                   </div>
                 </Card>
 
-                <Card size='small' title='Row Processing' className='shadow-sm'>
+                <Card size='small' title='پردازش ردیف' className='shadow-sm'>
                   <div className='space-y-3'>
                     <div className='flex items-center justify-between'>
-                      <span className='text-sm'>Remove duplicates</span>
+                      <span className='text-sm'>حذف تکراری‌ها</span>
                       <Switch
                         checked={config.dropDuplicates}
                         onChange={val => setConfig(prev => ({ ...prev, dropDuplicates: val }))}
                       />
                     </div>
                     <div className='flex items-center justify-between'>
-                      <span className='text-sm'>Remove empty rows</span>
+                      <span className='text-sm'>حذف ردیف‌های خالی</span>
                       <Switch
                         checked={config.removeEmptyRows}
                         onChange={val => setConfig(prev => ({ ...prev, removeEmptyRows: val }))}
@@ -824,22 +824,22 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
                   </div>
                 </Card>
 
-                <Card size='small' title='Outlier Handling' className='shadow-sm col-span-2'>
+                <Card size='small' title='مدیریت پرت‌ها' className='shadow-sm col-span-2'>
                   <div className='space-y-3'>
                     <div className='flex items-center gap-4'>
-                      <span className='text-sm text-gray-600'>Global strategy:</span>
+                      <span className='text-sm text-gray-600'>راهبرد سراسری:</span>
                       <Radio.Group
                         value={config.globalOutlierStrategy}
                         onChange={e => setConfig(prev => ({ ...prev, globalOutlierStrategy: e.target.value }))}
                         size='small'
                       >
-                        <Radio.Button value='keep'>Keep</Radio.Button>
-                        <Radio.Button value='cap'>Cap</Radio.Button>
-                        <Radio.Button value='remove'>Remove</Radio.Button>
-                        <Radio.Button value='flag'>Flag</Radio.Button>
+                        <Radio.Button value='keep'>نگه‌داشتن</Radio.Button>
+                        <Radio.Button value='cap'>سقف‌گذاری</Radio.Button>
+                        <Radio.Button value='remove'>حذف</Radio.Button>
+                        <Radio.Button value='flag'>علامت‌گذاری</Radio.Button>
                       </Radio.Group>
                       <Button size='small' onClick={() => applyGlobalStrategy('outlier')}>
-                        Apply to All
+                        اعمال بر همه
                       </Button>
                     </div>
                   </div>
@@ -852,20 +852,20 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
             label: (
               <span className='flex items-center gap-1.5'>
                 <ThunderboltOutlined className='text-xs' />
-                Summary
+                خلاصه
               </span>
             ),
             children: (
               <div className='grid grid-cols-4 gap-4 p-4'>
                 <Card size='small' className='text-center'>
-                  <Statistic title='Total Rows' value={data.length} valueStyle={{ color: '#3B82F6' }} />
+                  <Statistic title='کل ردیف‌ها' value={data.length} valueStyle={{ color: '#3B82F6' }} />
                 </Card>
                 <Card size='small' className='text-center'>
-                  <Statistic title='Total Columns' value={columns.length} valueStyle={{ color: '#10B981' }} />
+                  <Statistic title='کل ستون‌ها' value={columns.length} valueStyle={{ color: '#10B981' }} />
                 </Card>
                 <Card size='small' className='text-center'>
                   <Statistic
-                    title='Missing Values'
+                    title='مقادیر گم‌شده'
                     value={config.columns.reduce((sum, c) => sum + c.missingCount, 0)}
                     valueStyle={{ color: '#F59E0B' }}
                     prefix={<WarningOutlined />}
@@ -873,7 +873,7 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
                 </Card>
                 <Card size='small' className='text-center'>
                   <Statistic
-                    title='Outliers Detected'
+                    title='پرت‌های شناسایی‌شده'
                     value={config.columns
                       .filter(c => c.selectedType === 'number')
                       .reduce((sum, c) => sum + c.outlierCount, 0)}
@@ -884,7 +884,7 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
 
                 <div className='col-span-4'>
                   <h4 className='text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300'>
-                    Column Type Distribution
+                    توزیع نوع ستون‌ها
                   </h4>
                   <div className='flex flex-wrap gap-2'>
                     {['number', 'string', 'date', 'boolean', 'category', 'mixed', 'unknown'].map(type => {
@@ -912,27 +912,27 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
             icon={<ReloadOutlined />}
             onClick={() => setConfig(prev => ({ ...prev, columns: analyzeColumns(data, columns) }))}
           >
-            Reset
+            بازنشانی
           </Button>
         </div>
         <div className='flex items-center gap-2'>
           <Button icon={<EyeOutlined />} onClick={handlePreview}>
-            Preview
+            پیش‌نمایش
           </Button>
           <Button type='primary' icon={<ThunderboltOutlined />} onClick={handleApply}>
-            Apply Preprocessing
+            اعمال پیش‌پردازش
           </Button>
         </div>
       </div>
 
       <Modal
-        title='Preview Preprocessing Results'
+        title='پیش‌نمایش نتایج پیش‌پردازش'
         open={showPreview}
         onCancel={() => setShowPreview(false)}
         width={800}
         footer={[
           <Button key='close' onClick={() => setShowPreview(false)}>
-            Close
+            بستن
           </Button>,
           <Button
             key='apply'
@@ -944,7 +944,7 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
               }
             }}
           >
-            Apply Changes
+            اعمال تغییرات
           </Button>,
         ]}
       >
@@ -953,7 +953,7 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
             <div className='grid grid-cols-3 gap-4'>
               <Card size='small'>
                 <Statistic
-                  title='Rows'
+                  title='ردیف‌ها'
                   value={previewResult.processedRowCount}
                   suffix={`/ ${previewResult.originalRowCount}`}
                   valueStyle={{
@@ -963,14 +963,14 @@ const DataPreprocessor: React.FC<DataPreprocessorProps> = ({
               </Card>
               <Card size='small'>
                 <Statistic
-                  title='Missing Filled'
+                  title='مقادیر گم‌شده پرشده'
                   value={previewResult.missingValuesFilled}
                   valueStyle={{ color: '#3B82F6' }}
                 />
               </Card>
               <Card size='small'>
                 <Statistic
-                  title='Outliers Handled'
+                  title='پرت‌های مدیریت‌شده'
                   value={previewResult.outliersHandled}
                   valueStyle={{ color: '#8B5CF6' }}
                 />

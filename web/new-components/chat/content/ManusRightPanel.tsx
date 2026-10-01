@@ -371,12 +371,12 @@ const getArtifactFileBg = (type: string): string => {
 
 const getArtifactTypeLabel = (type: string): string => {
   const map: Record<string, string> = {
-    file: 'File',
-    html: 'Web Report',
-    table: 'Data Table',
+    file: 'فایل',
+    html: 'گزارش وب',
+    table: 'جدول داده',
     chart: 'Chart',
     image: 'Image',
-    code: 'Code',
+    code: 'کد',
     markdown: 'Document',
     summary: 'Summary',
   };
@@ -489,7 +489,7 @@ const FileListItem: React.FC<{ artifact: ArtifactItem; onClick?: () => void }> =
         </div>
       </div>
       <span className='rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-medium text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300'>
-        Generated
+        تولیدشده
       </span>
     </button>
   );
@@ -664,14 +664,14 @@ const KB_TOOLS = new Set([
 
 // Friendly labels and icons for each kb tool action (used in the right-panel header card)
 const KB_ACTION_LABELS: Record<string, string> = {
-  kb_ls: 'List Files',
-  kb_glob: 'Search by Name',
-  kb_grep: 'Search Content',
-  kb_cat: 'Read File',
-  semantic_search: 'Semantic Search',
-  kb_codegraph_explore: 'Code Graph Explore',
-  kb_codegraph_call_chain: 'Call Chain',
-  kb_codegraph_class_hierarchy: 'Class Hierarchy',
+  kb_ls: 'فهرست فایل‌ها',
+  kb_glob: 'جستجو بر اساس نام',
+  kb_grep: 'جستجوی محتوا',
+  kb_cat: 'خواندن فایل',
+  semantic_search: 'جستجوی معنایی',
+  kb_codegraph_explore: 'کاوش گراف کد',
+  kb_codegraph_call_chain: 'زنجیره فراخوانی',
+  kb_codegraph_class_hierarchy: 'سلسله‌مراتب کلاس',
 };
 const KB_ACTION_ICONS: Record<string, React.ReactNode> = {
   kb_ls: <FolderOpenOutlined className='text-teal-500' />,
@@ -773,7 +773,7 @@ function renderKbCat(text: string, t: any): React.ReactNode {
             <CodeOutlined style={{ fontSize: 11 }} />
             {fileLines} lines
           </span>
-          <Tooltip title={t('Copy_Btn') || 'Copy'}>
+          <Tooltip title={t('Copy_Btn') || 'کپی'}>
             <button
               onClick={() => {
                 const codeText = codeLines
@@ -1077,7 +1077,7 @@ const OutputRenderer: React.FC<{ output: ExecutionOutput; index: number; action?
               src={resolveImageUrl(
                 typeof content === 'string' ? content : content?.url || content?.src || String(content),
               )}
-              alt='Generated chart'
+              alt='نمودار تولیدشده'
               className='w-full h-auto object-contain'
               style={{ maxHeight: 600 }}
             />
@@ -1330,7 +1330,7 @@ const SkillScriptRenderer: React.FC<{
           !htmlReportMatch && (
             <div className='flex flex-col items-center justify-center py-8 text-gray-400'>
               <FileSearchOutlined className='text-2xl mb-2' />
-              <span className='text-xs'>Waiting for execution results...</span>
+              <span className='text-xs'>در انتظار نتایج اجرا...</span>
             </div>
           )}
       </div>
@@ -1434,7 +1434,7 @@ const CodeExecutionRenderer: React.FC<{
           <div className='border-t border-gray-700/50 shrink-0' />
           <div className='relative overflow-auto bg-gray-900 flex-1 min-h-[60px]'>
             <span className='sticky top-0 right-0 float-right z-10 text-[10px] text-gray-400 bg-gray-800/80 px-2 py-0.5 rounded mr-2 mt-2'>
-              Execution Result
+              نتیجه اجرا
             </span>
             <div className='px-4 py-3 text-sm text-green-400 font-mono whitespace-pre leading-relaxed overflow-x-auto'>
               {group.results.map(r => String(r.content)).join('')}
@@ -1455,7 +1455,7 @@ const CodeExecutionRenderer: React.FC<{
                 ? img.content
                 : img.content?.url || img.content?.src || String(img.content),
             )}
-            alt='Generated chart'
+            alt='نمودار تولیدشده'
             className='w-full h-auto object-contain'
             style={{ maxHeight: 600 }}
           />
@@ -1876,13 +1876,13 @@ const TerminalRenderer: React.FC<{
           </div>
           <div className='flex items-center gap-2'>
             <ConsoleSqlOutlined className='text-gray-400 text-xs' />
-            <span className='text-xs font-medium text-gray-400'>Terminal</span>
+            <span className='text-xs font-medium text-gray-400'>ترمینال</span>
           </div>
         </div>
         <div className='flex items-center gap-2'>
           <StatusBadge status={activeStep.status} />
           {allText && (
-            <Tooltip title='Copy all'>
+            <Tooltip title='کپی همه'>
               <button
                 className='flex items-center gap-1 text-[11px] text-gray-500 hover:text-gray-300 transition-colors px-2 py-1 rounded hover:bg-gray-700/50'
                 onClick={() => copyToClipboard(allText)}
@@ -2078,10 +2078,10 @@ const SkillCardRenderer: React.FC<{
           setDetailData(json.data);
           setFileContent(json.data.raw_content || json.data.instructions || '');
         } else {
-          setError(json.err_msg || 'Failed to load skill detail');
+          setError(json.err_msg || 'بارگذاری جزئیات مهارت ناموفق بود');
         }
       } catch (_e) {
-        setError('Network error');
+        setError('خطای شبکه');
       } finally {
         setLoading(false);
       }
@@ -2105,10 +2105,10 @@ const SkillCardRenderer: React.FC<{
         );
         const json = await res.json();
         if (json.success && json.data) {
-          setFileContent(json.data.raw_content || json.data.instructions || '(Empty file)');
+          setFileContent(json.data.raw_content || json.data.instructions || '(فایل خالی)');
         }
       } catch {
-        setFileContent('(Failed to load file)');
+        setFileContent('(بارگذاری فایل ناموفق بود)');
       }
     },
     [skillName, detailData],
@@ -2119,7 +2119,7 @@ const SkillCardRenderer: React.FC<{
       setDownloading(true);
       const base = process.env.API_BASE_URL || '';
       const res = await fetch(`${base}/api/v1/agent/skills/download?skill_name=${encodeURIComponent(skillName)}`);
-      if (!res.ok) throw new Error('Download failed');
+      if (!res.ok) throw new Error('دانلود ناموفق بود');
       const blob = await res.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -2129,9 +2129,9 @@ const SkillCardRenderer: React.FC<{
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      message.success('Download successful');
+      message.success('دانلود موفقیت‌آمیز بود');
     } catch {
-      message.error('Download failed');
+      message.error('دانلود ناموفق بود');
     } finally {
       setDownloading(false);
     }
@@ -2188,7 +2188,7 @@ const SkillCardRenderer: React.FC<{
               </div>
             </div>
             <div className='flex items-center gap-2 flex-shrink-0 ml-3'>
-              <Tooltip title='Download as ZIP'>
+              <Tooltip title='دانلود به‌صورت ZIP'>
                 <button
                   className='flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-500 hover:text-indigo-600 hover:border-indigo-300 dark:hover:border-indigo-500 transition-colors'
                   onClick={handleDownload}
@@ -2256,7 +2256,7 @@ const SkillCardRenderer: React.FC<{
           </div>
         </div>
         <div className='flex items-center gap-2 flex-shrink-0'>
-          <Tooltip title='Download as ZIP'>
+          <Tooltip title='دانلود به‌صورت ZIP'>
             <button
               className='flex items-center justify-center w-8 h-8 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-500 hover:text-indigo-600 hover:border-indigo-300 transition-colors'
               onClick={handleDownload}
@@ -2346,7 +2346,7 @@ const SkillCardRenderer: React.FC<{
           ) : (
             <div className='flex flex-col items-center justify-center py-12 text-gray-400'>
               <FileTextOutlined className='text-2xl mb-2' />
-              <span className='text-xs'>Select a file to view its content</span>
+              <span className='text-xs'>یک فایل انتخاب کنید تا محتوای آن نمایش داده شود</span>
             </div>
           )}
         </div>
@@ -2388,7 +2388,7 @@ const ReferencesPanel: React.FC<{
   return (
     <div className='space-y-3' data-testid='references-panel'>
       <div className='rounded-lg border border-blue-100 bg-blue-50/60 px-3 py-2 text-xs leading-5 text-blue-700 dark:border-blue-500/20 dark:bg-blue-500/10 dark:text-blue-300'>
-        The following are knowledge sources retrieved or read while answering. Script execution echoes, SQL execution results, and other tool outputs are not included.
+        منابع دانشی زیر که هنگام پاسخ‌گویی بازیابی یا خوانده شده‌اند آورده شده‌اند. بازتاب اجرای اسکریپت، نتایج اجرای SQL و سایر خروجی‌های ابزار در این بخش لحاظ نشده است.
       </div>
       {citations.map(citation => {
         const isSelected = citation.index === selectedCitationIndex;
@@ -2452,7 +2452,7 @@ const ReferencesPanel: React.FC<{
                     className='mt-3 inline-flex items-center gap-1 text-xs font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300'
                   >
                     <LinkOutlined aria-hidden />
-                    Open source
+                    کد باز
                   </a>
                 )}
               </div>
@@ -2504,12 +2504,69 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
     onPanelViewChange?.(view);
   };
 
-  const handleExportPdf = () => {
+  const handleExportPdf = async () => {
     try {
       const iframe = htmlPreviewRef.current;
-      if (iframe?.contentWindow) {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
+      const win = iframe?.contentWindow as (Window & { Plotly?: any; Chart?: any }) | null | undefined;
+      const doc = iframe?.contentDocument;
+      if (iframe && win && doc) {
+        // Charts are bitmaps/SVGs sized for the on-screen panel. Printing does not
+        // re-run their resize logic, so on a narrower sheet they overflow and get
+        // cut in half. Lay the report out at the printable width first, let the
+        // charts redraw, print, then restore the panel.
+        const PRINT_WIDTH_PX = 1047; // A4 landscape (297mm) minus 2 x 10mm margins at 96dpi
+        const printStyle = doc.createElement('style');
+        printStyle.setAttribute('data-print-fix', '');
+        printStyle.textContent = `
+          @page { size: A4 landscape; margin: 10mm; }
+          @media print {
+            html, body { width: auto !important; min-width: 0 !important; overflow: visible !important; }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            canvas, svg, img, video, .js-plotly-plot, .plot-container { max-width: 100% !important; }
+            table { max-width: 100% !important; }
+            canvas, svg, img, tr, .card, .chart-box, .chart-container, .js-plotly-plot,
+            [class*="card"], [class*="chart"] { break-inside: avoid; page-break-inside: avoid; }
+            h1, h2, h3 { break-after: avoid; page-break-after: avoid; }
+          }`;
+        doc.head?.appendChild(printStyle);
+
+        const previous = {
+          width: iframe.style.width,
+          minWidth: iframe.style.minWidth,
+          maxWidth: iframe.style.maxWidth,
+          flex: iframe.style.flex,
+        };
+        const restore = () => {
+          iframe.style.width = previous.width;
+          iframe.style.minWidth = previous.minWidth;
+          iframe.style.maxWidth = previous.maxWidth;
+          iframe.style.flex = previous.flex;
+          printStyle.remove();
+          win.dispatchEvent(new Event('resize'));
+        };
+        try {
+          iframe.style.flex = 'none';
+          iframe.style.width = `${PRINT_WIDTH_PX}px`;
+          iframe.style.minWidth = `${PRINT_WIDTH_PX}px`;
+          iframe.style.maxWidth = `${PRINT_WIDTH_PX}px`;
+          win.dispatchEvent(new Event('resize'));
+          // Plotly only follows its container when asked to.
+          if (win.Plotly?.Plots?.resize) {
+            doc.querySelectorAll('.js-plotly-plot').forEach(el => {
+              try {
+                win.Plotly.Plots.resize(el);
+              } catch {
+                /* ignore a chart that cannot resize */
+              }
+            });
+          }
+          // Give Chart.js/ECharts/Plotly time to redraw at the new width.
+          await new Promise(resolve => setTimeout(resolve, 500));
+          win.focus();
+          win.print(); // blocks until the print dialog closes
+        } finally {
+          restore();
+        }
         return;
       }
     } catch {
@@ -2527,7 +2584,7 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
         win.focus();
         win.print();
       } else {
-        message.error('The browser blocked the popup window, please allow it and try again');
+        message.error('مرورگر پنجره بازشو را مسدود کرد، لطفاً آن را مجاز کنید و دوباره تلاش کنید');
       }
     }
   };
@@ -2651,7 +2708,7 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
                 size='small'
                 icon={<LinkOutlined />}
                 onClick={onShare}
-                className='text-blue-500 hover:text-blue-600'
+                className='bg-[#DB0A16] text-white hover:bg-[#B80812] hover:text-white'
               >
                 {t('share_conversation')}
               </Button>
@@ -2756,7 +2813,7 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
               )}
             >
               <ProfileOutlined className='mr-1.5' />
-              {t('observability_trace_tab') || 'Trace'}
+              {t('observability_trace_tab') || 'ردیابی'}
               {panelView === 'trace' && (
                 <div className='absolute bottom-0 left-0 right-0 h-[2px] bg-gray-900 dark:bg-gray-100 rounded-full' />
               )}
@@ -2827,7 +2884,7 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
               )}
             >
               <BookOutlined className='mr-1.5' />
-              References
+              منابع
               <span className='ml-1.5 rounded-full bg-blue-50 px-1.5 py-0.5 text-[10px] text-blue-600 dark:bg-blue-500/10 dark:text-blue-300'>
                 {citations.length}
               </span>
@@ -2928,7 +2985,7 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
                 }
                 return resolveImageUrl(obj?.url || obj?.src || String(content));
               })()}
-              alt={previewArtifact.name || 'Image preview'}
+              alt={previewArtifact.name || 'پیش‌نمایش تصویر'}
               className='max-w-full max-h-full object-contain rounded-lg shadow-md'
               style={{ maxHeight: 'calc(100vh - 200px)' }}
             />
@@ -2948,7 +3005,7 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
           <div className='space-y-5'>
             <div
               role='tablist'
-              aria-label='Task file categories'
+              aria-label='دسته‌بندی فایل‌های وظیفه'
               className='flex w-fit max-w-full items-center gap-1 overflow-x-auto rounded-lg bg-gray-100/80 p-1 dark:bg-gray-800/60'
             >
               {TASK_FILE_TABS.map(tab => {
@@ -2992,7 +3049,7 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
                         Uploaded Materials · {visibleInputFiles.length}
                       </div>
                       <div className='mt-0.5 text-[11px] text-slate-400 dark:text-slate-500'>
-                        Analysis context brought in with this round of user input
+                        زمینه تحلیل واردشده در این دور از ورودی کاربر
                       </div>
                     </div>
                   )}
@@ -3012,7 +3069,7 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
                         Generated · {filteredArtifacts.length}
                       </div>
                       <div className='mt-0.5 text-[11px] text-slate-400 dark:text-slate-500'>
-                        Files generated by the Agent during this round of reasoning
+                        فایل‌های تولیدشده توسط عامل در این دور از استدلال
                       </div>
                     </div>
                   )}
@@ -3306,7 +3363,7 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
                                 <div className='flex items-center gap-2'>
                                   {getDbTypeInfo(databaseType).icon}
                                   <span className='text-xs font-semibold text-gray-600 dark:text-gray-300'>
-                                    SQL Query
+                                    کوئری SQL
                                   </span>
                                   {databaseType && (
                                     <span className='text-[10px] px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 font-medium'>
@@ -3319,15 +3376,15 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
                                     </span>
                                   )}
                                   <span className='text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 font-medium'>
-                                    READ ONLY
+                                    فقط خواندنی
                                   </span>
                                 </div>
-                                <Tooltip title='Copy SQL'>
+                                <Tooltip title='کپی SQL'>
                                   <button
                                     className='flex items-center gap-1 text-[11px] text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors px-2 py-1 rounded hover:bg-gray-100 dark:hover:bg-gray-700'
                                     onClick={() => {
                                       navigator.clipboard.writeText(sql);
-                                      message.success('SQL copied to clipboard');
+                                      message.success('دستور SQL در کلیپ‌بورد کپی شد');
                                     }}
                                   >
                                     <CopyOutlined className='text-xs' />
@@ -3445,13 +3502,13 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
                 {isRunning ? (
                   <div className='flex flex-col items-center justify-center py-12 text-gray-400'>
                     <LoadingOutlined className='text-3xl text-blue-500 mb-4' />
-                    <span className='text-sm'>Executing...</span>
-                    <span className='text-xs text-gray-500 mt-1'>Please wait, results will be displayed shortly</span>
+                    <span className='text-sm'>در حال اجرا...</span>
+                    <span className='text-xs text-gray-500 mt-1'>لطفاً صبر کنید، نتایج به‌زودی نمایش داده می‌شود</span>
                   </div>
                 ) : (
                   <div className='flex flex-col items-center justify-center py-12 text-gray-400'>
                     <FileTextOutlined className='text-3xl mb-4' />
-                    <span className='text-sm'>No output results yet</span>
+                    <span className='text-sm'>هنوز نتیجه‌ای تولید نشده است</span>
                   </div>
                 )}
               </>
@@ -3463,8 +3520,8 @@ const ManusRightPanel: React.FC<ManusRightPanelProps> = ({
             <div className='w-20 h-20 rounded-2xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4'>
               <ConsoleSqlOutlined className='text-3xl text-gray-400' />
             </div>
-            <span className='text-sm font-medium mb-1'>Select a step to view details</span>
-            <span className='text-xs text-gray-500'>Click a step card on the left to display execution results</span>
+            <span className='text-sm font-medium mb-1'>یک مرحله انتخاب کنید تا جزئیات نمایش داده شود</span>
+            <span className='text-xs text-gray-500'>روی کارت یک مرحله در سمت چپ کلیک کنید تا نتایج اجرا نمایش داده شود</span>
           </div>
         )}
       </div>

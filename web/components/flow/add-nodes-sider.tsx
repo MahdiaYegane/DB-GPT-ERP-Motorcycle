@@ -201,15 +201,15 @@ const AddNodesSider: React.FC = () => {
           </p>
 
           <Switch
-            checkedChildren='高阶'
-            unCheckedChildren='全部'
+            checkedChildren='پیشرفته'
+            unCheckedChildren='همه'
             onClick={onModeChange}
             className={classnames('w-20', { 'bg-zinc-400': isAllNodesVisible })}
             defaultChecked
           />
         </div>
 
-        <Search placeholder='Search node' onSearch={searchNode} allowClear />
+        <Search placeholder='جستجوی گره' onSearch={searchNode} allowClear />
 
         <h2 className='font-semibold'>{t('operators')}</h2>
         <Collapse

@@ -32,12 +32,12 @@ const Feedback: React.FC<{
     const result = copy(chatDialogRef.current?.textContent || pureStr);
     if (result) {
       if (pureStr) {
-        message.success('复制成功');
+        message.success('کپی شد');
       } else {
-        message.warning('内容复制为空');
+        message.warning('محتوایی برای کپی وجود ندارد');
       }
     } else {
-      message.error('复制失败');
+      message.error('کپی ناموفق بود');
     }
   };
 
@@ -58,7 +58,7 @@ const Feedback: React.FC<{
       onSuccess: data => {
         const [, res] = data;
         setStatus(res?.feedback_type);
-        message.success('反馈成功');
+        message.success('بازخورد ثبت شد');
         setFeedbackOpen(false);
       },
     },
@@ -73,7 +73,7 @@ const Feedback: React.FC<{
         const [, res] = data;
         if (res) {
           setStatus('none');
-          message.success('操作成功');
+          message.success('عملیات موفق بود');
         }
       },
     },
@@ -91,13 +91,13 @@ const Feedback: React.FC<{
     },
   });
 
-  // 终止话题
+  // پایان گفتگو
   const { run: stopTopicRun, loading: stopTopicLoading } = useRequest(
     async () => await apiInterceptors(stopTopic({ conv_id: conv_uid, round_index: 0 })),
     {
       manual: true,
       onSuccess: () => {
-        message.success('操作成功');
+        message.success('عملیات موفق بود');
       },
     },
   );
@@ -149,7 +149,7 @@ const Feedback: React.FC<{
             }}
             className='text-xs'
           >
-            终止话题
+            پایان گفتگو
           </Button>
         )}
       </div>

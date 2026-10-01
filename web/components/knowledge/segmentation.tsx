@@ -58,7 +58,7 @@ export default function Segmentation(props: IProps) {
           if (status === 'FINISHED') {
             clearInterval(intervalId);
             setSyncStatus('FINISHED');
-            message.success('Congratulation, All files sync successfully.');
+            message.success('تبریک، همه فایل‌ها با موفقیت همگام‌سازی شدند.');
             handleStepChange({
               label: 'finish',
             });
@@ -90,7 +90,7 @@ export default function Segmentation(props: IProps) {
     let checked = true;
     if (syncStatus === 'RUNNING') {
       checked = false;
-      message.warning('The task is still running, do not submit it again.');
+      message.warning('وظیفه هنوز در حال اجراست، دوباره ارسال نکنید.');
     }
     const { fileStrategies } = data;
     fileStrategies.map(item => {

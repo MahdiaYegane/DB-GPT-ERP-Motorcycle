@@ -1,0 +1,5 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Compass needle only (no ring): white fill + gray stroke, matching skills.svg/datasource.svg style -->
+  <path d="M56 24L46 46L24 56L34 34L56 24Z" fill="white" stroke="#5F6470" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="40" cy="40" r="2" fill="#5F6470"/>
+</svg>

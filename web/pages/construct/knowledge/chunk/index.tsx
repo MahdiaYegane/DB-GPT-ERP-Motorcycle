@@ -89,7 +89,7 @@ function ChunkList() {
     {
       manual: true,
       onSuccess: async () => {
-        message.success('添加成功');
+        message.success('افزوده شد');
         setIsModalOpen(false);
         await fetchChunks();
       },
@@ -102,7 +102,7 @@ function ChunkList() {
         className='m-6'
         items={[
           {
-            title: 'Knowledge',
+            title: 'دانش',
             onClick() {
               router.back();
             },

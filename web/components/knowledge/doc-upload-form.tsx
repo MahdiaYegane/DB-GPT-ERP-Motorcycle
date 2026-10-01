@@ -80,9 +80,9 @@ export default function DocUploadForm(props: IProps) {
     }
     setSpinning(false);
     if (docType === 'DOCUMENT' && files.length < 1) {
-      return message.error('Upload failed, please re-upload.');
+      return message.error('بارگذاری ناموفق بود، لطفاً دوباره بارگذاری کنید.');
     } else if (docType !== 'DOCUMENT' && !docId) {
-      return message.error('Upload failed, please re-upload.');
+      return message.error('بارگذاری ناموفق بود، لطفاً دوباره بارگذاری کنید.');
     }
 
     let fileList = files;
@@ -339,14 +339,14 @@ export default function DocUploadForm(props: IProps) {
             </p>
           </Dragger>
         </Form.Item>
-        <Form.Item<FieldType> label='关联问题:'>
+        <Form.Item<FieldType> label='سؤالات مرتبط:'>
           <Form.List name='questions'>
             {(fields, { add, remove }) => (
               <>
                 {fields.map(({ key, name }) => (
                   <div key={key} className={cls('flex flex-1 items-center gap-8 mb-6')}>
                     <Form.Item label='' name={[name, 'question']} className='grow'>
-                      <Input placeholder='请输入问题' />
+                      <Input placeholder='سؤال را وارد کنید' />
                     </Form.Item>
                     <Form.Item>
                       <MinusCircleOutlined

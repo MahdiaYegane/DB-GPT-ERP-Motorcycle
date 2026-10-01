@@ -53,6 +53,7 @@ import type { SubAgentState } from '@/types/subagent';
 import { buildActionDisplayText } from '@/utils/action-display';
 import axios from '@/utils/ctx-axios';
 import { createSummaryPresentation, type SummaryPresentation } from '@/utils/final-presentation';
+import { notifyDialoguesChanged } from '@/utils/dialogue-events';
 import { decodeFinalEvent, decodeHistoryAnswer, type AgentCitation } from '@/utils/react-agent-final';
 import { sendGetRequest, sendSpacePostRequest } from '@/utils/request';
 import {
@@ -141,10 +142,10 @@ const _getFileTypeLabel = (fileName: string, mimeType?: string): string => {
   }
   if (ext === 'pdf' || mimeType?.includes('pdf')) return 'PDF';
   if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg'].includes(ext) || mimeType?.includes('image')) return 'Image';
-  if (['doc', 'docx'].includes(ext) || mimeType?.includes('word')) return 'Word Document';
-  if (['txt', 'md'].includes(ext) || mimeType?.includes('text')) return 'Text File';
+  if (['doc', 'docx'].includes(ext) || mimeType?.includes('word')) return 'سند Word';
+  if (['txt', 'md'].includes(ext) || mimeType?.includes('text')) return 'فایل متنی';
   if (['json'].includes(ext)) return 'JSON';
-  return 'File';
+  return 'فایل';
 };
 
 const _getFileIcon = (fileName: string, mimeType?: string) => {
@@ -442,7 +443,7 @@ const convertToManusFormat = (
   const sections: ThinkingSection[] = [
     {
       id: 'section-execution',
-      title: t ? t('execution_steps') : 'Execution Steps',
+      title: t ? t('execution_steps') : 'مراحل اجرا',
       isCompleted: steps.every(s => s.status === 'completed'),
       steps,
     },
@@ -490,10 +491,10 @@ const EXAMPLE_CARDS = [
   {
     id: 'walmart_sales',
     icon: '📊',
-    title: 'Walmart Sales Data Analysis',
-    description: 'Analyze Walmart sales CSV data, generate visual web report',
+    title: 'تحلیل داده‌های فروش وال‌مارت',
+    description: 'تحلیل فایل CSV فروش وال‌مارت و تولید گزارش وب بصری',
     query:
-      'Please comprehensively analyze this Walmart sales data, including sales trends across stores, holiday impacts, and the effects of temperature and fuel prices on sales, and generate a beautifully interactive web analysis report.',
+      'لطفاً این داده‌های فروش وال‌مارت را به‌طور جامع تحلیل کنید؛ شامل روندهای فروش در فروشگاه‌های مختلف، تأثیر تعطیلات و اثرات دما و قیمت سوخت بر فروش، و یک گزارش تحلیلی وب تعاملی و زیبا تولید کنید.',
     fileName: 'Walmart_Sales.csv',
     fileType: 'text/csv',
     fileSize: 98304, // ~96 KB
@@ -505,10 +506,10 @@ const EXAMPLE_CARDS = [
   {
     id: 'db_profile_report',
     icon: '🗄️',
-    title: 'Database Profile & Analysis Report',
-    description: 'Connect to a database, generate database profile and visual web report',
+    title: 'پروفایل و گزارش تحلیل پایگاه داده',
+    description: 'اتصال به پایگاه داده، تولید پروفایل پایگاه داده و گزارش وب بصری',
     query:
-      'Please analyze the currently connected database, generate a database profile (including table structure, field information, data volume statistics, etc.), and generate a beautifully interactive web analysis report.',
+      'لطفاً پایگاه داده متصل فعلی را تحلیل کنید، یک پروفایل پایگاه داده (شامل ساختار جداول، اطلاعات فیلدها، آمار حجم داده و غیره) تهیه کنید و یک گزارش تحلیلی وب زیبا و تعاملی تولید کنید.',
     dbName: 'Walmart_Sales',
     color: 'from-emerald-500/10 to-teal-500/10',
     borderColor: 'border-emerald-200/60 dark:border-emerald-800/40',
@@ -517,10 +518,10 @@ const EXAMPLE_CARDS = [
   {
     id: 'fin_report',
     icon: '📈',
-    title: 'Financial Report In-depth Analysis',
-    description: 'Analyze Zhejiang Haixiang Pharmaceutical annual report, generate data visualization report',
+    title: 'تحلیل عمیق گزارش مالی',
+    description: 'تحلیل گزارش سالانه دارویی هیانگ ژجیانگ و تولید گزارش تجسم داده',
     query:
-      'Please deeply analyze this Zhejiang Haixiang Pharmaceutical 2019 annual report, including revenue and profit trends, asset and liability structure, cash flow analysis, and key financial indicators, and generate a professional interactive web analysis report.',
+      'لطفاً این گزارش سالانه 2019 شرکت دارویی هیانگ ژجیانگ را عمیقاً تحلیل کنید؛ شامل روندهای درآمد و سود، ساختار دارایی و بدهی، تحلیل جریان نقدی و شاخص‌های کلیدی مالی، و یک گزارش تحلیلی تعاملی حرفه‌ای تولید کنید.',
     fileName: '2020-01-23__浙江海翔药业股份有限公司__002099__海翔药业__2019年__年度报告.pdf',
     fileType: 'application/pdf',
     fileSize: 2621440, // ~2.5 MB
@@ -532,10 +533,10 @@ const EXAMPLE_CARDS = [
   {
     id: 'create_sql_skill',
     icon: '🛠️',
-    title: 'Create SQL Analysis Skill',
-    description: 'Use skill-creator to create a practical SQL data analysis skill',
+    title: 'ایجاد مهارت تحلیل SQL',
+    description: 'با skill-creator یک مهارت کاربردی تحلیل SQL بسازید',
     query:
-      'Please use skill-creator to help me create a practical SQL data analysis skill, including core functions like connecting to a database, executing SQL queries, and data visualization.',
+      'لطفاً با کمک skill-creator یک مهارت کاربردی تحلیل SQL برایم بسازید؛ شامل کارکردهای اصلی مانند اتصال به پایگاه داده، اجرای کوئری‌های SQL و تجسم داده.',
     color: 'from-amber-500/10 to-orange-500/10',
     borderColor: 'border-amber-200/60 dark:border-amber-800/40',
     iconBg: 'bg-amber-100 dark:bg-amber-900/40',
@@ -618,7 +619,7 @@ const Playground: NextPage = () => {
       setSessionFilePreview({
         snapshot: null,
         loading: false,
-        error: err?.message || 'Preview failed',
+        error: err?.message || 'پیش‌نمایش ناموفق بود',
         size: item.size,
       });
     }
@@ -768,7 +769,7 @@ const Playground: NextPage = () => {
         setSessionFilePreview({
           snapshot: null,
           loading: false,
-          error: err?.message || 'Preview failed',
+          error: err?.message || 'پیش‌نمایش ناموفق بود',
           size: file.size,
         });
       }
@@ -786,7 +787,7 @@ const Playground: NextPage = () => {
       );
     }
     if (sessionFilePreview.error) {
-      return <Alert type='error' showIcon message='Preview failed' description={sessionFilePreview.error} />;
+      return <Alert type='error' showIcon message='پیش‌نمایش ناموفق بود' description={sessionFilePreview.error} />;
     }
     return <AttachmentPreview snapshot={sessionFilePreview.snapshot} size={sessionFilePreview.size} />;
   };
@@ -1279,7 +1280,7 @@ const Playground: NextPage = () => {
     return {
       kind: 'table' as const,
       file_name: fileName,
-      columns: header.map(col => col || 'Column'),
+      columns: header.map(col => col || 'ستون'),
       rows,
       shape: [lines.length - 1, header.length],
     };
@@ -1294,16 +1295,16 @@ const Playground: NextPage = () => {
     if (outputType === 'chart') {
       const chartType = content?.chartType || 'line';
       const chartTypeNames: Record<string, string> = {
-        line: 'Line Chart',
-        column: 'Column Chart',
-        bar: 'Bar Chart',
-        pie: 'Pie Chart',
-        donut: 'Donut Chart',
-        area: 'Area Chart',
-        scatter: 'Scatter Plot',
-        'dual-axes': 'Dual Axes Chart',
+        line: 'نمودار خطی',
+        column: 'نمودار ستونی',
+        bar: 'نمودار میله‌ای',
+        pie: 'نمودار دایره‌ای',
+        donut: 'نمودار حلقه‌ای',
+        area: 'نمودار ناحیه‌ای',
+        scatter: 'نمودار پراکندگی',
+        'dual-axes': 'نمودار دو محوره',
       };
-      return content?.title || chartTypeNames[chartType] || 'Chart Visualization';
+      return content?.title || chartTypeNames[chartType] || 'نمایش نمودار';
     }
     if (outputType === 'code') {
       return `Code Snippet`;
@@ -1316,7 +1317,7 @@ const Playground: NextPage = () => {
       return `Document: ${preview}${String(content).length > 30 ? '...' : ''}`;
     }
     if (outputType === 'file') {
-      return content?.name || content?.file_name || 'File';
+      return content?.name || content?.file_name || 'فایل';
     }
     return `${outputType} output`;
   };
@@ -1446,7 +1447,7 @@ const Playground: NextPage = () => {
             const blob = await resp.blob();
             triggerBlobDownload(blob, artifact.name || imgName || 'file');
           } catch {
-            message.warning('File is not available for download yet');
+            message.warning('فایل هنوز برای دانلود آماده نیست');
           }
         } else if (filePath) {
           // Download via backend file download endpoint (for agent-created files)
@@ -1455,16 +1456,16 @@ const Playground: NextPage = () => {
             const resp = await fetch(downloadUrl);
             if (!resp.ok) {
               const errData = await resp.json().catch(() => ({}));
-              message.warning(errData.detail || 'File is not available for download yet');
+              message.warning(errData.detail || 'فایل هنوز برای دانلود آماده نیست');
               break;
             }
             const blob = await resp.blob();
             triggerBlobDownload(blob, artifact.name || filePath.split('/').pop() || 'file');
           } catch {
-            message.warning('File download failed');
+            message.warning('دانلود فایل ناموفق بود');
           }
         } else {
-          message.warning('File is not available for download yet');
+          message.warning('فایل هنوز برای دانلود آماده نیست');
         }
         break;
       }
@@ -1477,7 +1478,7 @@ const Playground: NextPage = () => {
 
   const _copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      message.success('Copied to clipboard');
+      message.success('در کلیپ‌بورد کپی شد');
     });
   };
 
@@ -1547,7 +1548,7 @@ const Playground: NextPage = () => {
               finalArtifacts.push({
                 id: `${messageId}-file-${step.id}-${oIdx}`,
                 type: 'file',
-                name: output.content?.name || output.content?.file_name || 'File',
+                name: output.content?.name || output.content?.file_name || 'فایل',
                 content: output.content,
                 createdAt: now,
                 messageId,
@@ -1924,17 +1925,17 @@ const Playground: NextPage = () => {
     if (explicitLegacyFile) {
       const staged = sessionFiles.stageLegacyForSend(explicitLegacyFile, currentConvId);
       if (!staged.ok) {
-        message.error('Failed to load example: ' + staged.error);
+        message.error('بارگذاری نمونه ناموفق بود: ' + staged.error);
         return;
       }
       sendSnapshot = staged.snapshot;
     } else if (hasSessionFileDrafts || hasLegacyFile) {
       if (sessionFiles.files.some(draft => draft.validation.status !== 'ok')) {
-        message.error('Some attachments failed validation, please remove them before sending');
+        message.error('برخی پیوست‌ها اعتبارسنجی را رد نکردند، لطفاً قبل از ارسال حذف کنید');
         return;
       }
       if (sessionFiles.hasHardFailures) {
-        message.error('Some attachments failed to upload, please retry or remove them before sending');
+        message.error('بارگذاری برخی پیوست‌ها ناموفق بود، لطفاً دوباره تلاش کنید یا قبل از ارسال حذف کنید');
         return;
       }
       try {
@@ -1942,7 +1943,7 @@ const Playground: NextPage = () => {
         sendSnapshot = await sessionFiles.prepare(currentConvId);
       } catch (prepareErr: any) {
         if (taskEpochRef.current !== taskEpoch) return;
-        message.error(prepareErr?.message || 'Attachment validation failed, please retry');
+        message.error(prepareErr?.message || 'اعتبارسنجی پیوست ناموفق بود، لطفاً دوباره تلاش کنید');
         return;
       } finally {
         if (taskEpochRef.current === taskEpoch) setQueuedSendAfterUpload(false);
@@ -1965,7 +1966,7 @@ const Playground: NextPage = () => {
     }
     if (sendSnapshot?.legacyFile && !finalQuery.trim()) {
       // Legacy example-card default (unchanged from the preloaded flow).
-      finalQuery = 'Analyze the uploaded file.';
+      finalQuery = 'فایل بارگذاری‌شده را تحلیل کن.';
     }
     // Construct context prefix for non-legacy queries. Legacy example sends
     // reproduce the old payload, which never carried a context prefix.
@@ -2094,8 +2095,10 @@ const Playground: NextPage = () => {
       });
 
       if (!response.body) {
-        throw new Error('No response body');
+        throw new Error('بدنه پاسخی وجود ندارد');
       }
+      // server accepted the message: the conversation now exists, so the sidebar can show it
+      notifyDialoguesChanged();
 
       // Submission accepted by the server. The composer rail intentionally
       // keeps the sent files: they stay attached to the conversation scope
@@ -2533,18 +2536,20 @@ const Playground: NextPage = () => {
         }
       } else {
         if (taskEpochRef.current !== taskEpoch || conversationIdRef.current !== currentConvId) return;
-        message.error(err?.message || 'Failed to get response');
+        message.error(err?.message || 'دریافت پاسخ ناموفق بود');
         setMessages(prev => {
           const newMessages = [...prev];
           const lastMsg = newMessages[newMessages.length - 1];
           if (lastMsg && lastMsg.role === 'view') {
-            lastMsg.context = err?.message || 'Error occurred';
+            lastMsg.context = err?.message || 'خطایی رخ داد';
             lastMsg.thinking = false;
           }
           return newMessages;
         });
       }
     } finally {
+      // reply finished (or stopped): refresh the sidebar again for the saved title/order
+      notifyDialoguesChanged();
       if (chatAbortControllerRef.current === controller) {
         chatAbortControllerRef.current = null;
       }
@@ -2581,7 +2586,7 @@ const Playground: NextPage = () => {
     let exampleController: AbortController | null = null;
 
     try {
-      message.loading({ content: 'Loading example...', key: 'example-loading', duration: 0 });
+      message.loading({ content: 'در حال بارگذاری نمونه...', key: 'example-loading', duration: 0 });
       let exampleLegacyFile: LegacyServerFile | null = null;
 
       // Example files already exist on the server: materialize the selected
@@ -2617,8 +2622,8 @@ const Playground: NextPage = () => {
           };
         } else {
           message.destroy('example-loading');
-          const errMsg = res?.err_msg || 'Unknown error';
-          message.error('Failed to load example: ' + errMsg);
+          const errMsg = res?.err_msg || 'خطای ناشناخته';
+          message.error('بارگذاری نمونه ناموفق بود: ' + errMsg);
           return;
         }
       }
@@ -2654,8 +2659,8 @@ const Playground: NextPage = () => {
       if (taskEpochRef.current !== taskEpoch) return;
       message.destroy('example-loading');
       console.error('Example click error:', err);
-      const errMessage = err instanceof Error ? err.message : 'Unknown error';
-      message.error('Failed to load example: ' + errMessage);
+      const errMessage = err instanceof Error ? err.message : 'خطای ناشناخته';
+      message.error('بارگذاری نمونه ناموفق بود: ' + errMessage);
     } finally {
       if (exampleAbortControllerRef.current === exampleController) {
         exampleAbortControllerRef.current = null;
@@ -2670,7 +2675,7 @@ const Playground: NextPage = () => {
   const handleClearChat = useCallback(() => {
     void startNewTask().catch(error => {
       console.error('Failed to clear the current task', error);
-      message.error('Failed to create new task');
+      message.error('ایجاد وظیفه جدید ناموفق بود');
     });
   }, [startNewTask]);
 
@@ -2900,7 +2905,7 @@ const Playground: NextPage = () => {
     } catch (e) {
       if (historyRequestRef.current !== requestVersion || taskEpochRef.current !== taskEpoch) return;
       console.error('Failed to load conversation', e);
-      message.error('Failed to load conversation history');
+      message.error('بارگذاری تاریخچه گفتگو ناموفق بود');
     } finally {
       if (historyAbortControllerRef.current === controller) {
         historyAbortControllerRef.current = null;
@@ -2915,19 +2920,19 @@ const Playground: NextPage = () => {
   // Share current conversation — create share link and copy to clipboard
   const handleShare = async () => {
     if (!conversationId) {
-      message.warning('Please start a conversation before sharing');
+      message.warning('لطفاً قبل از اشتراک‌گذاری یک گفتگو آغاز کنید');
       return;
     }
     try {
       const res: any = await axios.post('/api/v1/chat/share', { conv_uid: conversationId });
       const shareUrl = res?.data?.share_url;
-      if (!shareUrl) throw new Error('No share URL returned');
+      if (!shareUrl) throw new Error('آدرس اشتراک‌گذاری برنگشت');
       const fullUrl = `${window.location.origin}${shareUrl}`;
       await navigator.clipboard.writeText(fullUrl);
-      message.success('Share link copied to clipboard!');
+      message.success('پیوند اشتراک‌گذاری در کلیپ‌بورد کپی شد!');
     } catch (e) {
       console.error('Failed to create share link', e);
-      message.error('Failed to create share link, please try again later');
+      message.error('ایجاد پیوند اشتراک‌گذاری ناموفق بود، لطفاً بعداً دوباره تلاش کنید');
     }
   };
 
@@ -3012,9 +3017,7 @@ const Playground: NextPage = () => {
         <div className='flex-1 min-h-0 flex flex-col relative overflow-hidden bg-white dark:bg-[#111217]'>
           {/* Top Header */}
           <div className='h-16 flex-shrink-0 flex items-center justify-between px-8 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-[#111217]/80 backdrop-blur z-20'>
-            <div className='flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300 px-2 py-1 rounded-md'>
-              <span>{t('home_title')}</span>
-            </div>
+            <div />
             <div className='flex items-center gap-4'>
               {selectedDb && (
                 <Tag className='flex items-center gap-1 bg-blue-50 border-blue-200 text-blue-700 px-3 py-1 rounded-full text-xs'>
@@ -3023,14 +3026,11 @@ const Playground: NextPage = () => {
               )}
               {messages.length > 0 && (
                 <Button type='text' size='small' onClick={handleClearChat} className='text-gray-500'>
-                  Clear Chat
+                  پاک کردن گفتگو
                 </Button>
               )}
               <BellOutlined className='text-lg text-gray-500 cursor-pointer' />
-              <div className='flex items-center gap-2 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full text-xs font-medium'>
-                <ThunderboltOutlined className='text-yellow-500' /> <span>300</span>
-              </div>
-              <Avatar size='small' icon={<UserOutlined />} className='bg-blue-500' />
+              <Avatar size='small' icon={<UserOutlined />} />
             </div>
           </div>
 
@@ -3041,7 +3041,7 @@ const Playground: NextPage = () => {
           {/* When from_task mode and loading history, show loading spinner instead of Hero */}
           {router.query.from_task && historyLoading && messages.length === 0 ? (
             <div className='flex-1 flex items-center justify-center'>
-              <Spin size='large' tip='Loading conversation history...' />
+              <Spin size='large' tip='در حال بارگذاری تاریخچه گفتگو...' />
             </div>
           ) : messages.length > 0 ? (
             <div className={`flex-1 min-h-0 flex overflow-hidden ${rightPanelCollapsed ? 'justify-center' : ''}`}>
@@ -3215,7 +3215,7 @@ const Playground: NextPage = () => {
                             const res = await fetch(
                               `${base}/api/v1/agent/skills/download?skill_name=${encodeURIComponent(skillName)}`,
                             );
-                            if (!res.ok) throw new Error('Download failed');
+                            if (!res.ok) throw new Error('دانلود ناموفق بود');
                             const blob = await res.blob();
                             const url = URL.createObjectURL(blob);
                             const a = document.createElement('a');
@@ -3337,7 +3337,7 @@ const Playground: NextPage = () => {
                             }}
                             placeholder={
                               t('ask_data_question') ||
-                              'Ask a question about your database, upload a CSV, or generate a report...'
+                              'درباره پایگاه داده خود بپرسید، یک فایل CSV بارگذاری کنید یا گزارش بسازید...'
                             }
                             autoSize={{ minRows: 2, maxRows: 6 }}
                             className='flex-1 resize-none !border-none !shadow-none !bg-transparent px-0 py-2'
@@ -3355,20 +3355,20 @@ const Playground: NextPage = () => {
                                       key: 'upload',
                                       label: (
                                         <Upload {...uploadProps}>
-                                          <div className='w-full'>Upload File</div>
+                                          <div className='w-full'>بارگذاری فایل</div>
                                         </Upload>
                                       ),
                                       icon: <UploadOutlined />,
                                     },
                                     {
                                       key: 'database',
-                                      label: 'Select Data Source',
+                                      label: 'انتخاب منبع داده',
                                       icon: <DatabaseOutlined />,
                                       onClick: () => setIsDbModalOpen(true),
                                     },
                                     {
                                       key: 'knowledge',
-                                      label: 'Select Knowledge Base',
+                                      label: 'انتخاب پایگاه دانش',
                                       icon: <BookOutlined />,
                                       onClick: () => setIsKnowledgeModalOpen(true),
                                     },
@@ -3756,7 +3756,7 @@ const Playground: NextPage = () => {
                                   } ${
                                     query.trim() || hasSessionFileDrafts || hasLegacyFile
                                       ? 'bg-gradient-to-br from-[#3b82f6] to-[#2563eb] hover:shadow-blue-300/40 hover:shadow-xl hover:scale-105'
-                                      : 'bg-gray-200 text-gray-400'
+                                      : 'bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
                                   }`}
                                   style={
                                     query.trim() || hasSessionFileDrafts || hasLegacyFile
@@ -3764,7 +3764,7 @@ const Playground: NextPage = () => {
                                       : undefined
                                   }
                                 >
-                                  {queuedSendAfterUpload && <span className='text-[13px] font-medium'>Send after upload</span>}
+                                  {queuedSendAfterUpload && <span className='text-[13px] font-medium'>ارسال پس از بارگذاری</span>}
                                   {(query.trim() || hasSessionFileDrafts || hasLegacyFile) && (
                                     <span
                                       className='absolute inset-0 opacity-0 group-hover/send:opacity-100 transition-opacity duration-300 pointer-events-none'
@@ -3952,18 +3952,36 @@ const Playground: NextPage = () => {
             </div>
           ) : (
             // Welcome Mode: Display Hero Section
-            <div className='flex-1 flex flex-col items-center justify-center px-6 py-4 pb-20 overflow-y-auto'>
-              <div className='w-full max-w-[860px] flex flex-col items-center animate-fade-in-up'>
-                <h1 className='text-4xl md:text-5xl font-serif text-gray-900 dark:text-gray-100 mb-4 text-center flex items-center gap-4'>
-                  <div className='w-12 h-12 rounded-xl bg-white dark:bg-[#1a1b1e] shadow-md flex items-center justify-center flex-shrink-0'>
-                    <Image src='/LOGO_SMALL.png' alt='DB-GPT' width={32} height={32} className='object-contain' />
-                  </div>
-                  {t('home_title')}
-                </h1>
-
-                <p className='text-sm md:text-base text-gray-400 dark:text-gray-500 tracking-[0.2em] font-light mb-10'>
-                  {t('home_subtitle')}
-                </p>
+            <div className='flex-1 flex flex-col items-center justify-center px-6 pt-2 pb-2 overflow-y-auto'>
+              {/* Rider line art (gray-600 lines on light theme, gray-300 on dark), matches the composer width */}
+              <h1 className='sr-only'>{t('home_title')}</h1>
+              <div
+                className='relative z-10 pointer-events-none select-none animate-fade-in-up'
+                style={{
+                  // composer width; shrinks only on short screens so the page never scrolls
+                  width: 'min(860px, 100%, max(360px, calc((100vh - 654px) * 3.5)))',
+                  marginBottom: 'calc(min(860px, 100%, max(360px, calc((100vh - 654px) * 3.5))) * -0.0646)',
+                }}
+                aria-hidden='true'
+              >
+                <Image
+                  src='/pictures/hero-rider-on-light.webp'
+                  alt=''
+                  width={1672}
+                  height={602}
+                  priority
+                  className='block dark:hidden w-full h-auto'
+                />
+                <Image
+                  src='/pictures/hero-rider-on-dark.webp'
+                  alt=''
+                  width={1672}
+                  height={602}
+                  priority
+                  className='hidden dark:block w-full h-auto'
+                />
+              </div>
+              <div className='relative z-10 w-full max-w-[860px] flex flex-col items-center animate-fade-in-up'>
 
                 {/* Input Box Container - Premium Layered Style */}
                 <div className='w-full relative'>
@@ -4048,7 +4066,7 @@ const Playground: NextPage = () => {
                         }}
                         placeholder={
                           t('ask_data_question') ||
-                          'Ask a question about your database, upload a CSV, or generate a report...'
+                          'درباره پایگاه داده خود بپرسید، یک فایل CSV بارگذاری کنید یا گزارش بسازید...'
                         }
                         autoSize={{ minRows: 3, maxRows: 8 }}
                         className='text-lg resize-none !border-none !shadow-none !bg-transparent px-2 py-2 mb-2'
@@ -4693,7 +4711,7 @@ const Playground: NextPage = () => {
                             } ${
                               query.trim() || hasSessionFileDrafts || hasLegacyFile
                                 ? 'bg-gradient-to-br from-[#3b82f6] to-[#2563eb] hover:shadow-blue-300/40 hover:shadow-xl hover:scale-105'
-                                : 'bg-gray-200 text-gray-400'
+                                : 'bg-gray-200 text-gray-400 dark:bg-gray-700 dark:text-gray-500'
                             }`}
                             style={
                               query.trim() || hasSessionFileDrafts || hasLegacyFile
@@ -4701,7 +4719,7 @@ const Playground: NextPage = () => {
                                 : undefined
                             }
                           >
-                            {queuedSendAfterUpload && <span className='text-[13px] font-medium'>Send after upload</span>}
+                            {queuedSendAfterUpload && <span className='text-[13px] font-medium'>ارسال پس از بارگذاری</span>}
                             {(query.trim() || hasSessionFileDrafts || hasLegacyFile) && (
                               <span
                                 className='absolute inset-0 opacity-0 group-hover/send:opacity-100 transition-opacity duration-300 pointer-events-none'
@@ -4728,7 +4746,7 @@ const Playground: NextPage = () => {
                 <div className='mt-10 w-full'>
                   <div className='flex items-center justify-center gap-2 mb-4'>
                     <div className='h-px flex-1 bg-gradient-to-r from-transparent to-gray-200 dark:to-gray-700' />
-                    <span className='text-xs font-medium text-gray-400 dark:text-gray-500 tracking-wider uppercase'>
+                    <span className='text-xs font-medium text-gray-400 dark:text-gray-400 tracking-wider uppercase'>
                       {t('recommend_examples')}
                     </span>
                     <div className='h-px flex-1 bg-gradient-to-l from-transparent to-gray-200 dark:to-gray-700' />
@@ -4738,16 +4756,11 @@ const Playground: NextPage = () => {
                       <div
                         key={example.id}
                         onClick={() => handleExampleClick(example)}
-                        className={`group relative bg-gradient-to-br ${example.color} border ${example.borderColor} rounded-2xl p-4 cursor-pointer hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300`}
+                        className='group relative bg-white dark:bg-[#151622] border border-gray-200 dark:border-gray-700 rounded-2xl p-4 cursor-pointer hover:bg-[#F3F4F6] dark:hover:bg-white/10 hover:border-gray-300 dark:hover:border-gray-600 transition-colors duration-200'
                       >
                         <div className='flex items-start gap-3'>
-                          <div
-                            className={`w-10 h-10 ${example.iconBg} rounded-xl flex items-center justify-center text-xl flex-shrink-0`}
-                          >
-                            {example.icon}
-                          </div>
                           <div className='flex-1 min-w-0'>
-                            <h3 className='text-sm font-semibold text-gray-800 dark:text-gray-200 mb-1'>
+                            <h3 className='text-sm font-semibold text-gray-800 dark:text-gray-200 group-hover:text-[#DB0A16] transition-colors mb-1'>
                               {(() => {
                                 const key = `example_${example.id}_title`;
                                 const val = t(key) as string;
@@ -4763,9 +4776,6 @@ const Playground: NextPage = () => {
                             </p>
                           </div>
                         </div>
-                        <div className='absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity'>
-                          <RightOutlined className='text-xs text-gray-400' />
-                        </div>
                       </div>
                     ))}
                   </div>
@@ -4775,18 +4785,6 @@ const Playground: NextPage = () => {
           )}
 
           {/* Footer Promo - Only show when no messages */}
-          {messages.length === 0 && (
-            <div className='absolute bottom-6 left-0 right-0 flex justify-center'>
-              <div className='bg-white/60 dark:bg-[#1e1f24]/60 backdrop-blur-sm px-5 py-2.5 rounded-full border border-gray-100 dark:border-gray-700/50 flex items-center gap-3 shadow-sm cursor-pointer hover:shadow-md hover:bg-white/90 dark:hover:bg-[#1e1f24]/90 transition-all duration-300'>
-                <Image src='/LOGO_SMALL.png' alt='DB-GPT' width={22} height={22} className='object-contain' />
-                <span className='text-xs font-medium text-gray-600 dark:text-gray-300 tracking-wide'>
-                  {t('home_subtitle')}
-                </span>
-                <span className='text-[10px] text-gray-400 dark:text-gray-500'>·</span>
-                <span className='text-[10px] text-gray-400 dark:text-gray-500'>{t('home_title')}</span>
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Database Selection Modal */}
@@ -4794,7 +4792,7 @@ const Playground: NextPage = () => {
           title={
             <div className='flex items-center gap-2'>
               <DatabaseOutlined />
-              Select Data Source
+              انتخاب منبع داده
             </div>
           }
           open={isDbModalOpen}
@@ -4821,11 +4819,11 @@ const Playground: NextPage = () => {
                 />
               </List.Item>
             )}
-            locale={{ emptyText: 'No data sources found' }}
+            locale={{ emptyText: 'هیچ منبع داده‌ای یافت نشد' }}
           />
           <div className='mt-4 pt-4 border-t border-gray-100 text-center'>
             <Button type='dashed' block icon={<PlusOutlined />} onClick={() => router.push('/construct/database')}>
-              Add New Data Source
+              افزودن منبع داده جدید
             </Button>
           </div>
         </Modal>
@@ -4835,7 +4833,7 @@ const Playground: NextPage = () => {
           title={
             <div className='flex items-center gap-2'>
               <BookOutlined />
-              Select Knowledge Base
+              انتخاب پایگاه دانش
             </div>
           }
           open={isKnowledgeModalOpen}
@@ -4866,11 +4864,11 @@ const Playground: NextPage = () => {
                 />
               </List.Item>
             )}
-            locale={{ emptyText: 'No knowledge bases found' }}
+            locale={{ emptyText: 'هیچ پایگاه دانشی یافت نشد' }}
           />
           <div className='mt-4 pt-4 border-t border-gray-100 text-center'>
             <Button type='dashed' block icon={<PlusOutlined />} onClick={() => router.push('/construct/knowledge')}>
-              Add New Knowledge Base
+              افزودن پایگاه دانش جدید
             </Button>
           </div>
         </Modal>

@@ -47,13 +47,13 @@ type FormShape = {
 const TRANSPORT_META: Record<string, { displayName: string; label: string; placeholder: string; hintKey: string }> = {
   sse: {
     displayName: 'SSE',
-    label: 'SSE Endpoint URL',
+    label: 'آدرس نقطه پایانی SSE',
     placeholder: 'http://your-mcp-server/sse',
     hintKey: 'connector.form.sseHint',
   },
   streamable_http: {
     displayName: 'Streamable HTTP',
-    label: 'Streamable HTTP Endpoint URL',
+    label: 'آدرس نقطه پایانی Streamable HTTP',
     placeholder: 'https://your-mcp-server/mcp',
     hintKey: 'connector.form.streamableHint',
   },
@@ -68,7 +68,7 @@ const AUTH_TYPE_LABEL_KEYS: Record<string, string> = {
   token: 'connector.form.authTokenCustom',
 };
 const AUTH_TYPE_LITERAL: Record<string, string> = {
-  bearer: 'Bearer Token',
+  bearer: 'توکن Bearer',
 };
 
 const ConnectorForm: React.FC<ConnectorFormProps> = ({

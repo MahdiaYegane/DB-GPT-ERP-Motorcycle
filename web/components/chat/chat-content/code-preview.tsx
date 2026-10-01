@@ -26,7 +26,7 @@ export function CodePreview({ code, light, dark, language, customStyle, codeStyl
         icon={<CopyOutlined />}
         onClick={() => {
           const success = copy(code);
-          message[success ? 'success' : 'error'](success ? '复制成功' : '复制失败');
+          message[success ? 'success' : 'error'](success ? 'کپی شد' : 'کپی ناموفق بود');
         }}
       />
       <SyntaxHighlighter

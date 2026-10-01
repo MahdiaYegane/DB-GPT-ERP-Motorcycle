@@ -128,7 +128,7 @@ export const AddFlowVariableModal: React.FC<Props> = ({ flowInfo, setFlowInfo })
       case 'ref':
         return (
           <Cascader
-            placeholder='Select Value'
+            placeholder='انتخاب مقدار'
             options={refVariableOptions}
             loadData={loadData}
             onChange={(value, selectedOptions) => onRefTypeValueChange(value, selectedOptions, index)}
@@ -136,27 +136,27 @@ export const AddFlowVariableModal: React.FC<Props> = ({ flowInfo, setFlowInfo })
           />
         );
       case 'str':
-        return <Input placeholder='Parameter Value' />;
+        return <Input placeholder='مقدار پارامتر' />;
       case 'int':
         return (
           <InputNumber
             step={1}
-            placeholder='Parameter Value'
+            placeholder='مقدار پارامتر'
             parser={value => value?.replace(/[^\-?\d]/g, '') || 0}
             style={{ width: '100%' }}
           />
         );
       case 'float':
-        return <InputNumber placeholder='Parameter Value' style={{ width: '100%' }} />;
+        return <InputNumber placeholder='مقدار پارامتر' style={{ width: '100%' }} />;
       case 'bool':
         return (
-          <Select placeholder='Select Value'>
+          <Select placeholder='انتخاب مقدار'>
             <Option value={true}>True</Option>
-            <Option value={false}>False</Option>
+            <Option value={false}>نادرست</Option>
           </Select>
         );
       default:
-        return <Input placeholder='Parameter Value' />;
+        return <Input placeholder='مقدار پارامتر' />;
     }
   };
 
@@ -211,37 +211,37 @@ export const AddFlowVariableModal: React.FC<Props> = ({ flowInfo, setFlowInfo })
                     <Form.Item
                       {...restField}
                       name={[name, 'name']}
-                      label={`参数 ${index + 1} 名称`}
+                      label={`نام پارامتر ${index + 1}`}
                       style={{ width: 140 }}
                       rules={[
-                        { required: true, message: 'Missing parameter name' },
+                        { required: true, message: 'نام پارامتر وارد نشده است' },
                         {
                           pattern: /^[a-zA-Z0-9]+(_[a-zA-Z0-9]+)*$/,
-                          message: '名称必须是字母、数字或下划线，并使用下划线分隔多个单词',
+                          message: 'نام فقط می‌تواند شامل حروف انگلیسی، عدد و زیرخط باشد و کلمات با زیرخط جدا شوند',
                         },
                       ]}
                     >
-                      <Input placeholder='Parameter Name' onChange={e => onNameChange(e, index)} />
+                      <Input placeholder='نام پارامتر' onChange={e => onNameChange(e, index)} />
                     </Form.Item>
 
                     <Form.Item
                       {...restField}
                       name={[name, 'label']}
-                      label='标题'
+                      label='عنوان'
                       style={{ width: 130 }}
-                      rules={[{ required: true, message: 'Missing parameter label' }]}
+                      rules={[{ required: true, message: 'برچسب پارامتر وارد نشده است' }]}
                     >
-                      <Input placeholder='Parameter Label' />
+                      <Input placeholder='برچسب پارامتر' />
                     </Form.Item>
 
                     <Form.Item
                       {...restField}
                       name={[name, 'value_type']}
-                      label='类型'
+                      label='نوع'
                       style={{ width: 100 }}
-                      rules={[{ required: true, message: 'Missing parameter type' }]}
+                      rules={[{ required: true, message: 'نوع پارامتر وارد نشده است' }]}
                     >
-                      <Select placeholder='Select' onChange={value => onValueTypeChange(value, index)}>
+                      <Select placeholder='انتخاب' onChange={value => onValueTypeChange(value, index)}>
                         {VALUE_TYPES.map(type => (
                           <Option key={type} value={type}>
                             {type}
@@ -253,15 +253,15 @@ export const AddFlowVariableModal: React.FC<Props> = ({ flowInfo, setFlowInfo })
                     <Form.Item
                       {...restField}
                       name={[name, 'value']}
-                      label='值'
+                      label='مقدار'
                       style={{ width: 320 }}
-                      rules={[{ required: true, message: 'Missing parameter value' }]}
+                      rules={[{ required: true, message: 'مقدار پارامتر وارد نشده است' }]}
                     >
                       {renderVariableValue(controlTypes[index], index)}
                     </Form.Item>
 
-                    <Form.Item {...restField} name={[name, 'description']} label='描述' style={{ width: 170 }}>
-                      <Input placeholder='Parameter Description' />
+                    <Form.Item {...restField} name={[name, 'description']} label='توضیحات' style={{ width: 170 }}>
+                      <Input placeholder='توضیحات پارامتر' />
                     </Form.Item>
 
                     <MinusCircleOutlined onClick={() => remove(name)} />

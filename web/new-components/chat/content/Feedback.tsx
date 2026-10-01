@@ -64,7 +64,7 @@ const DislikeContent: React.FC<{
             setFeedbackOpen(false);
           }}
         >
-          取消
+          انصراف
         </Button>
         <Button
           type='primary'
@@ -79,7 +79,7 @@ const DislikeContent: React.FC<{
           }}
           loading={loading}
         >
-          确认
+          تأیید
         </Button>
       </div>
     </div>
@@ -129,7 +129,7 @@ const Feedback: React.FC<{ content: Record<string, any> }> = ({ content }) => {
       onSuccess: data => {
         const [, res] = data;
         setStatus(res?.feedback_type);
-        message.success('反馈成功');
+        message.success('بازخورد ثبت شد');
         setFeedbackOpen(false);
       },
     },
@@ -147,7 +147,7 @@ const Feedback: React.FC<{ content: Record<string, any> }> = ({ content }) => {
     },
   });
 
-  // 取消反馈
+  // انصراف反馈
   const { run: cancel } = useRequest(
     async () => await apiInterceptors(cancelFeedback({ conv_uid: chatId, message_id: content?.order + '' })),
     {
@@ -156,7 +156,7 @@ const Feedback: React.FC<{ content: Record<string, any> }> = ({ content }) => {
         const [, res] = data;
         if (res) {
           setStatus('none');
-          message.success('操作成功');
+          message.success('عملیات موفق بود');
         }
       },
     },

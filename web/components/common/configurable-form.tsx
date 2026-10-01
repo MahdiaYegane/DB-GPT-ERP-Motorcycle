@@ -115,7 +115,7 @@ function ConfigurableForm({ params, form }: { params: Array<ConfigurableParams> 
 
       // Handle password input box
       if (isPrivacy) {
-        return <Input.Password disabled={isFixed} autoComplete='new-password' placeholder='请输入密码' />;
+        return <Input.Password disabled={isFixed} autoComplete='new-password' placeholder='رمز عبور را وارد کنید' />;
       }
 
       // Handle normal text input box

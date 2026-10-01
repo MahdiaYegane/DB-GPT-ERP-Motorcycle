@@ -69,7 +69,7 @@ export default function GitRepoSyncForm(props: IProps) {
           </svg>
         </div>
         <div>
-          <span className='text-sm font-semibold text-gray-800 dark:text-gray-200'>Git Repository</span>
+          <span className='text-sm font-semibold text-gray-800 dark:text-gray-200'>مخزن Git</span>
           <p className='text-xs text-gray-400 dark:text-gray-500 m-0'>{t('ds_git_repo_desc')}</p>
         </div>
       </div>

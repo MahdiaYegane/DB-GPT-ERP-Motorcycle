@@ -4,22 +4,22 @@ import React, { useCallback, useRef, useState } from 'react';
 const generateId = () => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
 const demoCommands: SlashCommand[] = [
-  { id: 'clear', trigger: 'clear', title: 'Clear History', description: 'Clear all chat history', type: 'builtin' },
-  { id: 'model', trigger: 'model', title: 'Switch Model', description: 'Change the AI model', type: 'builtin' },
-  { id: 'help', trigger: 'help', title: 'Help', description: 'Show available commands', type: 'builtin' },
+  { id: 'clear', trigger: 'clear', title: 'پاک کردن تاریخچه', description: 'پاک کردن همه تاریخچه گفتگو', type: 'builtin' },
+  { id: 'model', trigger: 'model', title: 'تغییر مدل', description: 'تغییر مدل هوش مصنوعی', type: 'builtin' },
+  { id: 'help', trigger: 'help', title: 'راهنما', description: 'نمایش دستورات موجود', type: 'builtin' },
   {
     id: 'export',
     trigger: 'export',
-    title: 'Export Chat',
-    description: 'Export conversation as file',
+    title: 'خروجی گفتگو',
+    description: 'خروجی گفتگو به‌صورت فایل',
     type: 'builtin',
   },
 ];
 
 const demoAgents = [
-  { name: 'SQL Expert', description: 'Database query and optimization specialist' },
-  { name: 'Code Assistant', description: 'Help with coding tasks' },
-  { name: 'Data Analyst', description: 'Data analysis and visualization' },
+  { name: 'متخصص SQL', description: 'متخصص پرس‌وجو و بهینه‌سازی پایگاه داده' },
+  { name: 'Code Assistant', description: 'کمک در وظایف برنامه‌نویسی' },
+  { name: 'تحلیلگر داده', description: 'تحلیل و مصورسازی داده' },
 ];
 
 const PlaygroundPage: React.FC = () => {
@@ -51,7 +51,7 @@ const PlaygroundPage: React.FC = () => {
         userMessage: text,
         isWorking: true,
         startTime,
-        steps: [{ id: '1', name: 'Processing request', status: 'running', tool: 'read', startTime }],
+        steps: [{ id: '1', name: 'در حال پردازش درخواست', status: 'running', tool: 'read', startTime }],
       };
 
       setTurns(prev => [...prev, newTurn]);
@@ -70,13 +70,13 @@ const PlaygroundPage: React.FC = () => {
                   steps: [
                     {
                       id: '1',
-                      name: 'Processing request',
+                      name: 'در حال پردازش درخواست',
                       status: 'completed',
                       tool: 'read',
                       startTime,
                       endTime: Date.now(),
                     },
-                    { id: '2', name: 'Generating response', status: 'running', tool: 'code', startTime: Date.now() },
+                    { id: '2', name: 'در حال تولید پاسخ', status: 'running', tool: 'code', startTime: Date.now() },
                   ],
                 }
               : t,
@@ -100,7 +100,7 @@ const PlaygroundPage: React.FC = () => {
                   steps: [
                     {
                       id: '1',
-                      name: 'Processing request',
+                      name: 'در حال پردازش درخواست',
                       status: 'completed',
                       tool: 'read',
                       startTime,
@@ -108,7 +108,7 @@ const PlaygroundPage: React.FC = () => {
                     },
                     {
                       id: '2',
-                      name: 'Generating response',
+                      name: 'در حال تولید پاسخ',
                       status: 'completed',
                       tool: 'code',
                       startTime: startTime + 800,
@@ -127,7 +127,7 @@ const PlaygroundPage: React.FC = () => {
             t.id === turnId
               ? {
                   ...t,
-                  assistantMessage: 'Sorry, an error occurred while generating the response.',
+                  assistantMessage: 'متأسفانه هنگام تولید پاسخ خطایی رخ داد.',
                   isWorking: false,
                   endTime: Date.now(),
                   steps: t.steps?.map(s => ({ ...s, status: 'failed' as const })),
@@ -155,7 +155,7 @@ const PlaygroundPage: React.FC = () => {
                 ...t,
                 isWorking: false,
                 endTime: Date.now(),
-                assistantMessage: t.assistantMessage || 'Generation stopped by user.',
+                assistantMessage: t.assistantMessage || 'تولید توسط کاربر متوقف شد.',
                 steps: t.steps?.map(s =>
                   s.status === 'running' ? { ...s, status: 'failed' as const, error: 'Cancelled' } : s,
                 ),
@@ -199,7 +199,7 @@ const PlaygroundPage: React.FC = () => {
         turns={turns}
         isLoading={isGenerating}
         modelName='GPT-4'
-        title='DB-GPT Playground'
+        title='محیط تمرین DB-GPT'
         onSendMessage={handleSendMessage}
         onStopGeneration={handleStopGeneration}
         onNewChat={handleNewChat}
@@ -208,7 +208,7 @@ const PlaygroundPage: React.FC = () => {
         onCommandSelect={handleCommandSelect}
         onFileSearch={handleFileSearch}
         showSteps={true}
-        inputPlaceholder='Ask me anything... (try @ for mentions, / for commands)'
+        inputPlaceholder='هر چه می‌خواهید بپرسید... (@ برای اشاره، / برای دستورات)'
       />
     </div>
   );

@@ -40,7 +40,7 @@ function MyPlugins() {
         return <LoadingOutlined />;
       }
       return (
-        <Tooltip title='Uninstall'>
+        <Tooltip title='حذف نصب'>
           <div
             className='w-full h-full'
             onClick={() => {
@@ -57,7 +57,7 @@ function MyPlugins() {
 
   const onChange: UploadProps['onChange'] = async info => {
     if (!info) {
-      message.error('Please select the *.zip,*.rar file');
+      message.error('لطفاً فایل ‎*.zip‎ و ‎*.rar‎ را انتخاب کنید');
       return;
     }
     try {
@@ -71,7 +71,7 @@ function MyPlugins() {
       message.success('success');
       refresh();
     } catch (e: any) {
-      message.error(e?.message || 'Upload Error');
+      message.error(e?.message || 'خطای بارگذاری');
     } finally {
       setUploading(false);
       messageApi.destroy();

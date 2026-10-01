@@ -410,7 +410,7 @@ const Completion = ({ messages, onSubmit, onFormatContent }: Props) => {
               })
             )
           ) : (
-            <MyEmpty description='Start a conversation' />
+            <MyEmpty description='شروع یک مکالمه' />
           )}
         </div>
       </div>
@@ -428,7 +428,7 @@ const Completion = ({ messages, onSubmit, onFormatContent }: Props) => {
         </div>
       </div>
       <Modal
-        title='JSON Editor'
+        title='ویرایشگر JSON'
         open={jsonModalOpen}
         width='60%'
         cancelButtonProps={{

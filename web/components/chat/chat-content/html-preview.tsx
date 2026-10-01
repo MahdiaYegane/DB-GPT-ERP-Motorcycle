@@ -70,7 +70,7 @@ const HtmlPreview = ({ code, language = 'html' }) => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTML Preview</title>
+  <title>پیش‌نمایش HTML</title>
   ${styleMatches.length > 0 ? styleMatches.map(m => m[0]).join('\n') : ''}
 </head>
 <body>
@@ -213,7 +213,7 @@ const HtmlPreview = ({ code, language = 'html' }) => {
               srcDoc={parsedCode.fullCode}
               style={{ width: '100%', height: '60vh', border: 'none' }}
               sandbox='allow-scripts allow-same-origin'
-              title='HTML Preview'
+              title='پیش‌نمایش HTML'
             />
             <Button
               type='primary'

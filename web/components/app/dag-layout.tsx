@@ -40,7 +40,7 @@ export default function DagLayout(props: IProps) {
 
   return (
     <div className='w-full h-[300px]'>
-      <div className='mr-24 mb-4 mt-2'>Flows:</div>
+      <div className='mr-24 mb-4 mt-2'>گردش‌کارها:</div>
       <div className='flex items-center mb-6'>
         <Select
           onChange={handleFlowsChange}

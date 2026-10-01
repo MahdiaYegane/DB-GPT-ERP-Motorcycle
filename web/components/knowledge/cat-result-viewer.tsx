@@ -72,7 +72,7 @@ const CatResultViewer: React.FC<CatResultViewerProps> = ({ content }) => {
               <CodeOutlined style={{ fontSize: 11 }} />
               {fileLines} lines
             </span>
-            <Tooltip title={tt('Copy_Btn') || 'Copy'}>
+            <Tooltip title={tt('Copy_Btn') || 'کپی'}>
               <button
                 onClick={() => {
                   const codeText = effectiveLines

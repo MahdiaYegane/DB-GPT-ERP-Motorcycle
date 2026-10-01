@@ -133,7 +133,7 @@ function buildArtifacts(
         artifacts.push({
           id: `${roundId}-file-${step.id}-${oIdx}`,
           type: 'file',
-          name: output.content?.name || output.content?.file_name || 'File',
+          name: output.content?.name || output.content?.file_name || 'فایل',
           content: output.content,
           createdAt: now,
           downloadable: true,
@@ -283,12 +283,12 @@ function buildSections(steps: ManusExecutionStep[]): ThinkingSection[] {
 
   const sections: ThinkingSection[] = [];
   if (thinkSteps.length > 0)
-    sections.push({ id: 'section-think', title: 'Analysis & Planning', isCompleted: true, steps: thinkSteps });
+    sections.push({ id: 'section-think', title: 'تحلیل و برنامه‌ریزی', isCompleted: true, steps: thinkSteps });
   if (skillSteps.length > 0)
-    sections.push({ id: 'section-skill', title: 'Skill Loading', isCompleted: true, steps: skillSteps });
+    sections.push({ id: 'section-skill', title: 'بارگذاری مهارت', isCompleted: true, steps: skillSteps });
   if (otherSteps.length > 0)
-    sections.push({ id: 'section-execution', title: 'Data Processing & Execution', isCompleted: true, steps: otherSteps });
-  if (sections.length === 0) sections.push({ id: 'section-main', title: 'Execution', isCompleted: true, steps });
+    sections.push({ id: 'section-execution', title: 'پردازش و اجرای داده', isCompleted: true, steps: otherSteps });
+  if (sections.length === 0) sections.push({ id: 'section-main', title: 'اجرا', isCompleted: true, steps });
   return sections;
 }
 
@@ -510,7 +510,7 @@ const SharePage: NextPage = () => {
         if (!json) return;
         const rawMessages = json?.data?.messages ?? null;
         if (!Array.isArray(rawMessages)) {
-          setFetchError('Data format error');
+          setFetchError('خطای قالب داده');
           setLoading(false);
           return;
         }
@@ -519,7 +519,7 @@ const SharePage: NextPage = () => {
         setLoading(false);
       })
       .catch((err: any) => {
-        setFetchError(err?.message || 'Failed to load');
+        setFetchError(err?.message || 'بارگذاری ناموفق بود');
         setLoading(false);
       });
   }, [token]);
@@ -595,9 +595,9 @@ const SharePage: NextPage = () => {
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      message.success('Link copied');
+      message.success('پیوند کپی شد');
     } catch {
-      message.error('Copy failed');
+      message.error('کپی ناموفق بود');
     }
   };
 
@@ -610,7 +610,7 @@ const SharePage: NextPage = () => {
       <div className='flex items-center justify-center h-screen bg-white dark:bg-[#111217]'>
         <div className='text-center space-y-3'>
           <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto' />
-          <p className='text-gray-400'>Loading...</p>
+          <p className='text-gray-400'>در حال بارگذاری...</p>
         </div>
       </div>
     );
@@ -620,8 +620,8 @@ const SharePage: NextPage = () => {
     return (
       <div className='flex items-center justify-center h-screen bg-white dark:bg-[#111217]'>
         <div className='text-center space-y-3'>
-          <p className='text-2xl font-semibold text-gray-700 dark:text-gray-200'>Share link is invalid or expired</p>
-          <p className='text-gray-400'>{fetchError || 'No replayable conversation content'}</p>
+          <p className='text-2xl font-semibold text-gray-700 dark:text-gray-200'>پیوند اشتراک‌گذاری نامعتبر یا منقضی است</p>
+          <p className='text-gray-400'>{fetchError || 'محتوای قابل بازپخشی برای گفتگو وجود ندارد'}</p>
         </div>
       </div>
     );
@@ -633,7 +633,7 @@ const SharePage: NextPage = () => {
         <title>
           {firstQuestion
             ? `${firstQuestion.slice(0, 60)}${firstQuestion.length > 60 ? '…' : ''} · DB-GPT Replay`
-            : 'DB-GPT Conversation Replay'}
+            : 'بازپخش گفتگوی DB-GPT'}
         </title>
       </Head>
 
@@ -647,7 +647,7 @@ const SharePage: NextPage = () => {
             <span className='font-bold text-base text-gray-800 dark:text-white flex-shrink-0'>DB-GPT</span>
             <div className='w-px h-4 bg-gray-200 dark:bg-gray-700 flex-shrink-0' />
             <span className='text-xs font-medium text-blue-500 bg-blue-50 dark:bg-blue-500/10 px-2 py-0.5 rounded-full flex-shrink-0'>
-              Replay
+              بازپخش
             </span>
             {firstQuestion && (
               <span className='text-sm text-gray-500 dark:text-gray-400 truncate max-w-[400px]' title={firstQuestion}>
@@ -681,21 +681,21 @@ const SharePage: NextPage = () => {
             {/* Play / Pause */}
             {state.done ? (
               <Button icon={<ReloadOutlined />} onClick={restart}>
-                Restart Replay
+                شروع مجدد بازپخش
               </Button>
             ) : playing ? (
               <Button icon={<PauseCircleOutlined />} onClick={pause}>
-                Pause
+                توقف
               </Button>
             ) : (
               <Button type='primary' icon={<PlayCircleOutlined />} onClick={play}>
-                {completedSteps === 0 ? 'Start Replay' : 'Continue'}
+                {completedSteps === 0 ? 'شروع بازپخش' : 'ادامه'}
               </Button>
             )}
 
             {/* Skip to end */}
             {!state.done && (
-              <Tooltip title='Skip to last step'>
+              <Tooltip title='پرش به آخرین مرحله'>
                 <Button icon={<StepForwardOutlined />} onClick={() => jumpToRound(rounds.length - 1)} />
               </Tooltip>
             )}
@@ -704,13 +704,13 @@ const SharePage: NextPage = () => {
             <div className='w-px h-5 bg-gray-200 dark:bg-gray-700' />
 
             {/* Copy share link — blue to match the UI theme */}
-            <Tooltip title='Copy the share link so anyone can replay this conversation via the link'>
+            <Tooltip title='کپی پیوند اشتراک‌گذاری تا هر کسی بتواند با آن این گفتگو را بازپخش کند'>
               <Button
                 icon={<LinkOutlined />}
                 onClick={handleCopyLink}
                 style={{ color: '#3b82f6', borderColor: '#3b82f6' }}
               >
-                Share
+                اشتراک‌گذاری
               </Button>
             </Tooltip>
           </div>

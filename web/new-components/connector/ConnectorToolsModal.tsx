@@ -180,7 +180,7 @@ const ConnectorToolsModal: React.FC<ConnectorToolsModalProps> = ({ open, instanc
             onClick={onClose}
             className='w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition'
             title='Esc'
-            aria-label='close'
+            aria-label='بستن'
           >
             <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
               <path d='M18 6L6 18M6 6l12 12' />

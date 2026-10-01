@@ -1,10 +1,9 @@
 import { ChatContext } from '@/app/chat-context';
 import { DarkSvg, SunnySvg } from '@/components/icons';
 import UserBar from '@/new-components/layout/UserBar';
-import { STORAGE_LANG_KEY, STORAGE_THEME_KEY } from '@/utils/constants/index';
-import Icon, { GlobalOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { STORAGE_THEME_KEY } from '@/utils/constants/index';
+import Icon, { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Layout, Popover } from 'antd';
-import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { ReactNode, useCallback, useContext, useMemo, useState } from 'react';
@@ -20,7 +19,7 @@ interface SettingItem {
 
 const Sider: React.FC = () => {
   const { mode, setMode } = useContext(ChatContext);
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [collapsed, setCollapsed] = useState<boolean>(false);
 
   // 切换主题
@@ -29,19 +28,6 @@ const Sider: React.FC = () => {
     setMode(theme);
     localStorage.setItem(STORAGE_THEME_KEY, theme);
   }, [mode, setMode]);
-
-  // 切换语言
-  const handleChangeLang = useCallback(() => {
-    const language = i18n.language === 'en' ? 'zh' : 'en';
-    i18n.changeLanguage(language);
-    if (language === 'zh') {
-      moment.locale('zh-cn');
-    }
-    if (language === 'en') {
-      moment.locale('en');
-    }
-    localStorage.setItem(STORAGE_LANG_KEY, language);
-  }, [i18n]);
 
   // 展开或收起
   const handleToggleMenu = useCallback(() => {
@@ -57,19 +43,13 @@ const Sider: React.FC = () => {
         onClick: handleToggleTheme,
       },
       {
-        key: 'language',
-        name: t('language'),
-        icon: <GlobalOutlined />,
-        onClick: handleChangeLang,
-      },
-      {
         key: 'fold',
         name: t(collapsed ? 'Show_Sidebar' : 'Close_Sidebar'),
         icon: collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />,
         onClick: handleToggleMenu,
       },
     ];
-  }, [collapsed, handleChangeLang, handleToggleMenu, handleToggleTheme, mode, t]);
+  }, [collapsed, handleToggleMenu, handleToggleTheme, mode, t]);
 
   return (
     <Layout.Sider
@@ -79,14 +59,14 @@ const Sider: React.FC = () => {
       collapsible={true}
       collapsed={collapsed}
       trigger={null}
-      className='flex flex-1 flex-col h-full justify-between  bg-bar dark:bg-[#232734] px-4 pt-4'
+      className='flex flex-1 flex-col h-full justify-between  bg-white dark:bg-white px-4 pt-4'
     >
       {collapsed ? (
         <></>
       ) : (
         <>
           <Link href='/' className='flex items-center justify-center p-2 pb-4'>
-            <Image src='/logo_zh_latest.png' alt='DB-GPT' width={180} height={40} />
+            <Image src='/LOGO.png' alt='DB-GPT' width={180} height={40} />
           </Link>
           <div></div>
           <div className='flex flex-col'>

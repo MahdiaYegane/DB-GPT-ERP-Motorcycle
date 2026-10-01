@@ -47,7 +47,7 @@ const ReferencesContentView: React.FC<{ references: any }> = ({ references }) =>
                     <span className='text-[10px] font-medium text-white bg-blue-500 rounded px-1'>{chunk.index}</span>
                   )}
                   {chunk.recall_score != null && (
-                    <span className='text-[10px] text-gray-400'>召回 {Number(chunk.recall_score).toFixed(2)}</span>
+                    <span className='text-[10px] text-gray-400'>امتیاز بازیابی {Number(chunk.recall_score).toFixed(2)}</span>
                   )}
                 </div>
                 <MarkDownContext key={chunk.id}>{chunk.content}</MarkDownContext>
@@ -64,11 +64,11 @@ const ReferencesContentView: React.FC<{ references: any }> = ({ references }) =>
       <Divider className='mb-1 mt-0' dashed />
       <div className='flex text-sm gap-2 text-blue-400' onClick={() => setOpen(true)}>
         <LinkOutlined />
-        <span className='text-sm'>查看回复引用</span>
+        <span className='text-sm'>مشاهده منابع پاسخ</span>
       </div>
       <Drawer
         open={open}
-        title='回复引用'
+        title='منابع پاسخ'
         placement={isMobile ? 'bottom' : 'right'}
         onClose={() => setOpen(false)}
         destroyOnClose={true}

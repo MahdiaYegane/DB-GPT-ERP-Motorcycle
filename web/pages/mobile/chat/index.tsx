@@ -284,7 +284,7 @@ const MobileChat: React.FC = () => {
       });
     } catch {
       ctrl.current?.abort();
-      tempHistory[index].context = 'Sorry, we meet some error, please try again later.';
+      tempHistory[index].context = 'متأسفانه خطایی رخ داد، لطفاً بعداً دوباره تلاش کنید.';
       tempHistory[index].thinking = false;
       setHistory([...tempHistory]);
       setCanNewChat(true);

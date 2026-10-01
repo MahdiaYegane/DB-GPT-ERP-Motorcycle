@@ -542,7 +542,7 @@ const EmbeddedChat: React.FC<EmbeddedChatProps> = ({ spaceName }) => {
                     <div className='border-b dark:border-gray-700/50 bg-white dark:bg-[#1a1d2e]'>
                       <div className='flex items-center justify-between px-3 py-1.5 bg-gray-50 dark:bg-gray-800/50 border-b dark:border-gray-700/50'>
                         <span className='text-[10px] text-gray-400 font-mono truncate flex-1'>{ref.path}</span>
-                        <Tooltip title={t('Copy_Btn') || 'Copy'}>
+                        <Tooltip title={t('Copy_Btn') || 'کپی'}>
                           <button
                             onClick={() => {
                               navigator.clipboard?.writeText(ref.content || '');

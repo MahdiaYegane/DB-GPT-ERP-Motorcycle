@@ -18,5 +18,5 @@ export const renderDatePicker = (params: Props) => {
     });
   };
 
-  return <DatePicker onChange={onChange} {...attr} className='w-full' placeholder='please select a date' />;
+  return <DatePicker onChange={onChange} {...attr} className='w-full' placeholder='لطفاً تاریخ را انتخاب کنید' />;
 };

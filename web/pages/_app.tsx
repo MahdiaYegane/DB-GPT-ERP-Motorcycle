@@ -1,20 +1,19 @@
 import { ChatContext, ChatContextProvider } from '@/app/chat-context';
 import SideBar from '@/components/layout/side-bar';
 import { NewTaskProvider } from '@/modules/new-task';
-import FloatHelper from '@/new-components/layout/FloatHelper';
-import { STORAGE_LANG_KEY, STORAGE_USERINFO_KEY, STORAGE_USERINFO_VALID_TIME_KEY } from '@/utils/constants/index';
+import { STORAGE_USERINFO_KEY, STORAGE_USERINFO_VALID_TIME_KEY } from '@/utils/constants/index';
 import { App, ConfigProvider, MappingAlgorithm, theme } from 'antd';
 import enUS from 'antd/locale/en_US';
-import zhCN from 'antd/locale/zh_CN';
 import classNames from 'classnames';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import '../app/i18n';
 import '../nprogress.css';
 import '../styles/globals.css';
+import '../styles/kavir-theme.css';
+
 // import TopProgressBar from '@/components/layout/top-progress-bar';
 
 const antdDarkTheme: MappingAlgorithm = (seedToken, mapToken) => {
@@ -28,7 +27,6 @@ const antdDarkTheme: MappingAlgorithm = (seedToken, mapToken) => {
 
 function CssWrapper({ children }: { children: React.ReactElement }) {
   const { mode } = useContext(ChatContext);
-  const { i18n } = useTranslation();
 
   useEffect(() => {
     if (mode) {
@@ -42,8 +40,10 @@ function CssWrapper({ children }: { children: React.ReactElement }) {
   }, [mode]);
 
   useEffect(() => {
-    i18n.changeLanguage?.(window.localStorage.getItem(STORAGE_LANG_KEY) || 'zh');
-  }, [i18n]);
+    document.documentElement.lang = 'en';
+    document.documentElement.dir = 'rtl';
+    document.body.dir = 'rtl';
+  }, []);
 
   return (
     <div>
@@ -55,15 +55,14 @@ function CssWrapper({ children }: { children: React.ReactElement }) {
 
 function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const { isMenuExpand, mode } = useContext(ChatContext);
-  const { i18n } = useTranslation();
   const [isLogin, setIsLogin] = useState(false);
 
   const router = useRouter();
 
-  // 登录检测
+  // ç™»ه½•و£€وµ‹
   const handleAuth = async () => {
     setIsLogin(false);
-    // 如果已有登录信息，直接展示首页
+    // ه¦‚و‍œه·²وœ‰ç™»ه½•ن؟،وپ¯ï¼Œç›´وژ¥ه±•ç¤؛é¦–é،µ
     // if (localStorage.getItem(STORAGE_USERINFO_KEY)) {
     //   setIsLogin(true);
     //   return;
@@ -109,18 +108,19 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
           </div>
         )}
         <div className='flex flex-col flex-1 relative overflow-hidden'>{children}</div>
-        {!hideSidebar && <FloatHelper />}
       </div>
     );
   };
 
   return (
     <ConfigProvider
-      locale={i18n.language === 'en' ? enUS : zhCN}
+      locale={enUS}
+      direction='rtl'
       theme={{
         token: {
-          colorPrimary: '#0C75FC',
+          colorPrimary: '#E30613',
           borderRadius: 4,
+          fontFamily: 'Arad, sans-serif',
         },
         algorithm: mode === 'dark' ? antdDarkTheme : undefined,
       }}

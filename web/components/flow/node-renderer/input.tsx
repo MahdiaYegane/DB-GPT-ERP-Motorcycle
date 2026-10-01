@@ -17,5 +17,5 @@ export const renderInput = (data: IFlowNodeParameter) => {
   const attr = convertKeysToCamelCase(data.ui?.attr || {});
   attr.prefix = getIconComponent(data.ui?.attr?.prefix || '');
 
-  return <Input {...attr} className='w-full' placeholder='please input' allowClear />;
+  return <Input {...attr} className='w-full' placeholder='لطفاً وارد کنید' allowClear />;
 };

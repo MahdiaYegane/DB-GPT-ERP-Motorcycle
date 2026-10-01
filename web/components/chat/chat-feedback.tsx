@@ -109,10 +109,10 @@ const ChatFeedback = ({ conv_index, question, knowledge_space, select_param }: P
       }),
     )
       .then(_ => {
-        messageApi.open({ type: 'success', content: 'save success' });
+        messageApi.open({ type: 'success', content: 'ذخیره موفقیت‌آمیز بود' });
       })
       .catch(_ => {
-        messageApi.open({ type: 'error', content: 'save error' });
+        messageApi.open({ type: 'error', content: 'خطای ذخیره' });
       });
   };
   return (
@@ -147,7 +147,7 @@ const ChatFeedback = ({ conv_index, question, knowledge_space, select_param }: P
                 <Select
                   action={action}
                   value={ques_type}
-                  placeholder='Choose one…'
+                  placeholder='یکی را انتخاب کنید…'
                   onChange={(_, newValue) => setQuesType(newValue ?? '')}
                   {...(ques_type && {
                     // display the button and remove select indicator
@@ -198,7 +198,7 @@ const ChatFeedback = ({ conv_index, question, knowledge_space, select_param }: P
               </Grid>
               <Grid xs={10} sx={{ pl: 0, ml: 0 }}>
                 <Slider
-                  aria-label='Custom'
+                  aria-label='سفارشی'
                   step={1}
                   min={0}
                   max={5}

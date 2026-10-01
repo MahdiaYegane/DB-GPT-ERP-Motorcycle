@@ -350,7 +350,7 @@ const ConversationTracePanel: React.FC<ConversationTracePanelProps> = ({ convers
       {/* Trace selector */}
       {traces.length > 1 && (
         <div className='flex items-center gap-2 text-xs'>
-          <span className='text-gray-400'>{t('observability_trace') || 'Trace'}:</span>
+          <span className='text-gray-400'>{t('observability_trace') || 'ردیابی'}:</span>
           <select
             value={activeTraceId || ''}
             onChange={e => setActiveTraceId(e.target.value)}
@@ -367,7 +367,7 @@ const ConversationTracePanel: React.FC<ConversationTracePanelProps> = ({ convers
 
       {messages.length === 0 ? (
         <div className='flex h-full items-center justify-center p-5'>
-          <Empty description={t('observability_no_trace') || 'No trace yet'} />
+          <Empty description={t('observability_no_trace') || 'هنوز ردیابی‌ای وجود ندارد'} />
         </div>
       ) : (
         <div className='space-y-2'>

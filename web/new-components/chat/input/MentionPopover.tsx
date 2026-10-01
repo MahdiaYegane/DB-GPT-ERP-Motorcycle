@@ -80,7 +80,7 @@ const MentionPopover: React.FC<MentionPopoverProps> = ({
           <Spin size='small' />
         </div>
       ) : options.length === 0 ? (
-        <div className='px-3 py-2 text-sm text-gray-500 dark:text-gray-400'>No results found</div>
+        <div className='px-3 py-2 text-sm text-gray-500 dark:text-gray-400'>نتیجه‌ای پیدا نشد</div>
       ) : (
         <div className='py-1'>
           {options.map(option => {

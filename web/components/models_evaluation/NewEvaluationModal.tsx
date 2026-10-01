@@ -70,7 +70,7 @@ export const NewEvaluationModal = (props: Props) => {
             parsedHeaders = JSON.parse(values.headers);
           }
         } catch (_error) {
-          throw new Error('Header info format is incorrect, please enter valid JSON format');
+          throw new Error('قالب اطلاعات هدر نادرست است، لطفاً قالب JSON معتبر وارد کنید');
         }
 
         try {
@@ -78,7 +78,7 @@ export const NewEvaluationModal = (props: Props) => {
             parsedMapping = JSON.parse(values.response_mapping);
           }
         } catch (_error) {
-          throw new Error('Response Mapping configuration format is incorrect, please enter valid JSON format');
+          throw new Error('قالب پیکربندی نگاشت پاسخ نادرست است، لطفاً قالب JSON معتبر وارد کنید');
         }
 
         // 构造Agent评测参数,使用Agent专有字段

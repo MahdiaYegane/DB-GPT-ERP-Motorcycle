@@ -564,7 +564,7 @@ function DbEditor() {
                   setCurrentRound(e);
                 }}
               />
-              <Search className='mb-2' placeholder='Search' onChange={onChange} />
+              <Search className='mb-2' placeholder='جستجو' onChange={onChange} />
               {treeData && treeData.length > 0 && (
                 <div className='flex-1 overflow-y-auto'>
                   <Tree

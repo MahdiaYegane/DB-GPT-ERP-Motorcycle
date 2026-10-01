@@ -93,29 +93,29 @@ function getFilename(path: string | undefined): string {
 
 function getToolTitle(tool: string): string {
   const titleMap: Record<string, string> = {
-    read: 'Read File',
-    list: 'List Directory',
-    glob: 'Find Files',
-    grep: 'Search Content',
-    bash: 'Run Command',
-    edit: 'Edit File',
-    write: 'Write File',
-    task: 'Delegate Task',
-    todowrite: 'Update Todo',
-    todoread: 'Read Todo',
-    webfetch: 'Fetch Web',
-    question: 'Ask Question',
-    apply_patch: 'Apply Patch',
-    skill: 'Load Skill',
+    read: 'خواندن فایل',
+    list: 'فهرست پوشه',
+    glob: 'یافتن فایل‌ها',
+    grep: 'جستجوی محتوا',
+    bash: 'اجرای دستور',
+    edit: 'ویرایش فایل',
+    write: 'نوشتن فایل',
+    task: 'تفویض وظیفه',
+    todowrite: 'بروزرسانی فهرست کارها',
+    todoread: 'خواندن فهرست کارها',
+    webfetch: 'دریافت از وب',
+    question: 'پرسیدن سؤال',
+    apply_patch: 'اعمال وصله',
+    skill: 'بارگذاری مهارت',
     // Knowledge base tools
-    kb_ls: 'List Files',
-    kb_glob: 'Find Files',
-    kb_grep: 'Search Content',
-    kb_cat: 'Read File',
-    semantic_search: 'Semantic Search',
-    kb_codegraph_explore: 'Explore Code Graph',
-    kb_codegraph_call_chain: 'Trace Call Chain',
-    kb_codegraph_class_hierarchy: 'Trace Class Hierarchy',
+    kb_ls: 'فهرست فایل‌ها',
+    kb_glob: 'یافتن فایل‌ها',
+    kb_grep: 'جستجوی محتوا',
+    kb_cat: 'خواندن فایل',
+    semantic_search: 'جستجوی معنایی',
+    kb_codegraph_explore: 'کاوش گراف کد',
+    kb_codegraph_call_chain: 'ردیابی زنجیره فراخوانی',
+    kb_codegraph_class_hierarchy: 'ردیابی سلسله‌مراتب کلاس',
   };
   return titleMap[tool] || tool;
 }
@@ -305,7 +305,7 @@ const ToolPartDisplay: React.FC<ToolPartDisplayProps> = ({ part, defaultOpen = f
         action: isRunning ? (
           <Spin size='small' indicator={<LoadingOutlined spin />} />
         ) : hasError ? (
-          <span className='text-xs text-red-500'>Error</span>
+          <span className='text-xs text-red-500'>خطا</span>
         ) : null,
       }}
       defaultOpen={defaultOpen}
@@ -330,7 +330,7 @@ const ToolPartDisplay: React.FC<ToolPartDisplayProps> = ({ part, defaultOpen = f
                         <div className='text-sm font-semibold text-gray-800 dark:text-gray-200 truncate'>
                           {skillInfo.name}
                         </div>
-                        <div className='text-[11px] text-gray-400 dark:text-gray-500'>Skill</div>
+                        <div className='text-[11px] text-gray-400 dark:text-gray-500'>مهارت</div>
                       </div>
                     </div>
                     {skillInfo.description && (

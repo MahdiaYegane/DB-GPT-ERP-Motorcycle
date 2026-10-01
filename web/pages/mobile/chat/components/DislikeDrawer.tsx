@@ -22,7 +22,7 @@ const DislikeDrawer: React.FC<{
 
   return (
     <Drawer
-      title='你的反馈助我进步'
+      title='بازخورد شما به بهبود ما کمک می‌کند'
       placement='bottom'
       open={open}
       onClose={() => setFeedbackOpen(false)}
@@ -53,7 +53,7 @@ const DislikeDrawer: React.FC<{
           })}
         </div>
         <Input.TextArea
-          placeholder='描述一下具体问题或更优的答案'
+          placeholder='مشکل یا پاسخ بهتر را توضیح دهید'
           className='h-24 resize-none mb-2'
           value={remark}
           onChange={e => setRemark(e.target.value.trim())}
@@ -65,7 +65,7 @@ const DislikeDrawer: React.FC<{
               setFeedbackOpen(false);
             }}
           >
-            取消
+            انصراف
           </Button>
           <Button
             type='primary'
@@ -80,7 +80,7 @@ const DislikeDrawer: React.FC<{
             }}
             loading={loading}
           >
-            确认
+            تأیید
           </Button>
         </div>
       </div>
