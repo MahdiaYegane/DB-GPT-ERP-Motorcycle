@@ -1,0 +1,470 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 07:51+0800\n"
+"PO-Revision-Date: 2026-09-28 00:00+0000\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embedding_factory.py:245
+msgid "Default Embeddings"
+msgstr "تعبیه‌های پیش‌فرض"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embedding_factory.py:249
+msgid "Default embeddings(using default embedding model of current system)"
+msgstr "تعبیه‌های پیش‌فرض (با استفاده از مدل تعبیه پیش‌فرض سیستم جاری)"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:61
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/rerank.py:37
+msgid "Device to run model. If None, the device is automatically determined"
+msgstr ""
+"دستگاهی که مدل روی آن اجرا می‌شود. اگر None باشد، دستگاه به‌طور خودکار "
+"تعیین می‌شود"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:68
+msgid "Path of the cache folder."
+msgstr "مسیر پوشه حافظه نهان."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:75
+msgid "Normalize embeddings."
+msgstr "تعبیه‌ها را نرمال‌سازی می‌کند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:81
+msgid "Run encode() on multiple GPUs."
+msgstr "اجرای متد encode() روی چندین GPU."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:87
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/rerank.py:53
+msgid "Keyword arguments to pass to the model."
+msgstr "آرگومان‌های کلیدی که باید به مدل ارسال شوند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:93
+msgid "Keyword arguments to pass when calling the `encode` method."
+msgstr "آرگومان‌های کلیدی که هنگام فراخوانی متد `encode` ارسال می‌شوند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:100
+msgid "Instruction to use for embedding documents. Just for Instructor model."
+msgstr "دستورالعمل مورد استفاده برای تعبیه اسناد. فقط برای مدل Instructor."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:108
+msgid "Instruction to use for embedding query. Just for Instructor model."
+msgstr "دستورالعمل مورد استفاده برای تعبیه پرس‌وجو. فقط برای مدل Instructor."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:147
+msgid "HuggingFace Embeddings"
+msgstr "تعبیه‌های HuggingFace"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:150
+msgid "HuggingFace sentence_transformers embedding models."
+msgstr "مدل‌های تعبیه sentence_transformers از HuggingFace."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:153
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:285
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:548
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:714
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rewrite.py:32
+msgid "Model Name"
+msgstr "نام مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:158
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:290
+msgid "Model name to use."
+msgstr "نام مدلی که باید استفاده شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:279
+msgid "HuggingFace Instructor Embeddings"
+msgstr "تعبیه‌های HuggingFace Instructor"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:282
+msgid "HuggingFace Instructor embeddings."
+msgstr "تعبیه‌های HuggingFace Instructor."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:293
+msgid "Embed Instruction"
+msgstr "دستورالعمل تعبیه"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:298
+msgid "Instruction to use for embedding documents."
+msgstr "دستورالعمل مورد استفاده برای تعبیه اسناد."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:301
+msgid "Query Instruction"
+msgstr "دستورالعمل پرس‌وجو"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:306
+msgid "Instruction to use for embedding query."
+msgstr "دستورالعمل مورد استفاده برای تعبیه پرس‌وجو."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:536
+msgid "HuggingFace Inference API Embeddings"
+msgstr "تعبیه‌های HuggingFace Inference API"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:539
+msgid "HuggingFace Inference API embeddings."
+msgstr "تعبیه‌های HuggingFace Inference API."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:542
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:706
+msgid "API Key"
+msgstr "کلید API"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:545
+msgid "Your API key for the HuggingFace Inference API."
+msgstr "کلید API شما برای HuggingFace Inference API."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:553
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:719
+msgid "The name of the model to use for text embeddings."
+msgstr "نام مدلی که برای تعبیه متن استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:659
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:703
+msgid "The URL of the embeddings API."
+msgstr "نشانی URL مربوط به API تعبیه."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:665
+msgid "The API key for the embeddings API."
+msgstr "کلید API برای API تعبیه."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:672
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/rerank.py:186
+msgid ""
+"The real model name to pass to the provider, default is None. If backend is "
+"None, use name as the real model name."
+msgstr ""
+"نام واقعی مدلی که به ارائه‌دهنده ارسال می‌شود؛ پیش‌فرض None است. اگر "
+"بک‌اند None باشد، نام به‌عنوان نام واقعی مدل استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:681
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:727
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/rerank.py:195
+msgid "The timeout for the request in seconds."
+msgstr "مهلت زمانی درخواست بر حسب ثانیه."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:692
+msgid "OpenAPI Embeddings"
+msgstr "تعبیه‌های OpenAPI"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:695
+msgid "OpenAPI embeddings."
+msgstr "تعبیه‌های OpenAPI."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:698
+msgid "API URL"
+msgstr "نشانی URL مربوط به API"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:711
+msgid "Your API key for the Open API."
+msgstr "کلید API شما برای Open API."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:722
+msgid "Timeout"
+msgstr "مهلت زمانی"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:924
+msgid "The GTE models are trained by Alibaba DAMO Academy, supporting Chinese."
+msgstr ""
+"مدل‌های GTE توسط آکادمی Alibaba DAMO آموزش داده شده‌اند و از زبان چینی "
+"پشتیبانی می‌کنند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:934
+msgid "The GTE models are trained by Alibaba DAMO Academy, supporting English."
+msgstr ""
+"مدل‌های GTE توسط آکادمی Alibaba DAMO آموزش داده شده‌اند و از زبان "
+"انگلیسی پشتیبانی می‌کنند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:944
+msgid ""
+"The embedding model are trained by MokaAI, this version support English and "
+"Chinese."
+msgstr ""
+"این مدل تعبیه توسط MokaAI آموزش داده شده است؛ این نسخه از انگلیسی و "
+"چینی پشتیبانی می‌کند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:954
+msgid ""
+"The embedding model are trained by MokaAI, this version support Chinese."
+msgstr ""
+"این مدل تعبیه توسط MokaAI آموزش داده شده است؛ این نسخه از زبان چینی "
+"پشتیبانی می‌کند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:969
+msgid "The embedding model are trained by HKUNLP, it support English."
+msgstr ""
+"این مدل تعبیه توسط HKUNLP آموزش داده شده است و از زبان انگلیسی "
+"پشتیبانی می‌کند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:987
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/embeddings.py:997
+msgid "The embedding model are trained by OpenAI, it support English."
+msgstr ""
+"این مدل تعبیه توسط OpenAI آموزش داده شده است و از زبان انگلیسی "
+"پشتیبانی می‌کند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/rerank.py:45
+msgid "Max length for input sequences. Longer sequences will be truncated."
+msgstr "حداکثر طول دنباله‌های ورودی. دنباله‌های طولانی‌تر کوتاه می‌شوند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/rerank.py:173
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/rerank.py:333
+msgid "The URL of the rerank API."
+msgstr "نشانی URL مربوط به API رتبه‌بندی مجدد."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/rerank.py:179
+#: ../packages/dbgpt-core/src/dbgpt/rag/embedding/rerank.py:339
+msgid "The API key for the rerank API."
+msgstr "کلید API برای API رتبه‌بندی مجدد."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/chunk_manager.py:18
+msgid "Chunk Manager Operator"
+msgstr "عملگر مدیر تکه‌بندی"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/chunk_manager.py:20
+msgid " Split Knowledge Documents into chunks."
+msgstr " اسناد دانش را به تکه‌ها تقسیم می‌کند."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/chunk_manager.py:24
+msgid "Chunk Split Parameters"
+msgstr "پارامترهای تقسیم تکه"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/chunk_manager.py:27
+msgid "Chunk Split Parameters."
+msgstr "پارامترهای تقسیم تکه."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/chunk_manager.py:35
+msgid "Knowledge"
+msgstr "دانش"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/chunk_manager.py:38
+msgid "The knowledge to be loaded."
+msgstr "دانشی که باید بارگذاری شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/chunk_manager.py:43
+msgid "Chunks"
+msgstr "تکه‌ها"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/chunk_manager.py:46
+msgid "The split chunks by chunk manager."
+msgstr "تکه‌های تقسیم‌شده توسط مدیر تکه‌بندی."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:16
+msgid "Query Rewrite Operator"
+msgstr "عملگر بازنویسی پرس‌وجو"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:19
+msgid "Query rewrite operator."
+msgstr "عملگر بازنویسی پرس‌وجو."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:22
+msgid "Query context"
+msgstr "زمینه پرس‌وجو"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:22
+msgid "query context"
+msgstr "زمینه پرس‌وجو"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:27
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:31
+msgid "Rewritten queries"
+msgstr "پرس‌وجوهای بازنویسی‌شده"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:36
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rewrite.py:38
+msgid "LLM Client"
+msgstr "کلاینت LLM"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:39
+msgid "The LLM Client."
+msgstr "کلاینت LLM."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:42
+msgid "Model name"
+msgstr "نام مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:47
+msgid "LLM model name."
+msgstr "نام مدل LLM."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:50
+msgid "Prompt language"
+msgstr "زبان پرامپت"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:55
+msgid "Prompt language."
+msgstr "زبان پرامپت."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:58
+msgid "Number of results"
+msgstr "تعداد نتایج"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/operators/rewrite.py:63
+msgid "rewrite query number."
+msgstr "تعداد پرس‌وجوهای بازنویسی."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:212
+msgid "Character Text Splitter"
+msgstr "تقسیم‌کننده متنی کاراکتری"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:217
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:428
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:830
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:873
+msgid "Separator"
+msgstr "جداکننده"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:220
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:431
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:833
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:876
+msgid "Separator to split the text."
+msgstr "جداکننده برای تقسیم متن."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:257
+msgid "Recursive Character Text Splitter"
+msgstr "تقسیم‌کننده بازگشتی متنی کاراکتری"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:271
+msgid "Split text by characters recursively."
+msgstr "تقسیم متن بر اساس کاراکترها به‌صورت بازگشتی."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:336
+msgid "Spacy Text Splitter"
+msgstr "تقسیم‌کننده متنی Spacy"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:341
+msgid "Pipeline"
+msgstr "پایپ‌لاین"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:344
+msgid "Spacy pipeline to use for tokenization."
+msgstr "پایپ‌لاین Spacy مورد استفاده برای توکن‌سازی."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:349
+msgid "Split text by sentences using Spacy."
+msgstr "تقسیم متن بر اساس جمله‌ها با استفاده از Spacy."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:399
+msgid "Markdown Header Text Splitter"
+msgstr "تقسیم‌کننده متنی سرفصل Markdown"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:404
+msgid "Return Each Line"
+msgstr "بازگرداندن هر خط"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:407
+msgid "Return each line with associated headers."
+msgstr "بازگرداندن هر خط به همراه سرفصل‌های مرتبط."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:412
+msgid "Chunk Size"
+msgstr "اندازه تکه"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:415
+msgid "Size of each chunk."
+msgstr "اندازه هر تکه."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:420
+msgid "Chunk Overlap"
+msgstr "هم‌پوشانی تکه‌ها"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:423
+msgid "Overlap between chunks."
+msgstr "هم‌پوشانی بین تکه‌ها."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:436
+msgid "Split markdown text by headers."
+msgstr "تقسیم متن Markdown بر اساس سرفصل‌ها."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:825
+msgid "Separator Text Splitter"
+msgstr "تقسیم‌کننده متنی جداکننده"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:838
+msgid "Split text by separator."
+msgstr "تقسیم متن بر اساس جداکننده."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:868
+msgid "Page Text Splitter"
+msgstr "تقسیم‌کننده متنی صفحه"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/text_splitter/text_splitter.py:881
+msgid "Split text by page."
+msgstr "تقسیم متن بر اساس صفحه."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rewrite.py:26
+msgid "Query Rewrite"
+msgstr "بازنویسی پرس‌وجو"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rewrite.py:29
+msgid "Query rewrite."
+msgstr "بازنویسی پرس‌وجو."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rewrite.py:35
+msgid "The LLM model name."
+msgstr "نام مدل LLM."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rewrite.py:41
+msgid "The llm client."
+msgstr "کلاینت LLM."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rewrite.py:44
+msgid "Language"
+msgstr "زبان"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rewrite.py:47
+msgid "The language of the query rewrite prompt."
+msgstr "زبان پرامپت بازنویسی پرس‌وجو."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:88
+msgid "Default Ranker"
+msgstr "رتبه‌بند پیش‌فرض"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:91
+msgid "Default ranker(Rank by score)."
+msgstr "رتبه‌بند پیش‌فرض (رتبه‌بندی بر اساس امتیاز)."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:94
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:184
+msgid "Top k"
+msgstr "K برتر"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:97
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:187
+msgid "The number of top k documents."
+msgstr "تعداد اسناد K برتر."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:178
+msgid "CrossEncoder Rerank"
+msgstr "رتبه‌بندی مجدد CrossEncoder"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:181
+msgid "CrossEncoder ranker."
+msgstr "رتبه‌بند CrossEncoder."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:190
+msgid "Rerank Model"
+msgstr "مدل رتبه‌بندی مجدد"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:193
+msgid "rerank model name, e.g., 'BAAI/bge-reranker-base'."
+msgstr "نام مدل رتبه‌بندی مجدد، مثلاً 'BAAI/bge-reranker-base'."
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:196
+msgid "device"
+msgstr "دستگاه"
+
+#: ../packages/dbgpt-core/src/dbgpt/rag/retriever/rerank.py:199
+msgid "device name, e.g., 'cpu'."
+msgstr "نام دستگاه، مثلاً 'cpu'."

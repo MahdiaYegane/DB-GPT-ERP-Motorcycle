@@ -1,0 +1,173 @@
+[system]
+language = "${env:DBGPT_LANG:-en}"
+api_keys = []
+encrypt_key = "your_secret_key"
+
+# Server Configurations
+[service.web]
+host = "0.0.0.0"
+port = 5670
+cors_allowed_origins = "*"
+
+[service.web.database]
+type = "sqlite"
+path = "pilot/meta_data/dbgpt.db"
+
+[service.web.agent_context]
+# 999K context budget (effective ~997K after reserved_tokens).
+# Per-model clamp in agentic_data_api._load_context_budget_config caps this
+# to each model's real context_length (Groq 131K, Ollama 262K, Liara ~1M),
+# so small models fail safe instead of overflowing the provider API.
+# TPM (tokens/minute) is a RATE limit, not the context window.
+max_context_tokens = 999000
+reserved_tokens = 2048
+warning_threshold = 0.70
+error_threshold = 0.90
+critical_threshold = 0.95
+min_keep_recent_rounds = 2
+max_observation_age_rounds = 5
+truncated_observation_max_chars = 500
+min_keep_tokens = 6000
+max_compact_failures = 3
+max_parallel_subagents = 1
+
+[app]
+# Output cap must leave room for full tool-call argument JSON. Too small a
+# value truncates tool arguments mid-JSON -> empty args -> "No code provided"
+# retry loops. 1500 fits a typical matplotlib script + thought.
+temperature = 0.2
+max_new_tokens = 1500
+
+[rag.storage]
+[rag.storage.vector]
+type = "chroma"
+persist_path = "pilot/data"
+
+# Model Configurations - Groq + local fallback (Groq hit 200K/day limit, local avoids 429)
+[models]
+[[models.llms]]
+name = "qwen3.5:9b"
+provider = "proxy/ollama"
+api_base = "http://localhost:11434"
+api_key = ""
+# Ollama /api/show reports qwen35.context_length=262144
+context_length = 262144
+
+[[models.llms]]
+name = "openai/gpt-oss-120b"
+provider = "proxy/openai"
+api_key = "${env:GROQ_API_KEY}"
+api_base = "https://api.groq.com/openai/v1"
+# Groq model card: context_window=131072 (proxy/openai defaults to 8192 otherwise)
+context_length = 131072
+
+[[models.llms]]
+name = "qwen/qwen3.8-27b"
+provider = "proxy/openai"
+api_key = "${env:GROQ_API_KEY}"
+api_base = "https://api.groq.com/openai/v1"
+# Groq model card: context_window=131042
+context_length = 131042
+
+[[models.llms]]
+name = "mimo-v2.6-flash:free"
+provider = "proxy/openai"
+api_key = "${env:TOKENHARBOR_API_KEY}"
+api_base = "https://tokenharbor.ai/v1"
+# TokenHarbor /v1/models: context_length=1048576
+context_length = 1048576
+
+[[models.llms]]
+name = "qwen3.8-flash:free"
+provider = "proxy/openai"
+api_key = "${env:TOKENHARBOR_API_KEY}"
+api_base = "https://tokenharbor.ai/v1"
+# TokenHarbor reports null context_length; max output=128000. Use 128K safe floor.
+context_length = 131072
+
+[[models.llms]]
+name = "deepseek-v4.1-flash:free"
+provider = "proxy/openai"
+api_key = "${env:TOKENHARBOR_API_KEY}"
+api_base = "https://tokenharbor.ai/v1"
+# TokenHarbor /v1/models: context_length=1048576
+context_length = 1048576
+
+# --- Liara AI (Iran), provider: proxy/liara ---
+# Base URL: https://ai.liara.ir/api/{workspace_id}/v1 (workspace dbgpt)
+# Auth: Bearer $LIARA_API_KEY. Set LIARA_API_KEY in start_dbgpt_server.bat
+# `name` is the display name shown in the UI dropdown (keep the liara tag so
+# these models are distinguishable). `backend` is the real model id sent to
+# the Liara API (LiaraLLMClient maps display name -> backend automatically).
+[[models.llms]]
+name = "xiaomi/mimo-v2.5 (liara)"
+provider = "proxy/liara"
+backend = "xiaomi/mimo-v2.5"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1050000
+
+[[models.llms]]
+name = "xiaomi/mimo-v2.5-pro (liara)"
+provider = "proxy/liara"
+backend = "xiaomi/mimo-v2.5-pro"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1050000
+
+[[models.llms]]
+name = "deepseek/deepseek-v4.1-flash (liara)"
+provider = "proxy/liara"
+backend = "deepseek/deepseek-v4.1-flash"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1048576
+
+# --- Liara: Z.ai GLM 5.3 Flash (multimodal in, 1.31M context) ---
+[[models.llms]]
+name = "z-ai/glm-5.3-flash (liara)"
+provider = "proxy/liara"
+backend = "z-ai/glm-5.3-flash"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1310720
+
+# --- Liara: MiniMax M3 (multimodal in, 1M context) ---
+[[models.llms]]
+name = "minimax/minimax-m3 (liara)"
+provider = "proxy/liara"
+backend = "minimax/minimax-m3"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1048576
+
+# --- Liara: Qwen 3.7 Flash (multimodal in, 1M context) ---
+[[models.llms]]
+name = "qwen/qwen3.7-flash (liara)"
+provider = "proxy/liara"
+backend = "qwen/qwen3.7-flash"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1000000
+
+# --- Liara: DeepSeek V4 Pro 0423 (text-to-text, 1M context) ---
+[[models.llms]]
+name = "deepseek/deepseek-v4-pro (liara)"
+provider = "proxy/liara"
+backend = "deepseek/deepseek-v4-pro"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1048576
+
+[[models.embeddings]]
+name = "bge-m3:567m"
+provider = "proxy/ollama"
+api_url = "http://localhost:11434"
+api_key = ""
+
+# Optional second embedding - uncomment if you want to use qwen3-embedding:8b instead/as alternative
+# [[models.embeddings]]
+# name = "qwen3-embedding:8b"
+# provider = "proxy/ollama"
+# api_url = "http://localhost:11434"
+# api_key = ""

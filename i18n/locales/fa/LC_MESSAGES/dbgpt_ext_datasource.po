@@ -1,0 +1,277 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 07:51+0800\n"
+"PO-Revision-Date: 2026-09-28 00:00+0000\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_spark.py:22
+msgid "Apache Spark datasource"
+msgstr "منبع داده Apache Spark"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_spark.py:25
+msgid "Unified engine for large-scale data analytics."
+msgstr "موتور یکپارچه برای تحلیل داده‌های کلان."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_spark.py:34
+msgid "The file path of the data source."
+msgstr "مسیر فایل منبع داده."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_tugraph.py:18
+msgid "TuGraph datasource"
+msgstr "منبع داده TuGraph"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_tugraph.py:22
+msgid ""
+"TuGraph is a high-performance graph database jointly developed by Ant Group "
+"and Tsinghua University."
+msgstr "TuGraph یک پایگاه داده گراف با کارایی بالا است که به‌طور مشترک توسط Ant Group و دانشگاه Tsinghua توسعه یافته است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_tugraph.py:32
+msgid "TuGraph server host"
+msgstr "میزبان سرور TuGraph"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_tugraph.py:33
+msgid "TuGraph server user"
+msgstr "کاربر سرور TuGraph"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_tugraph.py:38
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:49
+msgid ""
+"Database password, you can write your password directly, of course, you can "
+"also use environment variables, such as ${env:DBGPT_DB_PASSWORD}"
+msgstr "گذرواژه پایگاه داده؛ می‌توانید گذرواژه را مستقیم وارد کنید یا از متغیرهای محیطی استفاده کنید، مانند ${env:DBGPT_DB_PASSWORD}"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_tugraph.py:46
+msgid "TuGraph server port, default 7687"
+msgstr "درگاه سرور TuGraph، پیش‌فرض 7687"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/conn_tugraph.py:49
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:38
+msgid "Database name, default 'default'"
+msgstr "نام پایگاه داده، پیش‌فرض 'default'"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:21
+msgid "Apache Hive datasource"
+msgstr "منبع داده Apache Hive"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:24
+msgid "A distributed fault-tolerant data warehouse system."
+msgstr "یک سیستم انبار داده توزیع‌شده و مقاوم در برابر خطا."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:33
+msgid "Hive server host"
+msgstr "میزبان سرور Hive"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:35
+msgid "Hive server port, default 10000"
+msgstr "درگاه سرور Hive، پیش‌فرض 10000"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:45
+msgid "Authentication mode: NONE, NOSASL, LDAP, KERBEROS, CUSTOM"
+msgstr "حالت احراز هویت: NONE، NOSASL، LDAP، KERBEROS، CUSTOM"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:50
+msgid "Username for authentication"
+msgstr "نام کاربری برای احراز هویت"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:55
+msgid "Password for LDAP or CUSTOM auth"
+msgstr "گذرواژه برای احراز هویت LDAP یا CUSTOM"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:62
+msgid "Kerberos service name"
+msgstr "نام سرویس Kerberos"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:67
+msgid "Transport mode: binary or http"
+msgstr "حالت انتقال: binary یا http"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_hive.py:75
+msgid "Driver name for Hive, default is hive."
+msgstr "نام درایور Hive، پیش‌فرض hive است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_starrocks.py:22
+msgid "StarRocks datasource"
+msgstr "منبع داده StarRocks"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_starrocks.py:25
+msgid "An Open-Source, High-Performance Analytical Database."
+msgstr "یک پایگاه داده تحلیلی متن‌باز با کارایی بالا."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_starrocks.py:36
+msgid "Driver name for starrocks, default is starrocks."
+msgstr "نام درایور StarRocks، پیش‌فرض starrocks است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_mysql.py:16
+msgid "MySQL datasource"
+msgstr "منبع داده MySQL"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_mysql.py:20
+msgid ""
+"Fast, reliable, scalable open-source relational database management system."
+msgstr "سیستم مدیریت پایگاه داده رابطه‌ای متن‌باز، سریع، قابل اعتماد و مقیاس‌پذیر."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_mysql.py:32
+msgid "Driver name for MySQL, default is mysql+pymysql."
+msgstr "نام درایور MySQL، پیش‌فرض mysql+pymysql است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_sqlite.py:24
+msgid "SQLite datasource"
+msgstr "منبع داده SQLite"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_sqlite.py:28
+msgid ""
+"Lightweight embedded relational database with simplicity and portability."
+msgstr "پایگاه داده رابطه‌ای سبک و تعبیه‌شده با سادگی و قابلیت حمل."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_sqlite.py:45
+msgid "SQLite database file path. Use ':memory:' for in-memory database"
+msgstr "مسیر فایل پایگاه داده SQLite. برای پایگاه داده درون‌حافظه‌ای از ':memory:' استفاده کنید"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_sqlite.py:54
+msgid ""
+"Check same thread or not, default is False. Set False to allow sharing "
+"connection across threads"
+msgstr "بررسی هم‌رشته بودن یا نبودن، پیش‌فرض False است. برای اجازه اشتراک اتصال بین رشته‌ها False قرار دهید"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_sqlite.py:61
+msgid "Driver name, default is sqlite"
+msgstr "نام درایور، پیش‌فرض sqlite است"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_mssql.py:18
+msgid "MSSQL datasource"
+msgstr "منبع داده MSSQL"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_mssql.py:22
+msgid "Powerful, scalable, secure relational database system by Microsoft."
+msgstr "سیستم پایگاه داده رابطه‌ای قدرتمند، مقیاس‌پذیر و امن از Microsoft."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_mssql.py:33
+msgid "Driver name for MSSQL, default is mssql+pymssql."
+msgstr "نام درایور MSSQL، پیش‌فرض mssql+pymssql است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_doris.py:20
+msgid "Apache Doris datasource"
+msgstr "منبع داده Apache Doris"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_doris.py:23
+msgid "A new-generation open-source real-time data warehouse."
+msgstr "انبار داده بلادرنگ متن‌باز نسل جدید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_doris.py:37
+msgid "Driver name for Doris, default is doris."
+msgstr "نام درایور Doris، پیش‌فرض doris است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_vertica.py:29
+msgid "Vertica datasource"
+msgstr "منبع داده Vertica"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_vertica.py:33
+msgid ""
+"Vertica is a strongly consistent, ACID-compliant, SQL data warehouse, built "
+"for the scale and complexity of today`s data-driven world."
+msgstr "Vertica یک انبار داده SQL با سازگاری قوی و منطبق با ACID است که برای مقیاس و پیچیدگی دنیای داده‌محور امروز ساخته شده است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_vertica.py:45
+msgid "Driver name for vertica, default is vertica+vertica_python"
+msgstr "نام درایور Vertica، پیش‌فرض vertica+vertica_python است"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_oceanbase.py:19
+msgid "OceanBase datasource"
+msgstr "منبع داده OceanBase"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_oceanbase.py:22
+msgid "An Ultra-Fast & Cost-Effective Distributed SQL Database."
+msgstr "یک پایگاه داده SQL توزیع‌شده فوق‌سریع و مقرون‌به‌صرفه."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_oceanbase.py:32
+msgid "Driver name for oceanbase, default is mysql+ob."
+msgstr "نام درایور OceanBase، پیش‌فرض mysql+ob است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:25
+msgid "Clickhouse datasource"
+msgstr "منبع داده Clickhouse"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:29
+msgid "Columnar database for high-performance analytics and real-time queries."
+msgstr "پایگاه داده ستونی برای تحلیل با کارایی بالا و پرس‌وجوهای بلادرنگ."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:38
+msgid "Database host, e.g., localhost"
+msgstr "میزبان پایگاه داده، مثلاً localhost"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:40
+msgid "Database user to connect"
+msgstr "کاربر اتصال به پایگاه داده"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:41
+msgid "Database name"
+msgstr "نام پایگاه داده"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:43
+msgid "Storage engine, e.g., MergeTree"
+msgstr "موتور ذخیره‌سازی، مثلاً MergeTree"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:57
+msgid "http pool maxsize"
+msgstr "حداکثر اندازه استخر http"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:60
+msgid "http pool num_pools"
+msgstr "تعداد استخرهای http"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:63
+msgid "Database connect timeout, default 15s"
+msgstr "مهلت اتصال به پایگاه داده، پیش‌فرض 15 ثانیه"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_clickhouse.py:66
+msgid "Distributed ddl task timeout, default 300s"
+msgstr "مهلت وظیفه DDL توزیع‌شده، پیش‌فرض 300 ثانیه"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_postgresql.py:23
+msgid "PostreSQL datasource"
+msgstr "منبع داده PostreSQL"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_postgresql.py:27
+msgid ""
+"Powerful open-source relational database with extensibility and SQL "
+"standards."
+msgstr "پایگاه داده رابطه‌ای متن‌باز قدرتمند با قابلیت توسعه و استانداردهای SQL."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_postgresql.py:36
+msgid "Database schema, defaults to 'public'"
+msgstr "شمای پایگاه داده، پیش‌فرض 'public'"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_postgresql.py:41
+msgid "Driver name for postgres, default is postgresql+psycopg2."
+msgstr "نام درایور postgres، پیش‌فرض postgresql+psycopg2 است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_duckdb.py:19
+msgid "DuckDB datasource"
+msgstr "منبع داده DuckDB"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_duckdb.py:22
+msgid "In-memory analytical database with efficient query processing."
+msgstr "پایگاه داده تحلیلی درون‌حافظه‌ای با پردازش کارآمد پرس‌وجو."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_duckdb.py:29
+msgid "Path to the DuckDB file."
+msgstr "مسیر فایل DuckDB."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/datasource/rdbms/conn_duckdb.py:33
+msgid "Driver name for DuckDB, default is duckdb."
+msgstr "نام درایور DuckDB، پیش‌فرض duckdb است."

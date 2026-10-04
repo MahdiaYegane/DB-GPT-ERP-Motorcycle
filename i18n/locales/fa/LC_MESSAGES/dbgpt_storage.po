@@ -1,0 +1,93 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 00:06+0800\n"
+"PO-Revision-Date: 2025-02-23 13:40+0800\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:22
+msgid "Collection Name"
+msgstr "نام کالکشن"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:26
+msgid "The name of vector store, if not set, will use the default name."
+msgstr "نام ذخیره‌ساز برداری؛ اگر تنظیم نشود، از نام پیش‌فرض استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:32
+msgid "User"
+msgstr "کاربر"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:36
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:98
+msgid "The user of vector store, if not set, will use the default user."
+msgstr "کاربر ذخیره‌ساز برداری؛ اگر تنظیم نشود، از کاربر پیش‌فرض استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:42
+msgid "Password"
+msgstr "گذرواژه"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:46
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:106
+msgid ""
+"The password of vector store, if not set, will use the default password."
+msgstr "گذرواژه ذخیره‌ساز برداری؛ اگر تنظیم نشود، از گذرواژه پیش‌فرض استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:52
+msgid "Embedding Function"
+msgstr "تابع امبدینگ"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:56
+msgid ""
+"The embedding function of vector store, if not set, will use the default "
+"embedding function."
+msgstr "تابع امبدینگ ذخیره‌ساز برداری؛ اگر تنظیم نشود، از تابع امبدینگ پیش‌فرض استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:63
+msgid "Max Chunks Once Load"
+msgstr "حداکثر تعداد چانک در هر بار بارگذاری"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:67
+msgid ""
+"The max number of chunks to load at once. If your document is large, you can "
+"set this value to a larger number to speed up the loading process. Default "
+"is 10."
+msgstr "حداکثر تعداد چانک‌ها برای بارگذاری یکجا. اگر سند شما بزرگ است، می‌توانید این مقدار را بیشتر کنید تا فرایند بارگذاری سریع‌تر شود. مقدار پیش‌فرض 10 است."
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:75
+msgid "Max Threads"
+msgstr "حداکثر تعداد نخ‌ها"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/vector_store/base.py:79
+msgid ""
+"The max number of threads to use. Default is 1. If you set this bigger than "
+"1, please make sure your vector store is thread-safe."
+msgstr "حداکثر تعداد نخ‌های مورد استفاده. مقدار پیش‌فرض 1 است. اگر آن را بزرگ‌تر از 1 تنظیم می‌کنید، مطمئن شوید ذخیره‌ساز برداری شما نخ‌امن (thread-safe) است."
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/cache/manager.py:30
+msgid "Whether to enable model cache, default is True"
+msgstr "فعال‌سازی کش مدل؛ مقدار پیش‌فرض True است"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/cache/manager.py:36
+msgid "The storage type, default is memory"
+msgstr "نوع ذخیره‌سازی؛ مقدار پیش‌فرض memory است"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/cache/manager.py:42
+msgid "The max memory in MB, default is 256"
+msgstr "حداکثر حافظه به مگابایت؛ مقدار پیش‌فرض 256 است"
+
+#: ../packages/dbgpt-core/src/dbgpt/storage/cache/manager.py:48
+msgid "The persist directory, default is model_cache"
+msgstr "دایرکتوری ماندگاری داده؛ مقدار پیش‌فرض model_cache است"

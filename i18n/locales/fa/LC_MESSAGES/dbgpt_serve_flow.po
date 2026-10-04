@@ -1,0 +1,115 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 00:06+0800\n"
+"PO-Revision-Date: 2025-02-23 13:40+0800\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:32
+msgid "All AWEL Flows"
+msgstr "همه جریان‌های AWEL"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:33
+msgid "Fetch all AWEL flows in the system"
+msgstr "دریافت همه جریان‌های AWEL موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:40
+msgid "All AWEL Flow Nodes"
+msgstr "همه گره‌های جریان AWEL"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:41
+msgid "Fetch all AWEL flow nodes in the system"
+msgstr "دریافت همه گره‌های جریان AWEL موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:48
+msgid "All Variables"
+msgstr "همه متغیرها"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:49
+msgid "Fetch all variables in the system"
+msgstr "دریافت همه متغیرهای موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:56
+msgid "All Secrets"
+msgstr "همه رازها (secrets)"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:57
+msgid "Fetch all secrets in the system"
+msgstr "دریافت همه رازهای موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:64
+msgid "All LLMs"
+msgstr "همه LLMها"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:65
+msgid "Fetch all LLMs in the system"
+msgstr "دریافت همه LLMهای موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:72
+msgid "All Embeddings"
+msgstr "همه مدل‌های امبدینگ"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:73
+msgid "Fetch all embeddings models in the system"
+msgstr "دریافت همه مدل‌های امبدینگ موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:80
+msgid "All Rerankers"
+msgstr "همه مدل‌های بازرتبه‌بند (reranker)"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:81
+msgid "Fetch all rerankers in the system"
+msgstr "دریافت همه مدل‌های بازرتبه‌بند موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:88
+msgid "All Data Sources"
+msgstr "همه منابع داده"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:89
+msgid "Fetch all data sources in the system"
+msgstr "دریافت همه منابع داده موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:96
+msgid "All Agents"
+msgstr "همه ایجنت‌ها"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:97
+msgid "Fetch all agents in the system"
+msgstr "دریافت همه ایجنت‌های موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:104
+msgid "All Knowledge Spaces"
+msgstr "همه فضاهای دانش"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/service/variables_service.py:105
+msgid "Fetch all knowledge spaces in the system"
+msgstr "دریافت همه فضاهای دانش موجود در سیستم"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:24
+msgid "AWEL Flow Serve Configurations"
+msgstr "پیکربندی‌های سرو جریان AWEL"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:27
+msgid "This configuration is for the flow serve module."
+msgstr "این پیکربندی برای ماژول سرو جریان (flow) است."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:38
+msgid "Interval to load dbgpts from installed packages"
+msgstr "بازه زمانی بارگذاری dbgptها از بسته‌های نصب‌شده"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:41
+msgid "The key to encrypt the data"
+msgstr "کلید رمزنگاری داده‌ها"

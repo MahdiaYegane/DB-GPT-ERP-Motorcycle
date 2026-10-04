@@ -1,0 +1,65 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 07:51+0800\n"
+"PO-Revision-Date: 2026-09-28 00:00+0000\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:24
+msgid "File Serve Configurations"
+msgstr "پیکربندی‌های سرویس فایل"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:28
+msgid ""
+"This configuration is for the file serve module. In DB-GPT, you can store "
+"yourfiles in the file server."
+msgstr "این پیکربندی برای ماژول سرویس فایل است. در DB-GPT می‌توانید فایل‌های خود را در سرور فایل ذخیره کنید."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:49
+msgid "Check the hash of the file when downloading"
+msgstr "بررسی هش فایل هنگام دانلود"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:52
+msgid "The host of the file server"
+msgstr "میزبان سرور فایل"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:56
+msgid "The port of the file server, default is 5670"
+msgstr "درگاه سرور فایل، پیش‌فرض 5670 است"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:60
+msgid "The chunk size when downloading the file"
+msgstr "اندازه قطعه هنگام دانلود فایل"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:63
+msgid "The chunk size when saving the file"
+msgstr "اندازه قطعه هنگام ذخیره فایل"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:67
+msgid "The chunk size when transferring the file"
+msgstr "اندازه قطعه هنگام انتقال فایل"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:70
+msgid "The timeout when transferring the file"
+msgstr "مهلت زمانی هنگام انتقال فایل"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:73
+msgid "The local storage path"
+msgstr "مسیر ذخیره‌سازی محلی"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:81
+msgid "The storage backend configurations"
+msgstr "پیکربندی‌های بک‌اند ذخیره‌سازی"

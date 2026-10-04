@@ -1,0 +1,103 @@
+[system]
+# Load language from environment variable(It is set by the hook)
+language = "${env:DBGPT_LANG:-en}"
+api_keys = []
+encrypt_key = "your_secret_key"
+
+# Server Configurations
+[service.web]
+host = "0.0.0.0"
+port = 5670
+# CORS allowed origins: '*' allows all; set comma-separated origins to restrict.
+cors_allowed_origins = "${env:DBGPT_CORS_ALLOWED_ORIGINS:-*}"
+
+[service.web.database]
+type = "sqlite"
+path = "pilot/meta_data/dbgpt.db"
+[service.model.worker]
+host = "127.0.0.1"
+
+[rag.storage]
+[rag.storage.vector]
+type = "chroma"
+persist_path = "pilot/data"
+
+# ============================================================================
+# Liara AI (Iran) — OpenAI-compatible proxy provider: proxy/liara
+# Tested 2026-09-28 on service `dbgpt` (workspace 6aba44bb5d4e25a451926448).
+# - Base URL:  https://ai.liara.ir/api/{workspace_id}/v1
+# - Auth:      Authorization: Bearer $LIARA_API_KEY (no x-teamid header needed)
+# - NEVER put TeamID (6aba3e24...) in the URL path -> 403 access denied.
+# Docs: https://docs.liara.ir/ai/quick-start/
+#
+# Setup:
+#   1. $env:LIARA_API_KEY="<your-liara-ai-key>"   # PowerShell
+#      export LIARA_API_KEY="<your-liara-ai-key>" # Linux/macOS
+#   2. (optional) override workspace:
+#      $env:LIARA_API_BASE="https://ai.liara.ir/api/<your-workspace-id>/v1"
+#   3. Run: python launch_dbgpt.py start webserver --config configs/dbgpt-proxy-liara.toml
+# ============================================================================
+[models]
+# --- Liara: Xiaomi MiMo-V2.5 (default, multimodal in, 1.05M context) ---
+[[models.llms]]
+name = "xiaomi/mimo-v2.5 (liara)"
+provider = "proxy/liara"
+backend = "xiaomi/mimo-v2.5"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+
+# --- Liara: Xiaomi MiMo-V2.5-Pro (text-to-text, 1.05M context) ---
+[[models.llms]]
+name = "xiaomi/mimo-v2.5-pro (liara)"
+provider = "proxy/liara"
+backend = "xiaomi/mimo-v2.5-pro"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+
+# --- Liara: DeepSeek V4.1 Flash (text+image in, ~1M context) ---
+[[models.llms]]
+name = "deepseek/deepseek-v4.1-flash (liara)"
+provider = "proxy/liara"
+backend = "deepseek/deepseek-v4.1-flash"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+
+# --- Liara: Z.ai GLM 5.3 Flash (multimodal in, 1.31M context) ---
+[[models.llms]]
+name = "z-ai/glm-5.3-flash (liara)"
+provider = "proxy/liara"
+backend = "z-ai/glm-5.3-flash"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+
+# --- Liara: MiniMax M3 (multimodal in, 1M context) ---
+[[models.llms]]
+name = "minimax/minimax-m3 (liara)"
+provider = "proxy/liara"
+backend = "minimax/minimax-m3"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+
+# --- Liara: Qwen 3.7 Flash (multimodal in, 1M context) ---
+[[models.llms]]
+name = "qwen/qwen3.7-flash (liara)"
+provider = "proxy/liara"
+backend = "qwen/qwen3.7-flash"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+
+# --- Liara: DeepSeek V4 Pro 0423 (text-to-text, 1M context) ---
+[[models.llms]]
+name = "deepseek/deepseek-v4-pro (liara)"
+provider = "proxy/liara"
+backend = "deepseek/deepseek-v4-pro"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+
+[[models.embeddings]]
+name = "BAAI/bge-large-zh-v1.5"
+provider = "hf"
+# If not provided, the model will be downloaded from the Hugging Face model hub
+# uncomment the following line to specify the model path in the local file system
+# path = "the-model-path-in-the-local-file-system"
+path = "models/bge-large-zh-v1.5"

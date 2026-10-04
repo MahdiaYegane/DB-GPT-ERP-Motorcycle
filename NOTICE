@@ -1,0 +1,34 @@
+NOTICE — ERP Motorcycle Edition
+==============================
+
+Copyright (c) 2026 Arash Mansourpour and Mahdia Yegane. All Rights Reserved.
+Proprietary License — see LICENSE for complete terms (Version 1.0, 2026-09-19).
+
+This repository is a derivative of DB-GPT.
+
+Original work:
+  DB-GPT
+  Copyright (c) 2023 magic.chen / eosphoros-ai
+  Licensed under MIT License — full text preserved in LICENSE.MIT.ORIGINAL
+  Repository: https://github.com/eosphoros-ai/DB-GPT
+
+Derivative work (ERP Motorcycle Edition):
+  Modifications, ERP integration (erp/ , configs/dbgpt-proxy-ollama-qwen.toml,
+  test_database_connection.py, docs/ERP_INTEGRATION.md), schema discovery,
+  and all changes after 2026-09-19 are:
+  Copyright (c) 2026 Arash Mansourpour and Mahdia Yegane
+  Licensed under the Proprietary License in LICENSE.
+
+Third-party notices:
+  - skills/skill-creator : Apache License 2.0 (see skills/skill-creator/LICENSE.txt)
+  - tests/intetration_tests/datasource/test_conn_oracle.py,
+    test_conn_mysql.py, test_conn_starrocks.py : Copyright (c) 2000, 2023,
+    Oracle and/or its affiliates.
+  - All other dependencies retain their respective licenses as listed in
+    pyproject.toml files.
+
+Attribution requirement:
+  The file LICENSE.MIT.ORIGINAL must remain in the repository to satisfy the
+  MIT license condition for the original DB-GPT portions. Do not remove it.
+
+Contact for permission: Arash Mansourpour, Mahdia Yegane (via authorized channels).

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{COMPANY_NAME}} {{YEAR}} Annual Financial Report Analysis</title>
+<style>
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    color: #1a1a2e;
+    background: #f8f9fc;
+    line-height: 1.7;
+  }
+  h1 {
+    text-align: center;
+    font-size: 26px;
+    color: #16213e;
+    border-bottom: 3px solid #0f3460;
+    padding-bottom: 12px;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 32px;
+  }
+  h2 {
+    font-size: 20px;
+    color: #0f3460;
+    margin-top: 36px;
+    margin-bottom: 16px;
+    padding-left: 12px;
+    border-left: 4px solid #e94560;
+  }
+  h3 {
+    font-size: 17px;
+    color: #16213e;
+    margin-top: 24px;
+    margin-bottom: 12px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px 0;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  thead th {
+    background: #0f3460;
+    color: #fff;
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 14px;
+  }
+  tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid #eef0f5;
+    font-size: 14px;
+  }
+  tbody tr:hover {
+    background: #f0f4ff;
+  }
+  .section-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+  }
+  .highlight-positive { color: #27ae60; font-weight: 600; }
+  .highlight-negative { color: #e74c3c; font-weight: 600; }
+  .conclusion-box {
+    background: linear-gradient(135deg, #f8f9fc 0%, #eef1f8 100%);
+    border-radius: 10px;
+    padding: 24px;
+    margin-top: 20px;
+  }
+  .conclusion-box strong { color: #0f3460; }
+  .tag-advantage {
+    display: inline-block;
+    background: #d4edda;
+    color: #155724;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-right: 6px;
+  }
+  .tag-risk {
+    display: inline-block;
+    background: #f8d7da;
+    color: #721c24;
+    padding: 2px 10px;
+    border-radius: 4px;
+    font-size: 13px;
+    margin-right: 6px;
+  }
+  p { margin: 8px 0; font-size: 15px; }
+  ul { padding-left: 20px; }
+  li { margin: 4px 0; font-size: 14px; }
+  .chart-container {
+    text-align: center;
+    margin: 20px 0;
+  }
+  .chart-container img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  }
+  .chart-container .chart-caption {
+    font-size: 13px;
+    color: #888;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+  Usage notes (must-read for the agent):
+  1. Replace all {{placeholders}} with real data
+  2. Never remove any chapter (1-4); never change the number of table columns
+  3. The key financial summary table must keep 4 columns: Metric / Current Period / YoY Change / Industry Average (Reference)
+  4. If any data is missing, fill in "N/A" rather than deleting the row or column
+  5. You may add sub-paragraphs, charts, or other supplementary content inside each section-card, but never remove existing structure
+  6. Add class="highlight-positive" when YoY change is positive, class="highlight-negative" when negative
+============================================================ -->
+
+<h1>{{COMPANY_NAME}} {{YEAR}} Annual Financial Report Analysis</h1>
+<p class="subtitle">Report generated: {{DATE}} | Source: Company annual report</p>
+
+<!-- ==================== Chapter 1: Key Financial Summary ==================== -->
+<h2>1. Key Financial Summary</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Metric</th>
+      <th>Current Period</th>
+      <th>YoY Change</th>
+      <th>Industry Average (Reference)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Revenue</td>
+      <td>{{REVENUE}}</td>
+      <td class="{{REVENUE_GROWTH_CLASS}}">{{REVENUE_GROWTH}}</td>
+      <td>{{REVENUE_INDUSTRY_AVG}}</td>
+    </tr>
+    <tr>
+      <td>Net Profit Attributable to Parent</td>
+      <td>{{NET_PROFIT}}</td>
+      <td class="{{NET_PROFIT_GROWTH_CLASS}}">{{NET_PROFIT_GROWTH}}</td>
+      <td>{{NET_PROFIT_INDUSTRY_AVG}}</td>
+    </tr>
+    <tr>
+      <td>Non-recurring Adjusted Net Profit</td>
+      <td>{{NON_RECURRING_NET_PROFIT}}</td>
+      <td class="{{NON_RECURRING_GROWTH_CLASS}}">{{NON_RECURRING_GROWTH}}</td>
+      <td>{{NON_RECURRING_INDUSTRY_AVG}}</td>
+    </tr>
+    <tr>
+      <td>Gross Margin</td>
+      <td>{{GROSS_MARGIN}}</td>
+      <td class="{{GROSS_MARGIN_CHANGE_CLASS}}">{{GROSS_MARGIN_CHANGE}}</td>
+      <td>{{GROSS_MARGIN_INDUSTRY_AVG}}</td>
+    </tr>
+    <tr>
+      <td>ROE</td>
+      <td>{{ROE}}</td>
+      <td class="{{ROE_CHANGE_CLASS}}">{{ROE_CHANGE}}</td>
+      <td>{{ROE_INDUSTRY_AVG}}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+<div class="chart-container">
+  <img src="{{CHART_FINANCIAL_OVERVIEW}}" alt="Core financial metrics comparison">
+  <p class="chart-caption">Figure 1: Core financial metrics comparison (unit: 100M yuan)</p>
+</div>
+<!-- ==================== Chapter 2: In-depth Financial Analysis ==================== -->
+<h2>2. In-depth Financial Analysis</h2>
+
+<h3>2.1 Profitability Analysis</h3>
+<div class="section-card">
+  <!-- Describe in detail the drivers of profitability changes, covering gross margin, net margin, and expense ratios -->
+  <p>{{PROFITABILITY_ANALYSIS}}</p>
+</div>
+
+<h3>2.2 Solvency and Risk Analysis</h3>
+<div class="section-card">
+  <!-- Analyze debt-to-asset ratio, current ratio, quick ratio, etc., to assess financial safety -->
+  <p>{{SOLVENCY_ANALYSIS}}</p>
+  <div class="chart-container">
+    <img src="{{CHART_PROFITABILITY}}" alt="Profitability metrics">
+    <p class="chart-caption">Figure 2: Profitability metrics (%)</p>
+</div>
+
+<h3>2.3 Operating Efficiency Analysis</h3>
+<div class="section-card">
+  <!-- Analyze receivables turnover, inventory turnover, total asset turnover, etc., to assess management efficiency -->
+  <p>{{EFFICIENCY_ANALYSIS}}</p>
+</div>
+
+<!-- ==================== Chapter 3: Cash Flow and Earnings Quality ==================== -->
+<h2>3. Cash Flow and Earnings Quality</h2>
+<div class="section-card">
+  <div class="chart-container">
+    <img src="{{CHART_ASSET_STRUCTURE}}" alt="Asset structure">
+    <p class="chart-caption">Figure 3: Asset structure</p>
+  </div>
+  <!-- Compare net profit with operating cash flow to assess earnings quality; analyze investing and financing cash flow structure -->
+  <p>{{CASHFLOW_ANALYSIS}}</p>
+</div>
+
+<!-- ==================== Chapter 4: Conclusions and Recommendations ==================== -->
+<h2>4. Conclusions and Recommendations</h2>
+<div class="conclusion-box">
+  <p><strong>Strengths:</strong></p>
+  <ul>
+    <!-- List 2-4 key strengths, each in an <li> -->
+    {{ADVANTAGES_LIST}}
+  </ul>
+
+  <p><strong>Risks:</strong></p>
+  <ul>
+    <!-- List 2-4 key risks, each in an <li> -->
+    {{RISKS_LIST}}
+  </ul>
+
+  <p><strong>Overall Assessment:</strong></p>
+  <p>{{OVERALL_ASSESSMENT}}</p>
+</div>
+
+</body>
+</html>

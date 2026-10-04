@@ -1,0 +1,580 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 00:06+0800\n"
+"PO-Revision-Date: 2026-09-28 00:00+0000\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:35
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:145
+msgid "Context Key"
+msgstr "کلید زمینه"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:40
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:150
+msgid "The key of the context, it will be used in building the prompt"
+msgstr "کلید زمینه که در ساخت پرامپت استفاده می‌شود"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:43
+msgid "Top K"
+msgstr "تعداد K برتر"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:48
+msgid "The number of chunks to retrieve"
+msgstr "تعداد تکه‌هایی که باید بازیابی شوند"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:51
+msgid "Minimum Match Score"
+msgstr "حداقل امتیاز تطابق"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:58
+msgid ""
+"The minimum match score for the retrieved chunks, it will be dropped if the "
+"match score is less than the threshold"
+msgstr ""
+"حداقل امتیاز تطابق برای تکه‌های بازیابی‌شده؛ اگر امتیاز تطابق کمتر از "
+"آستانه باشد، تکه حذف می‌شود"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:66
+msgid "Reranker Enabled"
+msgstr "فعال بودن رتبه‌بندی مجدد"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:71
+msgid "Whether to enable the reranker"
+msgstr "مشخص می‌کند که آیا رتبه‌بند مجدد فعال شود یا خیر"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:74
+msgid "Reranker Top K"
+msgstr "تعداد K برتر رتبه‌بند مجدد"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:79
+msgid "The top k for the reranker"
+msgstr "تعداد نتایج برتر برای رتبه‌بند مجدد"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:83
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:153
+msgid "User question"
+msgstr "پرسش کاربر"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:86
+msgid "The user question to retrieve the knowledge"
+msgstr "پرسش کاربر برای بازیابی دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:89
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:159
+msgid "Retrieved context"
+msgstr "زمینه بازیابی‌شده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:92
+msgid "The retrieved context from the knowledge space"
+msgstr "زمینه بازیابی‌شده از فضای دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:107
+msgid "Knowledge Space Operator"
+msgstr "عملگر فضای دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:111
+msgid "Knowledge Space Operator, retrieve your knowledge from knowledge space"
+msgstr "عملگر فضای دانش؛ دانش خود را از فضای دانش بازیابی کنید"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:115
+msgid "Knowledge Space Name"
+msgstr "نام فضای دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:119
+msgid "The name of the knowledge space"
+msgstr "نام فضای دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:133
+msgid "Chunks"
+msgstr "تکه‌ها"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/rag.py:137
+msgid "The retrieved chunks from the knowledge space"
+msgstr "تکه‌های بازیابی‌شده از فضای دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:15
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:40
+msgid "String"
+msgstr "رشته"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:18
+msgid "The string to be converted to other types."
+msgstr "رشته‌ای که باید به انواع دیگر تبدیل شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:21
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:46
+msgid "Integer"
+msgstr "عدد صحیح"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:24
+msgid "The integer to be converted to other types."
+msgstr "عدد صحیحی که باید به انواع دیگر تبدیل شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:27
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:52
+msgid "Float"
+msgstr "عدد اعشاری"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:30
+msgid "The float to be converted to other types."
+msgstr "عدد اعشاری که باید به انواع دیگر تبدیل شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:33
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:58
+msgid "Boolean"
+msgstr "مقدار بولی"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:36
+msgid "The boolean to be converted to other types."
+msgstr "مقدار بولی که باید به انواع دیگر تبدیل شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:43
+msgid "The string converted from other types."
+msgstr "رشته تبدیل‌شده از انواع دیگر."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:49
+msgid "The integer converted from other types."
+msgstr "عدد صحیح تبدیل‌شده از انواع دیگر."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:55
+msgid "The float converted from other types."
+msgstr "عدد اعشاری تبدیل‌شده از انواع دیگر."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:61
+msgid "The boolean converted from other types."
+msgstr "مقدار بولی تبدیل‌شده از انواع دیگر."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:69
+msgid "String to Integer"
+msgstr "تبدیل رشته به عدد صحیح"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:71
+msgid "Converts a string to an integer."
+msgstr "یک رشته را به عدد صحیح تبدیل می‌کند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:88
+msgid "String to Float"
+msgstr "تبدیل رشته به عدد اعشاری"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:90
+msgid "Converts a string to a float."
+msgstr "یک رشته را به عدد اعشاری تبدیل می‌کند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:107
+msgid "String to Boolean"
+msgstr "تبدیل رشته به مقدار بولی"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:109
+msgid "Converts a string to a boolean, true: 'true', '1', 'y'"
+msgstr "یک رشته را به مقدار بولی تبدیل می‌کند؛ مقادیر درست: 'true'، '1'، 'y'"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:113
+msgid "True Values"
+msgstr "مقادیر درست"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:118
+msgid "Comma-separated values that should be treated as True."
+msgstr "مقادیر جدا شده با ویرگول که باید درست در نظر گرفته شوند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:137
+msgid "Integer to String"
+msgstr "تبدیل عدد صحیح به رشته"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:139
+msgid "Converts an integer to a string."
+msgstr "یک عدد صحیح را به رشته تبدیل می‌کند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:156
+msgid "Float to String"
+msgstr "تبدیل عدد اعشاری به رشته"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:158
+msgid "Converts a float to a string."
+msgstr "یک عدد اعشاری را به رشته تبدیل می‌کند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:175
+msgid "Boolean to String"
+msgstr "تبدیل مقدار بولی به رشته"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:177
+msgid "Converts a boolean to a string."
+msgstr "یک مقدار بولی را به رشته تبدیل می‌کند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:194
+msgid "Model Output to Dict"
+msgstr "تبدیل خروجی مدل به دیکشنری"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:196
+msgid "Converts a model output to a dictionary."
+msgstr "خروجی مدل را به دیکشنری تبدیل می‌کند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:199
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:391
+msgid "Model Output"
+msgstr "خروجی مدل"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/converter.py:200
+msgid "Dictionary"
+msgstr "دیکشنری"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:103
+msgid "Datasource"
+msgstr "منبع داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:106
+msgid "The datasource to retrieve the context"
+msgstr "منبع داده برای بازیابی زمینه"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:109
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:283
+msgid "Prompt Template"
+msgstr "قالب پرامپت"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:114
+msgid "The prompt template to build a database prompt"
+msgstr "قالب پرامپت برای ساخت پرامپت پایگاه داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:118
+msgid "Display Type"
+msgstr "نوع نمایش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:123
+msgid "The display type for the data"
+msgstr "نوع نمایش داده‌ها"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:127
+msgid "Max Number of Results"
+msgstr "حداکثر تعداد نتایج"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:132
+msgid "The maximum number of results to return"
+msgstr "حداکثر تعداد نتایجی که باید برگردانده شود"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:135
+msgid "Response Format"
+msgstr "قالب پاسخ"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:140
+msgid "The response format, default is a JSON format"
+msgstr "قالب پاسخ؛ پیش‌فرض قالب JSON است"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:156
+msgid "The user question to retrieve table schemas from the datasource"
+msgstr "پرسش کاربر برای بازیابی اسکیمای جدول‌ها از منبع داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:162
+msgid "The retrieved context from the datasource"
+msgstr "زمینه بازیابی‌شده از منبع داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:166
+msgid "SQL dict"
+msgstr "دیکشنری SQL"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:169
+msgid "The SQL to be executed wrapped in a dictionary, generated by LLM"
+msgstr ""
+"دستور SQL قابل اجرا که در قالب دیکشنری بسته‌بندی شده و توسط LLM تولید "
+"شده است"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:172
+msgid "SQL result"
+msgstr "نتیجه SQL"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:175
+msgid "The result of the SQL execution"
+msgstr "نتیجه اجرای SQL"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:179
+msgid "SQL dict list"
+msgstr "فهرست دیکشنری SQL"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:183
+msgid "The SQL list to be executed wrapped in a dictionary, generated by LLM"
+msgstr ""
+"فهرست دستورهای SQL قابل اجرا که در قالب دیکشنری بسته‌بندی شده و توسط "
+"LLM تولید شده است"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:212
+msgid "Datasource Retriever Operator"
+msgstr "عملگر بازیاب منبع داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:214
+msgid "Retrieve the table schemas from the datasource."
+msgstr "اسکیمای جدول‌ها را از منبع داده بازیابی می‌کند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:228
+msgid "Retrieved schema chunks"
+msgstr "تکه‌های اسکیمای بازیابی‌شده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:232
+msgid "The retrieved schema chunks from the datasource"
+msgstr "تکه‌های اسکیمای بازیابی‌شده از منبع داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:290
+msgid "Datasource Executor Operator"
+msgstr "عملگر اجراکننده منبع داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:292
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:329
+msgid "Execute the context from the datasource."
+msgstr "زمینه را از منبع داده اجرا می‌کند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/datasource.py:327
+msgid "Datasource Dashboard Operator"
+msgstr "عملگر داشبورد منبع داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:60
+msgid "Code Map Operator"
+msgstr "عملگر نگاشت کد"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:63
+msgid ""
+"Handle input dictionary with code and return output dictionary after "
+"execution."
+msgstr ""
+"دیکشنری ورودی حاوی کد را پردازش کرده و پس از اجرا، دیکشنری خروجی را "
+"برمی‌گرداند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:69
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:211
+msgid "Code Editor"
+msgstr "ویرایشگر کد"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:74
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:216
+msgid "Please input your code"
+msgstr "لطفاً کد خود را وارد کنید"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:75
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:217
+msgid "The code to be executed."
+msgstr "کدی که باید اجرا شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:81
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:223
+msgid "Language"
+msgstr "زبان"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:86
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:228
+msgid "Please select the language"
+msgstr "لطفاً زبان را انتخاب کنید"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:87
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:229
+msgid "The language of the code."
+msgstr "زبان کد."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:97
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:239
+msgid "Call Name"
+msgstr "نام فراخوانی"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:102
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:244
+msgid "Please input the call name"
+msgstr "لطفاً نام فراخوانی را وارد کنید"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:103
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:245
+msgid "The call name of the function."
+msgstr "نام فراخوانی تابع."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:108
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:250
+msgid "Input Data"
+msgstr "داده ورودی"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:111
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:253
+msgid "The input dictionary."
+msgstr "دیکشنری ورودی."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:116
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:258
+msgid "Output Data"
+msgstr "داده خروجی"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:119
+msgid "The output dictionary."
+msgstr "دیکشنری خروجی."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:202
+msgid "Code Dict to Model Request Operator"
+msgstr "عملگر تبدیل دیکشنری کد به درخواست مدل"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:205
+msgid ""
+"Handle input dictionary with code and return output ModelRequest after "
+"execution."
+msgstr ""
+"دیکشنری ورودی حاوی کد را پردازش کرده و پس از اجرا، ModelRequest خروجی "
+"را برمی‌گرداند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/code.py:261
+msgid "The output ModelRequest."
+msgstr "ModelRequest خروجی."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:53
+msgid "The context key can be used as the key for formatting prompt."
+msgstr "کلید زمینه می‌تواند به‌عنوان کلید قالب‌بندی پرامپت استفاده شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:57
+msgid "The context."
+msgstr "زمینه."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:63
+msgid "You are a helpful AI assistant."
+msgstr "شما یک دستیار هوش مصنوعی یاری‌رسان هستید."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:286
+msgid "The prompt template for the conversation."
+msgstr "قالب پرامپت برای گفت‌وگو."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:291
+msgid "Model Name"
+msgstr "نام مدل"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:296
+msgid "The model name."
+msgstr "نام مدل."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:300
+msgid "LLM Client"
+msgstr "کلاینت LLM"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:306
+msgid ""
+"The LLM Client, how to connect to the LLM model, if not provided, it will "
+"use the default client deployed by DB-GPT."
+msgstr ""
+"کلاینت LLM؛ نحوه اتصال به مدل LLM. اگر ارائه نشود، از کلاینت پیش‌فرض "
+"مستقرشده توسط DB-GPT استفاده می‌شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:311
+msgid "History Message Merge Mode"
+msgstr "حالت ادغام پیام‌های تاریخچه"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:322
+msgid ""
+"The history merge mode, supports 'none', 'window' and 'token'. 'none': no "
+"history merge, 'window': merge by conversation window, 'token': merge by "
+"token length."
+msgstr ""
+"حالت ادغام تاریخچه؛ مقادیر 'none'، 'window' و 'token' پشتیبانی "
+"می‌شوند. 'none': بدون ادغام تاریخچه، 'window': ادغام بر اساس پنجره "
+"گفت‌وگو، 'token': ادغام بر اساس طول توکن."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:329
+msgid "User Message Key"
+msgstr "کلید پیام کاربر"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:335
+msgid "The key of the user message in your prompt, default is 'user_input'."
+msgstr "کلید پیام کاربر در پرامپت شما؛ پیش‌فرض 'user_input' است."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:339
+msgid "History Key"
+msgstr "کلید تاریخچه"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:345
+msgid ""
+"The chat history key, with chat history message pass to prompt template, if "
+"not provided, it will parse the prompt template to get the key."
+msgstr ""
+"کلید تاریخچه گفت‌وگو که پیام‌های تاریخچه را به قالب پرامپت منتقل "
+"می‌کند؛ اگر ارائه نشود، قالب پرامپت برای یافتن کلید تجزیه می‌شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:350
+msgid "Keep Start Rounds"
+msgstr "حفظ دوره‌های آغازین"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:355
+msgid "The start rounds to keep in the chat history."
+msgstr "دوره‌های آغازینی که در تاریخچه گفت‌وگو حفظ می‌شوند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:358
+msgid "Keep End Rounds"
+msgstr "حفظ دوره‌های پایانی"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:363
+msgid "The end rounds to keep in the chat history."
+msgstr "دوره‌های پایانی که در تاریخچه گفت‌وگو حفظ می‌شوند."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:366
+msgid "Max Token Limit"
+msgstr "حداکثر سقف توکن"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:371
+msgid "The max token limit to keep in the chat history."
+msgstr "حداکثر سقف توکنی که در تاریخچه گفت‌وگو حفظ می‌شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:375
+msgid "Common LLM Request Body"
+msgstr "بدنه رایج درخواست LLM"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:378
+msgid "The common LLM request body."
+msgstr "بدنه رایج درخواست LLM."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:381
+msgid "Extra Context"
+msgstr "زمینه اضافی"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:385
+msgid ""
+"Extra context for building prompt(Knowledge context, database schema, etc), "
+"you can add multiple context."
+msgstr ""
+"زمینه اضافی برای ساخت پرامپت (زمینه دانش، اسکیمای پایگاه داده و غیره)؛ "
+"می‌توانید چندین زمینه اضافه کنید."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:394
+msgid "The model output."
+msgstr "خروجی مدل."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:397
+msgid "Streaming Model Output"
+msgstr "خروجی جریانی مدل"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:401
+msgid "The streaming model output."
+msgstr "خروجی جریانی مدل."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:407
+msgid "LLM Operator"
+msgstr "عملگر LLM"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:411
+msgid ""
+"High-level LLM operator, supports multi-round conversation (conversation "
+"window, token length and no multi-round)."
+msgstr ""
+"عملگر سطح بالای LLM که از گفت‌وگوی چندمرحله‌ای پشتیبانی می‌کند (پنجره "
+"گفت‌وگو، طول توکن و بدون چندمرحله‌ای)."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:441
+msgid "Streaming LLM Operator"
+msgstr "عملگر جریانی LLM"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:445
+msgid ""
+"High-level streaming LLM operator, supports multi-round conversation "
+"(conversation window, token length and no multi-round)."
+msgstr ""
+"عملگر جریانی سطح بالای LLM که از گفت‌وگوی چندمرحله‌ای پشتیبانی می‌کند "
+"(پنجره گفت‌وگو، طول توکن و بدون چندمرحله‌ای)."

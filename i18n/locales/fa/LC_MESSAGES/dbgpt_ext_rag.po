@@ -1,0 +1,478 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 07:51+0800\n"
+"PO-Revision-Date: 2026-09-28 00:00+0000\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:24
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:138
+msgid "Chunk Parameters"
+msgstr "پارامترهای قطعه‌بندی"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:29
+msgid "Chunk Strategy"
+msgstr "راهبرد قطعه‌بندی"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:32
+msgid "chunk strategy"
+msgstr "راهبرد قطعه‌بندی"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:37
+msgid "Text Splitter"
+msgstr "جداکننده متن"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:41
+msgid "Text splitter, if not set, will use the default text splitter."
+msgstr "جداکننده متن؛ اگر تنظیم نشود از جداکننده پیش‌فرض استفاده می‌شود."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:47
+msgid "Splitter Type"
+msgstr "نوع جداکننده"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:50
+msgid "Splitter type"
+msgstr "نوع جداکننده"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:55
+msgid "Chunk Size"
+msgstr "اندازه قطعه"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:58
+msgid "Chunk size"
+msgstr "اندازه قطعه"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:63
+msgid "Chunk Overlap"
+msgstr "هم‌پوشانی قطعات"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:71
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:112
+msgid "Separator"
+msgstr "جداکننده"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:74
+msgid "Chunk separator"
+msgstr "جداکننده قطعات"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:79
+msgid "Enable Merge"
+msgstr "فعال‌سازی ادغام"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/chunk_manager.py:82
+msgid "Enable chunk merge by chunk_size."
+msgstr "ادغام قطعات بر اساس chunk_size را فعال کنید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/qianfan.py:21
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/tongyi.py:20
+msgid "The API key for the embeddings API."
+msgstr "کلید API برای API امبدینگ."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/qianfan.py:26
+msgid "The Secret key for the embeddings API. It's the sk for qianfan."
+msgstr "کلید محرمانه برای API امبدینگ. این همان sk برای qianfan است."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/qianfan.py:33
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/ollama.py:29
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/tongyi.py:26
+msgid ""
+"The real model name to pass to the provider, default is None. If backend is "
+"None, use name as the real model name."
+msgstr "نام واقعی مدل برای ارسال به ارائه‌دهنده، پیش‌فرض None است. اگر backend برابر None باشد، از name به‌عنوان نام واقعی مدل استفاده می‌شود."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/qianfan.py:169
+msgid "Embedding-V1 by Baidu Qianfan. "
+msgstr "Embedding-V1 از Baidu Qianfan."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/ollama.py:22
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/jina.py:26
+msgid "The URL of the embeddings API."
+msgstr "نشانی URL مربوط به API امبدینگ."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/ollama.py:157
+msgid ""
+"The embedding model are trained by BAAI, it support more than 100 working "
+"languages."
+msgstr "مدل امبدینگ توسط BAAI آموزش داده شده و از بیش از 100 زبان پشتیبانی می‌کند."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/jina.py:33
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/jina.py:57
+msgid "The name of the model to use for text embeddings."
+msgstr "نام مدلی که برای امبدینگ متن استفاده می‌شود."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/jina.py:40
+msgid "Jina AI Embeddings"
+msgstr "امبدینگ‌های Jina AI"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/jina.py:43
+msgid "Jina AI embeddings."
+msgstr "امبدینگ‌های Jina AI."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/jina.py:46
+msgid "API Key"
+msgstr "کلید API"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/jina.py:49
+msgid "Your API key for the Jina AI API."
+msgstr "کلید API شما برای Jina AI API."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/jina.py:52
+msgid "Model Name"
+msgstr "نام مدل"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/embeddings/tongyi.py:159
+msgid ""
+"The embedding model are trained by TongYi, it support more than 50 working "
+"languages."
+msgstr "مدل امبدینگ توسط TongYi آموزش داده شده و از بیش از 50 زبان پشتیبانی می‌کند."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge_graph.py:17
+msgid "Knowledge Graph Operator"
+msgstr "عملگر گراف دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge_graph.py:19
+msgid "Extract Documents and persist into graph database."
+msgstr "اسناد را استخراج کرده و در پایگاه داده گراف ذخیره کنید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge_graph.py:23
+msgid "Knowledge Graph Connector"
+msgstr "اتصال‌دهنده گراف دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge_graph.py:26
+msgid "The knowledge graph."
+msgstr "گراف دانش."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge_graph.py:32
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge_graph.py:41
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:156
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:122
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:43
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:50
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:57
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:145
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/full_text.py:32
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/full_text.py:41
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/vector_store.py:32
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/vector_store.py:41
+msgid "Chunks"
+msgstr "قطعات"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge_graph.py:35
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/full_text.py:35
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/vector_store.py:35
+msgid "The text split chunks by chunk manager."
+msgstr "قطعات متنی که توسط مدیر قطعه‌بندی تقسیم شده‌اند."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge_graph.py:45
+msgid "The assembled chunks, it has been persisted to graph store."
+msgstr "قطعات سرهم‌شده که در ذخیره‌ساز گراف ذخیره شده‌اند."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:17
+msgid "Summary Operator"
+msgstr "عملگر خلاصه‌سازی"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:20
+msgid "The summary assembler operator."
+msgstr "عملگر سرهم‌کننده خلاصه."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:23
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:148
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:39
+msgid "Knowledge"
+msgstr "دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:23
+msgid "Knowledge datasource"
+msgstr "منبع داده دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:28
+msgid "Document summary"
+msgstr "خلاصه سند"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:36
+msgid "LLM Client"
+msgstr "کلاینت LLM"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:41
+msgid "The LLM Client."
+msgstr "کلاینت LLM."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:44
+msgid "Model name"
+msgstr "نام مدل"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:49
+msgid "LLM model name"
+msgstr "نام مدل LLM"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:52
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:57
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:65
+msgid "prompt language"
+msgstr "زبان پرامپت"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:60
+msgid "Max iteration with LLM"
+msgstr "حداکثر تکرار با LLM"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:68
+msgid "Concurrency limit with LLM"
+msgstr "محدودیت هم‌روندی با LLM"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/summary.py:73
+msgid "The concurrency limit with llm"
+msgstr "محدودیت هم‌روندی با llm"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:25
+msgid "Embedding Retriever Operator"
+msgstr "عملگر بازیاب امبدینگ"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:27
+msgid "Retrieve candidates from vector store."
+msgstr "نامزدها را از ذخیره‌ساز برداری بازیابی کنید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:31
+msgid "Storage Index Store"
+msgstr "ذخیره‌ساز شاخص ذخیره‌سازی"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:34
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:134
+msgid "The vector store connector."
+msgstr "اتصال‌دهنده ذخیره‌ساز برداری."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:38
+msgid "Top K"
+msgstr "K نتیجه برتر"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:41
+msgid "The number of candidates."
+msgstr "تعداد نامزدها."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:44
+msgid "Score Threshold"
+msgstr "آستانه امتیاز"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:48
+msgid ""
+"The score threshold, if score of candidate is less than it, it will be "
+"filtered."
+msgstr "آستانه امتیاز؛ اگر امتیاز نامزد کمتر از آن باشد، حذف می‌شود."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:55
+msgid "Query Rewrite"
+msgstr "بازنویسی پرس‌وجو"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:58
+msgid "The query rewrite resource."
+msgstr "منبع بازنویسی پرس‌وجو."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:63
+msgid "Rerank"
+msgstr "بازرتبه‌بندی"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:66
+msgid "The rerank."
+msgstr "بازرتبه‌بندی."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:73
+msgid "Query"
+msgstr "پرس‌وجو"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:76
+msgid "The query to retrieve."
+msgstr "پرس‌وجویی که باید بازیابی شود."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:81
+msgid "Candidates"
+msgstr "نامزدها"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:84
+msgid "The retrieved candidates."
+msgstr "نامزدهای بازیابی‌شده."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:125
+msgid "Embedding Assembler Operator"
+msgstr "عملگر سرهم‌کننده امبدینگ"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:127
+msgid "Load knowledge and assemble embedding chunks to vector store."
+msgstr "دانش را بارگذاری کرده و قطعات امبدینگ را در ذخیره‌ساز برداری سرهم کنید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:131
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/vector_store.py:23
+msgid "Vector Store Connector"
+msgstr "اتصال‌دهنده ذخیره‌ساز برداری"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:141
+msgid "The chunk parameters."
+msgstr "پارامترهای قطعه."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:151
+msgid "The knowledge to be loaded."
+msgstr "دانشی که باید بارگذاری شود."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/embedding.py:160
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/vector_store.py:45
+msgid "The assembled chunks, it has been persisted to vector store."
+msgstr "قطعات سرهم‌شده که در ذخیره‌ساز برداری ذخیره شده‌اند."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:23
+msgid "Knowledge Loader Operator"
+msgstr "عملگر بارگذار دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:27
+msgid "The knowledge operator, which can create knowledge from datasource."
+msgstr "عملگر دانش که می‌تواند از منبع داده، دانش ایجاد کند."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:31
+msgid "knowledge datasource"
+msgstr "منبع داده دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:34
+msgid "knowledge datasource, which can be a document, url, or text."
+msgstr "منبع داده دانش که می‌تواند سند، url یا متن باشد."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:42
+msgid "Knowledge object."
+msgstr "شیء دانش."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:47
+msgid "Default datasource"
+msgstr "منبع داده پیش‌فرض"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:52
+msgid "Default datasource."
+msgstr "منبع داده پیش‌فرض."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:55
+msgid "Knowledge type"
+msgstr "نوع دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:71
+msgid "Knowledge type."
+msgstr "نوع دانش."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:106
+msgid "Chunks To String Operator"
+msgstr "عملگر تبدیل قطعات به رشته"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:108
+msgid "Convert chunks to string."
+msgstr "قطعات را به رشته تبدیل کنید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:115
+msgid "The separator between chunks."
+msgstr "جداکننده بین قطعات."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:125
+msgid "The input chunks."
+msgstr "قطعات ورودی."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:131
+msgid "String"
+msgstr "رشته"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/knowledge.py:134
+msgid "The output string."
+msgstr "رشته خروجی."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:26
+msgid "Knowledge Process Branch Operator"
+msgstr "عملگر شاخه پردازش دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:30
+msgid "Branch the workflow based on the stream flag of the request."
+msgstr "گردش کار را بر اساس پرچم جریانی درخواست شاخه‌بندی کنید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:34
+msgid "Document Chunks"
+msgstr "قطعات سند"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:37
+msgid "The input value of the operator."
+msgstr "مقدار ورودی عملگر."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:46
+msgid "Chunks for Vector Storage Connector."
+msgstr "قطعات برای اتصال‌دهنده ذخیره‌سازی برداری."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:53
+msgid "Chunks for Knowledge Graph Connector."
+msgstr "قطعات برای اتصال‌دهنده گراف دانش."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:60
+msgid "Chunks for Full Text Connector."
+msgstr "قطعات برای اتصال‌دهنده متن کامل."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:119
+msgid "Knowledge Process Join Operator"
+msgstr "عملگر اتصال پردازش دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:124
+msgid "Join Branch the workflow based on the Knowledge Process Results."
+msgstr "شاخه‌های گردش کار را بر اساس نتایج پردازش دانش به هم متصل کنید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:129
+msgid "Vector Storage Results"
+msgstr "نتایج ذخیره‌سازی برداری"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:132
+msgid "vector storage results."
+msgstr "نتایج ذخیره‌سازی برداری."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:136
+msgid "Knowledge Graph Storage Results"
+msgstr "نتایج ذخیره‌سازی گراف دانش"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:139
+msgid "knowledge graph storage results."
+msgstr "نتایج ذخیره‌سازی گراف دانش."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/process_branch.py:148
+msgid "Knowledge Process Results."
+msgstr "نتایج پردازش دانش."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/full_text.py:17
+msgid "Full Text Storage Operator"
+msgstr "عملگر ذخیره‌سازی متن کامل"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/full_text.py:19
+msgid "Persist embeddings into full text storage."
+msgstr "امبدینگ‌ها را در ذخیره‌سازی متن کامل ذخیره کنید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/full_text.py:23
+msgid "Full Text Connector"
+msgstr "اتصال‌دهنده متن کامل"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/full_text.py:26
+msgid "The full text store."
+msgstr "ذخیره‌ساز متن کامل."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/full_text.py:45
+msgid "The assembled chunks, it has been persisted to full text store."
+msgstr "قطعات سرهم‌شده که در ذخیره‌ساز متن کامل ذخیره شده‌اند."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/vector_store.py:17
+msgid "Vector Storage Operator"
+msgstr "عملگر ذخیره‌سازی برداری"
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/vector_store.py:19
+msgid "Persist embeddings into vector storage."
+msgstr "امبدینگ‌ها را در ذخیره‌سازی برداری ذخیره کنید."
+
+#: ../packages/dbgpt-ext/src/dbgpt_ext/rag/operators/vector_store.py:26
+msgid "The vector store."
+msgstr "ذخیره‌ساز برداری."

@@ -1,0 +1,149 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 00:06+0800\n"
+"PO-Revision-Date: 2025-02-23 13:40+0800\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:32
+msgid ""
+"The module to scan, if not set, will scan all DB-GPT "
+"modules('dbgpt,dbgpt_client,dbgpt_ext,dbgpt_serve,dbgpt_app')."
+msgstr "ماژول موردنظر برای اسکن؛ اگر تنظیم نشود، همه ماژول‌های DB-GPT اسکن می‌شوند ('dbgpt,dbgpt_client,dbgpt_ext,dbgpt_serve,dbgpt_app')."
+
+#: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:42
+msgid ""
+"The output path, if not set, will print to packages/dbgpt-serve/src/"
+"dbgpt_serve/flow/compat/"
+msgstr "مسیر خروجی؛ اگر تنظیم نشود، در مسیر packages/dbgpt-serve/src/dbgpt_serve/flow/compat/ نوشته می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:52
+msgid ""
+"The current version of the flow, if not set, will read from dbgpt.__version__"
+msgstr "نسخه فعلی فلو؛ اگر تنظیم نشود، از dbgpt.__version__ خوانده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:61
+msgid ""
+"The last version to compatible, if not set, will big than the current "
+"version by one minor version."
+msgstr "آخرین نسخه سازگار؛ اگر تنظیم نشود، یک نسخه فرعی (minor) بالاتر از نسخه فعلی خواهد بود."
+
+#: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:70
+msgid "Update the template file."
+msgstr "به‌روزرسانی فایل قالب."
+
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:255
+msgid "Repos"
+msgstr "مخزن‌ها"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:256
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:628
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:718
+msgid "Repository"
+msgstr "مخزن"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:257
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:719
+msgid "Path"
+msgstr "مسیر"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:626
+msgid "dbgpts In All Repos"
+msgstr "‏dbgpts‎های موجود در همه مخزن‌ها"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:629
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:717
+msgid "Type"
+msgstr "نوع"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:630
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:716
+msgid "Name"
+msgstr "نام"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:714
+msgid "Installed dbgpts"
+msgstr "‏dbgpts‎های نصب‌شده"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/serialization/json_serialization.py:23
+msgid "Json Serializer"
+msgstr "سریالایزر JSON"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/serialization/json_serialization.py:26
+msgid "The serializer for serializing data with json format."
+msgstr "سریالایزر برای سریالایز کردن داده‌ها با فرمت JSON."
+
+#: ../packages/dbgpt-core/src/dbgpt/util/configure/manager.py:104
+msgid ""
+"Hook path, it can be a class path or a function path. eg: "
+"'dbgpt.config.hooks.env_var_hook'"
+msgstr "مسیر هوک؛ می‌تواند مسیر کلاس یا مسیر تابع باشد. مثال: 'dbgpt.config.hooks.env_var_hook'"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/configure/manager.py:113
+msgid ""
+"Hook init params to pass to the hook constructor(Just for class hook), must "
+"be key-value pairs"
+msgstr "پارامترهای مقداردهی اولیه هوک که به سازنده هوک ارسال می‌شود (فقط برای هوک کلاسی)؛ باید به‌صورت جفت‌های کلید-مقدار باشد"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/configure/manager.py:121
+msgid "Hook params to pass to the hook, must be key-value pairs"
+msgstr "پارامترهای هوک که به هوک ارسال می‌شود؛ باید به‌صورت جفت‌های کلید-مقدار باشد"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/configure/manager.py:126
+msgid "Whether the hook is enabled, default is True"
+msgstr "فعال بودن هوک؛ مقدار پیش‌فرض True است"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/utils.py:42
+msgid "Logging level, just support FATAL, ERROR, WARNING, INFO, DEBUG, NOTSET"
+msgstr "سطح لاگ‌گیری؛ فقط FATAL، ERROR، WARNING، INFO، DEBUG و NOTSET پشتیبانی می‌شود"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/utils.py:58
+msgid "The filename to store logs"
+msgstr "نام فایل برای ذخیره لاگ‌ها"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/tracer/tracer_impl.py:251
+msgid "The file to store the tracer, e.g. dbgpt_webserver_tracer.jsonl"
+msgstr "فایل ذخیره داده‌های ردیاب (tracer)؛ مثال: dbgpt_webserver_tracer.jsonl"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/tracer/tracer_impl.py:258
+msgid "The root operation name of the tracer"
+msgstr "نام عملیات ریشه ردیاب"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/tracer/tracer_impl.py:264
+msgid "The exporter of the tracer, e.g. telemetry"
+msgstr "اکسپورتر ردیاب؛ مثال: telemetry"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/tracer/tracer_impl.py:271
+msgid ""
+"The endpoint of the OpenTelemetry Protocol, you can set '$"
+"{env:OTEL_EXPORTER_OTLP_TRACES_ENDPOINT}' to use the environment variable"
+msgstr "نقطه پایانی (endpoint) پروتکل OpenTelemetry؛ می‌توانید '${env:OTEL_EXPORTER_OTLP_TRACES_ENDPOINT}' را برای استفاده از متغیر محیطی تنظیم کنید"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/tracer/tracer_impl.py:281
+msgid ""
+"Whether to use insecure connection, you can set '$"
+"{env:OTEL_EXPORTER_OTLP_TRACES_INSECURE}' to use the environment "
+msgstr "استفاده از اتصال ناامن؛ می‌توانید '${env:OTEL_EXPORTER_OTLP_TRACES_INSECURE}' را برای استفاده از متغیر محیطی تنظیم کنید"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/tracer/tracer_impl.py:290
+msgid ""
+"The timeout of the connection, in seconds, you can set '$"
+"{env:OTEL_EXPORTER_OTLP_TRACES_TIMEOUT}' to use the environment "
+msgstr "مهلت اتصال (timeout) بر حسب ثانیه؛ می‌توانید '${env:OTEL_EXPORTER_OTLP_TRACES_TIMEOUT}' را برای استفاده از متغیر محیطی تنظیم کنید"
+
+#: ../packages/dbgpt-core/src/dbgpt/util/tracer/tracer_impl.py:298
+msgid "The class of the tracer storage"
+msgstr "کلاس ذخیره‌سازی ردیاب"

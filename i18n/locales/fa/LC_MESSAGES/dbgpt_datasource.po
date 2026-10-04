@@ -1,0 +1,65 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 07:51+0800\n"
+"PO-Revision-Date: 2026-09-28 00:00+0000\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:57
+msgid "Database host, e.g., localhost"
+msgstr "میزبان پایگاه داده، مثلاً localhost"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:58
+msgid "Database port, e.g., 3306"
+msgstr "درگاه پایگاه داده، مثلاً 3306"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:59
+msgid "Database user to connect"
+msgstr "کاربر اتصال به پایگاه داده"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:60
+msgid "Database name"
+msgstr "نام پایگاه داده"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:61
+msgid "Database driver, e.g., mysql+pymysql"
+msgstr "درایور پایگاه داده، مثلاً mysql+pymysql"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:66
+msgid ""
+"Database password, you can write your password directly, of course, you can "
+"also use environment variables, such as ${env:DBGPT_DB_PASSWORD}"
+msgstr "گذرواژه پایگاه داده؛ می‌توانید گذرواژه را مستقیم وارد کنید یا از متغیرهای محیطی استفاده کنید، مانند ${env:DBGPT_DB_PASSWORD}"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:75
+msgid "Connection pool size, default 5"
+msgstr "اندازه استخر اتصال، پیش‌فرض 5"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:78
+msgid "Max overflow connections, default 10"
+msgstr "حداکثر اتصالات سرریز، پیش‌فرض 10"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:81
+msgid "Connection pool timeout, default 30"
+msgstr "مهلت زمانی استخر اتصال، پیش‌فرض 30"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:84
+msgid "Connection pool recycle, default 3600"
+msgstr "بازیافت استخر اتصال، پیش‌فرض 3600"
+
+#: ../packages/dbgpt-core/src/dbgpt/datasource/rdbms/base.py:87
+msgid "Connection pool pre ping, default True"
+msgstr "پیش‌آزمون اتصال استخر (pre ping)، پیش‌فرض True"

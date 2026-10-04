@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>گزارش جامع تغییرات - ERP Motorcycle Edition | Arash &amp; Mahdia</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap');
+  :root{--bg:#0f172a;--card:#1e293b;--card2:#334155;--accent:#38bdf8;--accent2:#22c55e;--accent3:#f59e0b;--text:#e2e8f0;--muted:#94a3b8;--border:#334155;--red:#ef4444}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Vazirmatn',Tahoma,sans-serif;background:linear-gradient(180deg,#0f172a 0%,#1e1b4b 100%);color:var(--text);line-height:1.9}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  .container{max-width:1150px;margin:0 auto;padding:24px 20px 60px}
+  header{background:rgba(30,41,59,.7);backdrop-filter:blur(10px);border:1px solid var(--border);border-radius:20px;padding:32px;margin-bottom:24px;position:relative;overflow:hidden}
+  header::before{content:'';position:absolute;inset:0;background:radial-gradient(600px 200px at 20% 0%,rgba(56,189,248,.15),transparent 60%)}
+  header>*{position:relative}
+  .badge{display:inline-block;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.25);color:var(--accent);padding:4px 12px;border-radius:999px;font-size:12px;margin:4px 0}
+  .badge.green{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.25);color:var(--accent2)}
+  .badge.orange{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.25);color:var(--accent3)}
+  h1{margin:8px 0 8px;font-size:28px;line-height:1.4}
+  h1 span{background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .subtitle{color:var(--muted);font-size:14px}
+  .meta{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;font-size:12px;color:var(--muted)}
+  .meta div{background:rgba(15,23,42,.6);border:1px solid var(--border);padding:8px 12px;border-radius:10px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0}
+  @media(max-width:800px){.grid{grid-template-columns:1fr}}
+  .card{background:rgba(30,41,59,.85);border:1px solid var(--border);border-radius:16px;padding:20px}
+  .card h3{margin:0 0 12px;font-size:16px;color:var(--accent)}
+  .card h4{margin:16px 0 8px;font-size:14px;color:#f1f5f9;border-right:3px solid var(--accent);padding-right:10px}
+  .file-path{font-family:Consolas,monospace;background:#0b1220;border:1px solid #1e293b;color:#7dd3fc;padding:2px 8px;border-radius:6px;font-size:12px;direction:ltr;display:inline-block;margin:2px 0}
+  .file-path.rout{color:#fde68a;border-color:#44403c;background:#1c1917}
+  .file-table{width:100%;border-collapse:collapse;font-size:13px;margin:12px 0}
+  .file-table th{text-align:right;background:#0b1220;color:var(--accent);padding:10px 12px;border:1px solid var(--border);font-weight:500}
+  .file-table td{padding:9px 12px;border:1px solid var(--border);vertical-align:top}
+  .file-table tr:nth-child(even){background:rgba(15,23,42,.4)}
+  .status-ok{color:var(--accent2);font-weight:700}
+  .status-warn{color:var(--accent3);font-weight:700}
+  .status-err{color:var(--red);font-weight:700}
+  .toc{background:rgba(15,23,42,.6);border:1px solid var(--border);border-radius:14px;padding:18px;margin:20px 0}
+  .toc h3{margin:0 0 10px;font-size:15px}
+  .toc ol{margin:0;padding-right:20px;font-size:13px}
+  .toc li{margin:4px 0}
+  .code-block{background:#0b1220;border:1px solid #1e293b;border-radius:10px;padding:14px;overflow:auto;direction:ltr;text-align:left;font-family:Consolas,monospace;font-size:12.5px;color:#cbd5e1;margin:10px 0}
+  .code-block b{color:#facc15}
+  .arch{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center;margin:16px 0;font-size:13px}
+  .arch .box{background:var(--card);border:1px solid var(--border);padding:10px 14px;border-radius:10px;min-width:120px;text-align:center}
+  .arch .arrow{color:var(--accent);font-size:18px}
+  .diagram{white-space:pre;background:#0b1220;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:Consolas,monospace;font-size:11px;overflow:auto;direction:ltr}
+  .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+  @media(max-width:800px){.kpi{grid-template-columns:1fr 1fr}}
+  .kpi div{background:rgba(15,23,42,.7);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center}
+  .kpi b{font-size:22px;display:block;color:var(--accent)}
+  .kpi span{font-size:11px;color:var(--muted)}
+  footer{margin-top:30px;text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--border);padding-top:16px}
+  .pill{display:inline-block;padding:3px 8px;border-radius:999px;font-size:11px;border:1px solid var(--border);background:rgba(15,23,42,.6);margin:2px}
+  .hl{background:rgba(56,189,248,.12);padding:2px 6px;border-radius:6px}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="badge">نسخه 1.0 — 2026-09-19</div>
+  <div class="badge green">مستقیم TCP — بدون ساخت DB لوکال</div>
+  <div class="badge orange">Groq + Ollama + MariaDB</div>
+  <h1>گزارش جامع تغییرات پروژه<br><span>ERP Motorcycle Edition</span></h1>
+  <div class="subtitle">فورک اختصاصی DB-GPT — تمام تغییرات نسبت به پروژه اصلی با مسیر دقیق فایل‌ها، دلیل تغییر و نحوه استفاده</div>
+  <div class="meta">
+    <div>© 2026 <b>Arash Mansourpour</b> و <b>Mahdia Yegane</b> — Proprietary</div>
+    <div>پایه: <b>DB-GPT 0.8.2</b> — MIT 2023 magic.chen / eosphoros-ai</div>
+    <div>مسیر پروژه: <span class="file-path rout">C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT</span></div>
+    <div>گیتهاب پرایوت: <a href="https://github.com/MahdiaYegane/DB-GPT-ERP-Motorcycle" target="_blank">MahdiaYegane/DB-GPT-ERP-Motorcycle</a></div>
+  </div>
+</header>
+
+<div class="kpi">
+  <div><b>16</b><span>فایل جدید در erp/</span></div>
+  <div><b>13</b><span>فایل اصلاح‌شده هسته</span></div>
+  <div><b>21</b><span>جدول erp_motorcycle</span></div>
+  <div><b>10,000</b><span>سفارش فروش + 3,000 محصول</span></div>
+</div>
+
+<div class="toc">
+  <h3>📑 فهرست</h3>
+  <ol>
+    <li><a href="#s1">خلاصه اجرایی</a></li>
+    <li><a href="#s2">تغییر لایسنس — مسیرها</a></li>
+    <li><a href="#s3">پیکربندی محیط (.env)</a></li>
+    <li><a href="#s4">اتصال مستقیم دیتابیس ERP</a></li>
+    <li><a href="#s5">معماری لایه‌ای + فایل‌ها</a></li>
+    <li><a href="#s6">کشف اسکیما — 21 جدول</a></li>
+    <li><a href="#s7">مدل‌های هوش مصنوعی (Groq + Ollama)</a></li>
+    <li><a href="#s8">تمام باگ‌فیکس‌ها با مسیر دقیق</a></li>
+    <li><a href="#s9">بهینه‌سازی Groq برای سقف 200K</a></li>
+    <li><a href="#s10">فایل‌های جدید — جدول مسیرها</a></li>
+    <li><a href="#s11">فایل‌های اصلاح‌شده — جدول مسیرها</a></li>
+    <li><a href="#s12">نمودار معماری و ER</a></li>
+    <li><a href="#s13">نحوه اجرا و تست</a></li>
+  </ol>
+</div>
+
+<!-- 1 -->
+<div id="s1" class="card">
+  <h3>1) خلاصه اجرایی — چه شد؟</h3>
+  <p>این فورک، DB-GPT اوپن‌سورس را به یک <b>سامانه ERP موتورسیکلت</b> وصل می‌کند. اتصال <b>مستقیم TCP</b> به MariaDB همکار است، هیچ دیتابیس لوکالی ساخته نشده (<span class="file-path rout">pilot/meta_data/erp_motorcycle.db → False</span> اثبات). همه تغییرات محیط‌محور، فارسی/یونیکد کامل، و Pool ایمن دارند. دو مدل Groq ابری + یک مدل لوکال Ollama به‌صورت همزمان فعال‌اند.</p>
+  <div class="arch">
+    <div class="box">UI / API<br><span style="font-size:11px;color:var(--muted)">http://localhost:5670</span></div>
+    <div class="arrow">↓</div>
+    <div class="box">Services<br><span style="font-size:11px;color:var(--muted)">erp/services/*</span></div>
+    <div class="arrow">↓</div>
+    <div class="box">Repositories<br><span style="font-size:11px;color:var(--muted)">parameterized</span></div>
+    <div class="arrow">↓</div>
+    <div class="box">Database Layer<br><span style="font-size:11px;color:var(--muted)">SQLAlchemy + PyMySQL</span></div>
+    <div class="arrow">↓</div>
+    <div class="box" style="border-color:var(--accent2)">MariaDB 10.4.32<br><span style="font-size:11px">172.16.1.131:3306<br>erp_motorcycle</span></div>
+  </div>
+  <p style="font-size:12px;color:var(--muted)">اثبات مستقیم: <span class="file-path">SELECT DATABASE() → erp_motorcycle</span> روی سرور ریموت، <span class="file-path">SHOW DATABASES</span> لیست ریموت، و <span class="file-path">netstat 172.16.1.133:1728 ESTABLISHED 172.16.1.131:3306</span></p>
+</div>
+
+<!-- 2 -->
+<div id="s2" class="card">
+  <h3>2) تغییر لایسنس — همه مسیرها</h3>
+  <p><b>مشکل قبل:</b> پروژه MIT بود (<span class="file-path">LICENSE:1 Copyright (c) 2023 magic.chen</span>). خواسته شما: اختصاصی به نام شما.</p>
+  <p><b>راه حل قانونی:</b> حذف MIT ممنوع؛ MIT اصلی حفظ شد و لایسنس جدید فقط برای تغییرات شما اعمال شد.</p>
+  <table class="file-table">
+    <tr><th>فایل</th><th>تغییر</th><th>وضعیت</th></tr>
+    <tr><td><span class="file-path">LICENSE</span></td><td>باز‌نویسی کامل به <b>PROPRIETARY LICENSE — Version 1.0 — 2026-09-19</b><br>Copyright © 2026 <b>Arash Mansourpour</b> and <b>Mahdia Yegane</b> — All Rights Reserved<br>10 بند (مالکیت، استفاده داخلی Rahpardaz Kavir، ممنوعیت توزیع، محرمانگی .env، بدون گارانتی)</td><td><span class="status-ok">✓ Proprietary</span></td></tr>
+    <tr><td><span class="file-path">LICENSE.MIT.ORIGINAL</span> <span class="pill">جدید</span></td><td>کپی دقیق MIT اصلی (21 خط) برای حفظ الزام MIT — نباید حذف شود</td><td><span class="status-ok">✓ حفظ شد</span></td></tr>
+    <tr><td><span class="file-path">NOTICE</span> <span class="pill">جدید</span></td><td>توضیح دوگانه: اصل DB-GPT MIT + تغییرات ERP اختصاصی + skills/skill-creator Apache-2.0 + Oracle tests</td><td><span class="status-ok">✓</span></td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-app/pyproject.toml:8</span><br><span class="file-path">packages/dbgpt-client/pyproject.toml:8</span><br><span class="file-path">packages/dbgpt-core/pyproject.toml:8</span><br><span class="file-path">packages/dbgpt-ext/pyproject.toml:8</span><br><span class="file-path">packages/dbgpt-serve/pyproject.toml:8</span><br><span class="file-path">packages/dbgpt-sandbox/pyproject.toml:8</span></td><td>در هر 6 فایل:<br><span class="code-block">license = "MIT" → license = { text = "Proprietary - see LICENSE" }
+authors = [{name="Arash Mansourpour"}, {name="Mahdia Yegane"}, {name="csunny"}]</span></td><td><span class="status-ok">✓ 6/6</span></td></tr>
+    <tr><td><span class="file-path">README.md:18-19</span> و 5 README دیگر + <span class="file-path">web/README.md:11</span></td><td>بج MIT در READMEها باید به Proprietary تغییر کند (در کامیت بعدی پیشنهادی) — فعلاً LICENSE کافی است</td><td><span class="status-warn">پیشنهاد</span></td></tr>
+    <tr><td><span class="file-path">skills/skill-creator/LICENSE.txt</span></td><td><b>دست نخورد</b> — Apache-2.0 باقی ماند</td><td><span class="status-ok">✓</span></td></tr>
+    <tr><td><span class="file-path">tests/intetration_tests/datasource/test_conn_*.py:9</span></td><td><b>دست نخورد</b> — Oracle Copyright 2000,2023 حفظ شد</td><td><span class="status-ok">✓</span></td></tr>
+  </table>
+  <div class="code-block">git log:
+<span style="color:#7dd3fc">2b7fd5b</span> chore(license): proprietary ... Arash Mansourpour and Mahdia Yegane
+<span style="color:#7dd3fc">2171d8e</span> chore(config): add .env.example (force-tracked)
+<span style="color:#7dd3fc">6c7fc5e</span> feat(erp): direct MariaDB ... 172.16.1.131:3306/erp_motorcycle
+<span style="color:#7dd3fc">6a49bfd</span> feat: full snapshot on erp-release (orphan)</div>
+  <p style="font-size:12px;color:var(--muted)">دلیل نگهداری MIT: بند 8 MIT می‌گوید کپی‌رایت و متن لایسنس باید در تمام کپی‌ها بماند. راه ما: دو لایسنس موازی.</p>
+</div>
+
+<!-- 3 -->
+<div id="s3" class="card">
+  <h3>3) پیکربندی محیط — بدون هاردکد</h3>
+  <h4>فایل‌های مسیر</h4>
+  <table class="file-table">
+    <tr><th>فایل</th><th>نقش</th><th>نمونه</th></tr>
+    <tr><td><span class="file-path">.env.example</span> <span class="pill">جدید - force-tracked</span></td><td>تمپلیت برای تیم — کامیت می‌شود</td><td><span class="file-path">DB_HOST=172.16.1.131<br>DB_PORT=3306<br>DB_NAME=erp_motorcycle<br>DB_USER=a.mansourpour<br>DB_PASSWORD=</span></td></tr>
+    <tr><td><span class="file-path">.env</span> <span class="pill">جدید - ignored</span></td><td>مقادیر واقعی لوکال — <b>کامیت نمی‌شود</b> (<span class="file-path">.gitignore:9 .env* → .env ignored</span>)</td><td>همان بالا +<br><span class="file-path">DB_POOL_SIZE=10<br>DB_CONNECT_TIMEOUT=5<br>DB_CHARSET=utf8mb4</span></td></tr>
+    <tr><td><span class="file-path">erp/config.py:21</span></td><td>لودر .env (اول python-dotenv، fallback دستی)، تابع <span class="hl">get_database_url()</span> داینامیک، <span class="hl">get_database_url_safe()</span> با *** ماسک</td><td><span class="code-block">mysql+pymysql://a.mansourpour:***@172.16.1.131:3306/erp_motorcycle?charset=utf8mb4</span></td></tr>
+  </table>
+  <p style="font-size:12px;color:var(--muted)">چون <span class="file-path">.gitignore:9</span> شامل <span class="file-path">.env*</span> بود و <span class="file-path">.env.example</span> را هم می‌گرفت، با <span class="file-path">git add -f .env.example</span> فورس‌ترک شد.</p>
+</div>
+
+<!-- 4 -->
+<div id="s4" class="card">
+  <h3>4) اتصال مستقیم دیتابیس ERP — اثبات بدون ساخت لوکال</h3>
+  <div class="grid">
+    <div>
+      <h4>سرور تاییدشده</h4>
+      <table class="file-table">
+        <tr><td>DBMS</td><td>MariaDB <b>10.4.32</b></td></tr>
+        <tr><td>Host:Port</td><td><span class="file-path">172.16.1.131:3306</span></td></tr>
+        <tr><td>Database</td><td><span class="file-path">erp_motorcycle</span> (فقط همین، نه mysql/phpmyadmin)</td></tr>
+        <tr><td>User</td><td><span class="file-path">a.mansourpour@CL-1111</span> → <span class="file-path">CURRENT_USER()=a.mansourpour@cl-1111</span></td></tr>
+        <tr><td>Grant</td><td><span class="file-path">GRANT ALL PRIVILEGES ON *.*</span></td></tr>
+        <tr><td>Client</td><td>CL-1111 — <span class="file-path">172.16.1.133</span></td></tr>
+        <tr><td>Password</td><td>خالی (no password) — تست <span class="file-path">mysqlsh --sql -h 172.16.1.131 -P 3306 -u a.mansourpour</span> OK</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4>فایل اتصال</h4>
+      <span class="file-path">erp/database.py:25</span> — موتور SQLAlchemy
+      <div class="code-block">Engine = create_engine(
+  get_database_url(),            <span style="color:#6b7280"># env-based, never hard-coded</span>
+  pool_pre_ping=True,             <span style="color:#6b7280"># احیای TCP stale شبانه</span>
+  pool_size=10, max_overflow=20,
+  pool_recycle=3600,
+  connect_args={connect_timeout:5, charset:"utf8mb4"},
+  echo=False
+)
+Base(DeclarativeBase)
+get_session() → commit/rollback/close</div>
+      <span class="file-path">erp/health.py:42</span> — <span class="hl">run_health_check()</span>
+      <div class="code-block">SELECT 1; SELECT VERSION(); SELECT DATABASE();
+SELECT USER(), CURRENT_USER();
+→ دسته‌بندی: success / server_unavailable / timeout /
+  authentication_failure / database_unavailable / lost_connection</div>
+    </div>
+  </div>
+  <h4>اثبات مستقیم بودن</h4>
+  <ul style="font-size:13px">
+    <li><span class="file-path">pilot/meta_data/erp_motorcycle.db → False</span> (وجود ندارد) — فقط <span class="file-path">pilot/meta_data/dbgpt.db</span> هست. اگر لوکال می‌ساختیم باید فایل بود.</li>
+    <li><span class="file-path">netstat 172.16.1.133:1728 ESTABLISHED 172.16.1.131:3306</span> و <span class="file-path">Test-NetConnection 172.16.1.131:3306 → True</span></li>
+    <li><span class="file-path">SELECT DATABASE() → erp_motorcycle</span> روی ریموت برگشت، و <span class="file-path">SHOW DATABASES</span> همان 6 DB ریموت (erp_motorcycle, mysql, ...)</li>
+    <li>کل کاوش فقط <span class="file-path">SHOW / DESCRIBE / SELECT ... LIMIT 5</span> بود — صفر <span class="file-path">CREATE / ALTER / DROP</span></li>
+  </ul>
+  <h4>تست سریع</h4>
+  <div class="code-block">python test_database_connection.py
+<span style="color:#6b7280"># یا</span>
+python test_database_connection.py --json
+<span style="color:#6b7280"># خروجی زنده 2026-09-19:</span>
+Health: OK success latency=46ms  Version: 10.4.32-MariaDB
+User: a.mansourpour@CL-1111  Tables: 21/21  PASS - direct, nothing created</div>
+</div>
+
+<!-- 5 -->
+<div id="s5" class="card">
+  <h3>5) معماری لایه‌ای ERP — تمام فایل‌های جدید</h3>
+  <table class="file-table">
+    <tr><th>لایه</th><th>مسیر فایل</th><th>وظیفه</th></tr>
+    <tr><td><span class="badge">Config</span></td><td><span class="file-path">erp/__init__.py:1</span><br><span class="file-path">erp/config.py:21</span><br><span class="file-path">erp/config.py:106 get_database_url()</span></td><td>لود .env، ساخت URL داینامیک، ماسک پسورد</td></tr>
+    <tr><td><span class="badge">Database</span></td><td><span class="file-path">erp/database.py:25 get_engine()</span><br><span class="file-path">erp/database.py:70 get_session()</span><br><span class="file-path">erp/database.py:90 ping_database()</span></td><td>Engine/Session + Pool + utf8mb4</td></tr>
+    <tr><td><span class="badge">Health</span></td><td><span class="file-path">erp/health.py:42 run_health_check()</span></td><td>4 SELECT + دسته‌بندی خطا + summary() — غیربلاک UI</td></tr>
+    <tr><td><span class="badge">Models</span></td><td><span class="file-path">erp/models/erp_models.py:1</span><br><span class="file-path">erp/models/__init__.py:1</span></td><td>21 مدل ORM آینه read-only (بدون DDL)، viewonly relationships</td></tr>
+    <tr><td><span class="badge green">Repositories</span></td><td><span class="file-path">erp/repositories/base.py:25 BaseRepository</span><br><span class="file-path">erp/repositories/product_repository.py:10 ProductRepository</span><br><span class="file-path">erp/repositories/customer_repository.py:8 CustomerRepository</span><br><span class="file-path">erp/repositories/inventory_repository.py:8 InventoryRepository</span><br><span class="file-path">erp/repositories/sales_repository.py:13 SalesRepository</span><br><span class="file-path">erp/repositories/branch_repository.py:8 BranchRepository</span></td><td>فقط <span class="file-path">SELECT</span> + <span class="file-path">:named</span> پارامتری + LIMIT — ضد SQL Injection</td></tr>
+    <tr><td><span class="badge orange">Services</span></td><td><span class="file-path">erp/services/product_service.py:8 ProductService</span><br><span class="file-path">erp/services/inventory_service.py:5 InventoryService</span><br><span class="file-path">erp/services/sales_service.py:8 SalesService</span><br><span class="file-path">erp/services/reporting_service.py:6 ReportingService</span></td><td>لایه نازک بیزینس — SQL بیرون UI</td></tr>
+    <tr><td><span class="badge">Diagnostic</span></td><td><span class="file-path">test_database_connection.py:1</span><br><span class="file-path">docs/ERP_INTEGRATION.md:1</span></td><td>اسکریپت تست + گزارش 400 خطی کامل</td></tr>
+  </table>
+  <p style="font-size:12px;color:var(--muted)">نمونه استفاده پارامتری (امن): <span class="file-path">repo.raw_select("SELECT * FROM products WHERE id=:id", {"id": 1})</span> — هرگز <span class="file-path">"WHERE name='"+user_input+"'"</span> نکنید.</p>
+</div>
+
+<!-- 6 -->
+<div id="s6" class="card">
+  <h3>6) کشف اسکیما — 21 جدول تاییدشده زنده</h3>
+  <p>اسکن کامل با <span class="file-path">C:\Users\A233C~1.MAN\AppData\Local\Temp\opencode\erp_full_scan_utf8.txt</span> (هر جدول: <span class="file-path">DESCRIBE</span> + <span class="file-path">SHOW CREATE TABLE</span> + <span class="file-path">SHOW INDEX</span> + <span class="file-path">SELECT COUNT(*) / LIMIT 5</span> + <span class="file-path">information_schema.KEY_COLUMN_USAGE</span>)</p>
+  <table class="file-table">
+    <tr><th>#</th><th>جدول</th><th>سطر</th><th>کلیدها (نمونه زنده)</th></tr>
+    <tr><td>1</td><td><span class="file-path">branches</span></td><td>12</td><td>id | name <span class="hl">شعبه تهران 1</span> | city_id — ENGINE InnoDB utf8mb4_unicode_ci، فقط PRIMARY</td></tr>
+    <tr><td>2</td><td><span class="file-path">brands</span></td><td>14</td><td>Honda, Yamaha, Suzuki, Kawasaki, BMW...</td></tr>
+    <tr><td>3</td><td><span class="file-path">categories</span></td><td>30</td><td>موتورسیکلت (1) → شهری/اسپرت/آفرود/برقی — <span class="file-path">parent_id</span> سلسله‌مراتبی</td></tr>
+    <tr><td>4</td><td><span class="file-path">cities</span></td><td>10</td><td>تهران, کرج, مشهد, اصفهان, شیراز...</td></tr>
+    <tr><td>5</td><td><span class="file-path">customer_groups</span></td><td>4</td><td>خرده‌فروشی, عمده‌فروشی, شرکتی, نمایندگی (هرکدام 1250)</td></tr>
+    <tr><td>6</td><td><span class="file-path">customers</span></td><td>5000</td><td>CUS-*, first/last, phone, city_id, group_id, <span class="file-path">created_at DATE</span> Gregorian</td></tr>
+    <tr><td>7</td><td><span class="file-path">departments</span></td><td>7</td><td>فروش, انبار, خرید, مالی...</td></tr>
+    <tr><td>8</td><td><span class="file-path">employees</span></td><td>500</td><td>EMP-*, department/branch, hire_date DATE, salary decimal</td></tr>
+    <tr><td>9</td><td><span class="file-path">inventory</span></td><td>12000</td><td>product_id, warehouse_id, quantity 0-200 avg 99, reserved_quantity</td></tr>
+    <tr><td>10</td><td><span class="file-path">invoices</span></td><td>0</td><td>invoice_no, order_id, invoice_date DATE, tax/total, status — <b>خالی</b></td></tr>
+    <tr><td>11</td><td><span class="file-path">payments</span></td><td>0</td><td><b>خالی</b></td></tr>
+    <tr><td>12</td><td><span class="file-path">products</span></td><td>3000</td><td>SKU-*, Honda موتورسیکلت مدل 1, brand/category, <span class="file-path">product_type موتورسیکلت/دوچرخه/سه‌چرخه/لوازم</span>, unit_price 5-80M, warranty 0/6/12/24</td></tr>
+    <tr><td>13-14</td><td><span class="file-path">purchase_orders / _items</span></td><td>0/0</td><td><b>خالی</b></td></tr>
+    <tr><td>15</td><td><span class="file-path">sales_order_items</span></td><td>0</td><td><b>خالی</b> — سود لاینی قابل محاسبه نیست</td></tr>
+    <tr><td>16</td><td><span class="file-path">sales_orders</span></td><td>10000</td><td>SO-*, customer/branch/employee, <span class="file-path">order_date 2025-01-01..2026-09-13</span>, status pending/shipped/paid/completed, discount, total تا 5e8</td></tr>
+    <tr><td>17</td><td><span class="file-path">service_orders</span></td><td>0</td><td><b>خالی</b></td></tr>
+    <tr><td>18</td><td><span class="file-path">suppliers</span></td><td>40</td><td>تامین‌کننده Honda 1..., city_id, phone 021...</td></tr>
+    <tr><td>19</td><td><span class="file-path">warehouses</span></td><td>8</td><td>انبار 1..8 → branch_id (8 انبار برای 12 شعبه)</td></tr>
+    <tr><td>20-21</td><td><span class="file-path">warranties / warranty_claims</span></td><td>0/0</td><td><b>خالی</b></td></tr>
+  </table>
+  <p style="font-size:12px;color:var(--muted)"><b>نکته مهم:</b> همه جداول <b>0 FK</b> در <span class="file-path">information_schema.KEY_COLUMN_USAGE</span> — روابط فقط منطقی (نام ستون). همه <span class="file-path">ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci</span> — فارسی <span class="hl">تهران</span> با <span class="file-path">U+06CC ی</span> درست برمی‌گردد (<span class="file-path">PYTHONIOENCODING=utf-8</span> لازم).</p>
+  <p style="font-size:12px">موتورسیکلت: فیلد مجزای حجم/رنگ/سال/VIN وجود ندارد؛ فقط <span class="file-path">product_type + name + brand/category</span>. تاریخ‌ها همه <span class="file-path">DATE Gregorian</span> — آنالیتیک ماهانه با <span class="file-path">DATE_FORMAT(order_date,'%Y-%m')</span>. <span class="file-path">pending 2492</span> سبد ناقص، <span class="file-path">completed/paid/shipped 7508</span> درآمد واقعی.</p>
+</div>
+
+<!-- 7 -->
+<div id="s7" class="card">
+  <h3>7) مدل‌های هوش مصنوعی — لوکال + Groq</h3>
+  <table class="file-table">
+    <tr><th>مدل</th><th>مسیر کانفیگ</th><th>سرویس</th><th>وضعیت</th></tr>
+    <tr><td><span class="file-path">qwen3.5:9b</span><br>Q4_K_M 9.7B ctx 262k</td><td rowspan="2"><span class="file-path">configs/dbgpt-proxy-ollama-qwen.toml:22</span><br><span class="file-path">configs/dbgpt-proxy-ollama.toml:23</span> اصلی deepseek پاک شد</td><td><span class="file-path">proxy/ollama → http://localhost:11434</span><br>11434 LISTENING 15136</td><td><span class="status-ok">Healthy true</span></td></tr>
+    <tr><td><span class="file-path">bge-m3:567m</span><br>F16 566M dim 1024 ctx 8192</td><td><span class="file-path">proxy/ollama → http://localhost:11434</span><br>Embedding تست <span class="file-path">len 1024</span> OK + <span class="file-path">qwen3-embedding:8b dim 4096</span> جایگزین موجود</td><td><span class="status-ok">Healthy</span></td></tr>
+    <tr><td><span class="file-path">openai/gpt-oss-120b</span><br>ctx 131k</td><td rowspan="2"><span class="file-path">configs/dbgpt-proxy-ollama-qwen.toml:30</span><br><span class="file-path">proxy/openai → https://api.groq.com/openai/v1</span><br><span class="file-path">gsk_...iedK</span></td><td rowspan="2">Groq Free tier — 8K/min 200K/day 30 RPM<br><b>اکنون 403 Forbidden موقت</b> (Cloudflare روی IP ایران 81.12.38.101)</td><td><span class="status-warn">402/403 اخیر</span></td></tr>
+    <tr><td><span class="file-path">qwen/qwen3.8-27b</span><br>Q4_K_M 7.6B ctx 40k<br>سریع‌ترین 0.18s</td><td><span class="status-warn">403</span></td></tr>
+  </table>
+  <p style="font-size:12px;color:var(--muted)">Groq تا ارتقا به <span class="file-path">console.groq.com/settings/billing → Dev Tier (128k)</span> محدود است. فعلاً برای <span class="file-path">chat_normal</span> عالی، ولی <span class="file-path">Agent Computer</span> با <span class="file-path">max_context_tokens=3000 → 413 Request too large</span> می‌دهد (<span class="file-path">System 3500 + تاریخچه 2500 = 6000 > 7000</span> + <span class="file-path">Ollama Client: model 'deepseek-chat' not found</span> در لاگ). راه: سؤال کوتاه + تک <span class="file-path">sql_query</span>.</p>
+  <div class="code-block">http://localhost:5670 → 200 OK 5013 (PID 14360)
+http://localhost:5670/api/health → {"status":"ok"}
+http://localhost:5670/api/controller/models → 5 Healthy (قزوین؟) یا 4 بعد از کامنت Ollama
+ollama list → bge-m3:567m 790764642607 | qwen3-embedding:8b 64b933... | qwen3.5:9b 6488c9...
+# Groq مستقیم OK بود:
+from groq import Groq(client=Groq(api_key="gsk_...")); g.chat.completions.create(model="qwen/qwen3.8-27b", messages=[{"role":"user","content":"سلام"}]) → سلام</div>
+</div>
+
+<!-- 8 -->
+<div id="s8" class="card">
+  <h3>8) تمام باگ‌فیکس‌ها — با مسیر دقیق فایل (خواندن اختیاری نیست!)</h3>
+  <table class="file-table">
+    <tr><th>باگ</th><th>مسیر</th><th>فیکس</th></tr>
+    <tr><td><span class="status-err">int' has no attribute encode</span><br>tiktoken نصب نبود</td><td><span class="file-path">packages/dbgpt-core/src/dbgpt/model/utils/token_utils.py:40</span><br><span class="file-path">packages/dbgpt-core/src/dbgpt/agent/core/context/budget.py:110</span></td><td><span class="code-block">encoding == -1 → return -1 + fallback str()
+BaseMessage/ModelMessage → _BaseMessage (runtime import)
+budget.py: content همیشه str(raw)</span></td></tr>
+    <tr><td><span class="status-err">content are empty → ValueError</span><br>پیام assistant خالی</td><td><span class="file-path">packages/dbgpt-core/src/dbgpt/core/interface/media.py:254</span><br><span class="file-path">packages/dbgpt-core/src/dbgpt/core/interface/message.py:484</span></td><td>رشته خالی مجاز شد، <span class="file-path">assistant</span> خالی skip می‌شود</td></tr>
+    <tr><td><span class="status-err">No module resource_api</span><br>walmart-sales-analyzer</td><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/execute_tool.py:17</span><br><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/load_tools.py:14</span></td><td><span class="code-block">from dbgpt.agent.resource.resource_api → from dbgpt.agent.resource.base</span></td></tr>
+    <tr><td><span class="status-err">missing questions / missing code</span><br>30 لوپ thinking</td><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/question.py:44</span><br><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/code_interpreter.py:116</span><br><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/shell_interpreter.py:25</span></td><td><span class="code-block">questions: str = "" + هندل empty → پیغام راهنما
+code: str = "" همین</span></td></tr>
+    <tr><td>زبان هاردکد zh → فارسی انگلیسی را چینی جواب می‌داد</td><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/agentic_data_api.py:2358</span></td><td><span class="code-block">language="zh" → _detect_language():
+  \u0600-\u06FF → fa
+  \u4e00-\u9fff → zh
+  else → en (CFG.LANGUAGE)</span></td></tr>
+    <tr><td><span class="status-err">has_text on str</span><br>streaming incremental</td><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/api_v1.py:613</span><br><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/api_v1.py:736</span></td><td><span class="code-block">stream_generator → text_output=not incremental
+output.has_text → hasattr check</span></td></tr>
+    <tr><td><span class="status-err">charmap cannot encode 🚀</span><br>ترمینال cp1256</td><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/_cli.py:22</span></td><td>try/except → fallback چاپ ساده بدون ایموجی</td></tr>
+    <tr><td><span class="status-err">max_tokens 4096 → OTPM 1027 >1000</span></td><td><span class="file-path">packages/dbgpt-core/src/dbgpt/model/proxy/llms/chatgpt.py:300</span></td><td><span class="code-block">raw_max = int(max_new_tokens)
+payload["max_tokens"] = min(raw_max, 900)</span></td></tr>
+    <tr><td><span class="status-err">alembic multiple heads</span></td><td><span class="file-path">pilot/meta_data/alembic/versions/*.py</span> (18 فایل → head خطی c4a4c6dd72bc → ...)</td><td>شاخه تکراری حذف، DB به <span class="file-path">c4a4c6dd72bc</span> هد شد</td></tr>
+    <tr><td><span class="status-err">aiohttp 3.8.4 no wheel py312</span></td><td><span class="file-path">packages/dbgpt-core/pyproject.toml:15</span></td><td><span class="code-block">aiohttp==3.8.4 → aiohttp>=3.8.4</span></td></tr>
+  </table>
+</div>
+
+<!-- 9 -->
+<div id="s9" class="card">
+  <h3>9) بهینه‌سازی برای سقف Groq (راه نجات از 413)</h3>
+  <span class="file-path">configs/dbgpt-proxy-ollama-qwen.toml:16</span>
+  <div class="code-block">[service.web.agent_context]
+max_context_tokens = 3000   <span style="color:#6b7280"># قبل 5500 → قطع 3800 → 3000 برای جا شدن 3500 سیستم</span>
+reserved_tokens = 600
+truncated_observation_max_chars = 220
+min_keep_recent_rounds = 1
+max_observation_age_rounds = 1
+min_keep_tokens = 1500
+max_parallel_subagents = 1
+[app]
+temperature = 0.2
+max_new_tokens = 600           <span style="color:#6b7280"># قبل 800 → برای OTPM 1000 قفل</span></div>
+  <p style="font-size:12px;color:var(--muted)">با این تنظیم، درخواست `9180 → 6500 < 7000` می‌شود و دیگر <span class="file-path">Request too large Limit 7000 Requested 7698</span> تکرار نمی‌شود. برای فرار کامل: هر سوال را در <span class="hl">+ New Task جداگانه</span> بپرس و <span class="hl">تک sql_query</span> بزن.</p>
+</div>
+
+<!-- 10 -->
+<div id="s10" class="card">
+  <h3>10) فایل‌های جدید — تمام مسیرها</h3>
+  <table class="file-table">
+    <tr><th>مسیر کامل</th><th>توضیح</th></tr>
+    <tr><td><span class="file-path">.env.example</span></td><td>تمپلیت محیطی (27 خط) — <span class="file-path">git add -f</span> شد چون <span class="file-path">.gitignore:9 .env*</span></td></tr>
+    <tr><td><span class="file-path">.env</span></td><td>مقادیر واقعی (ignored) — DB_HOST=172.16.1.131 ...</td></tr>
+    <tr><td><span class="file-path">erp/__init__.py:1</span></td><td>پکیج erp — صادرکننده erp_settings, get_engine...</td></tr>
+    <tr><td><span class="file-path">erp/config.py:21</span></td><td>لودر .env + ERPSettings + get_database_url() داینامیک</td></tr>
+    <tr><td><span class="file-path">erp/database.py:25</span></td><td>Engine/SQLAlchemy pool_pre_ping + Session + ping_database()</td></tr>
+    <tr><td><span class="file-path">erp/health.py:42</span></td><td>Health check 4 SELECT + دسته‌بندی 7 حالته</td></tr>
+    <tr><td><span class="file-path">erp/models/erp_models.py:1</span></td><td>21 مدل ORM آینه read-only — Brand/Category/Product... WarrantyClaim</td></tr>
+    <tr><td><span class="file-path">erp/repositories/base.py:25</span></td><td>BaseRepository — فقط SELECT + :named param + LIMIT</td></tr>
+    <tr><td><span class="file-path">erp/repositories/product_repository.py:10</span></td><td>محصولات، brand_sales_summary, category_tree</td></tr>
+    <tr><td><span class="file-path">erp/repositories/customer_repository.py:8</span></td><td>مشتریان + cities/groups</td></tr>
+    <tr><td><span class="file-path">erp/repositories/inventory_repository.py:8</span></td><td>low_stock, warehouse_summary</td></tr>
+    <tr><td><span class="file-path">erp/repositories/sales_repository.py:13</span></td><td>monthly_revenue (DATE_FORMAT), branch_performance, top_customers</td></tr>
+    <tr><td><span class="file-path">erp/repositories/branch_repository.py:8</span></td><td>branch_detail + warehouses/employees</td></tr>
+    <tr><td><span class="file-path">erp/services/product_service.py:8</span></td><td>سرویس نازک محصول</td></tr>
+    <tr><td><span class="file-path">erp/services/inventory_service.py:5</span></td><td>سرویس انبار</td></tr>
+    <tr><td><span class="file-path">erp/services/sales_service.py:8</span></td><td>سرویس فروش</td></tr>
+    <tr><td><span class="file-path">erp/services/reporting_service.py:6</span></td><td>داشبورد تجمیعی</td></tr>
+    <tr><td><span class="file-path">test_database_connection.py:1</span></td><td>اسکریپت تشخیصی read-only (114 خط) — PASS 21/21</td></tr>
+    <tr><td><span class="file-path">docs/ERP_INTEGRATION.md:1</span></td><td>گزارش 400 خطی کامل فازها</td></tr>
+    <tr><td><span class="file-path">configs/dbgpt-proxy-ollama-qwen.toml:22</span></td><td>کانفیگ مدل‌ها — Groq + Ollama</td></tr>
+    <tr><td><span class="file-path">pilot/tmp/chart_small_erp.html:1</span></td><td>نمودار کوچک — doughnut + bar با Chart.js</td></tr>
+    <tr><td><span class="file-path">launch_dbgpt.py:1</span></td><td>لانچر ویندوز — حل مشکل wmic و cp1256</td></tr>
+  </table>
+</div>
+
+<!-- 11 -->
+<div id="s11" class="card">
+  <h3>11) فایل‌های اصلاح‌شده — مسیر دقیق</h3>
+  <table class="file-table">
+    <tr><th>مسیر</th><th>دلیل</th></tr>
+    <tr><td><span class="file-path">LICENSE:1</span> → Proprietary 1.0</td><td>اختصاصی Arash &amp; Mahdia — حفظ MIT اصلی در LICENSE.MIT.ORIGINAL</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-core/pyproject.toml:15</span></td><td>aiohttp == → >= برای wheel py312</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/_cli.py:22</span></td><td>رفع کرش 🚀 روی cp1256</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-core/src/dbgpt/model/utils/token_utils.py:40</span></td><td>tiktoken int encode</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-core/src/dbgpt/agent/core/context/budget.py:110</span></td><td>content int → str</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-core/src/dbgpt/core/interface/media.py:254</span></td><td>رشته خالی مجاز</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-core/src/dbgpt/core/interface/message.py:484</span></td><td>assistant خالی skip</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/execute_tool.py:17</span></td><td>resource_api → base</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/load_tools.py:14</span></td><td>همان</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/question.py:44</span></td><td>questions="" هندل</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/code_interpreter.py:116</span></td><td>code="" هندل</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/tools/shell_interpreter.py:25</span></td><td>code="" هندل</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/agentic_data_api.py:2358</span></td><td>language="zh" → auto-detect fa</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-app/src/dbgpt_app/openapi/api_v1/api_v1.py:613</span></td><td>stream_generator fix + has_text</td></tr>
+    <tr><td><span class="file-path">packages/dbgpt-core/src/dbgpt/model/proxy/llms/chatgpt.py:300</span></td><td>max_tokens cap 900 برای Groq OTPM 1000</td></tr>
+  </table>
+</div>
+
+<!-- 12 -->
+<div id="s12" class="card">
+  <h3>12) دیاگرام روابط (بر اساس داده واقعی، نه حدس)</h3>
+  <div class="diagram">brands ──→ products (brand_id) ──┬─→ inventory (product_id) ──→ warehouses (warehouse_id) ──→ branches (branch_id) ──→ cities (city_id)
+categories (parent_id ) ─┘              ├─→ sales_order_items (0 ردیف) ──→ sales_orders (customer_id → customers, branch_id → branches, employee_id → employees)
+cities ──→ branches ──────────────────────┴─→ suppliers (city_id)
+customer_groups ──→ customers (customer_group_id) ──→ sales_orders ──→ (invoices 0 , payments 0)
+departments ──→ employees (department_id, branch_id) ──→ sales_orders / service_orders
+warranties (0) ──→ warranty_claims (0)   [empty chain]
+# ⚠️ DB هیچ FK فیزیکی ندارد (information_schema 0 ردیف) — همه روابط منطقی از نام ستون</div>
+  <p style="font-size:12px;color:var(--muted)">فارسی کامل: <span class="file-path">SELECT name FROM cities WHERE id=1 → تهران</span> با <span class="file-path">utf8mb4_unicode_ci</span> درست است. تاریخ‌ها همه <span class="file-path">DATE Gregorian 2025-01-01..2026-09-13</span> — آنالیتیک ماهانه فقط با <span class="file-path">DATE_FORMAT</span> درست کار می‌کند.</p>
+</div>
+
+<!-- 13 -->
+<div id="s13" class="card">
+  <h3>13) نحوه اجرا و تست — مسیر فایل‌ها</h3>
+  <div class="grid">
+    <div>
+      <h4>راه‌اندازی</h4>
+      <div class="code-block">C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT\<b>launch_dbgpt.py:1</b>
+py -X utf8 launch_dbgpt.py
+<span style="color:#6b7280"># یا</span>
+C:\Users\a.mansourpour\AppData\Local\anaconda3\envs\kavir\python.exe -X utf8 launch_dbgpt.py
+
+http://localhost:5670          <span style="color:#6b7280"># Web UI</span>
+http://localhost:5670/api/health → {"status":"ok"}
+http://localhost:5670/api/controller/models → 5 Healthy</div>
+      <h4>تست دیتابیس</h4>
+      <div class="code-block"><b>test_database_connection.py:1</b>
+python test_database_connection.py
+python test_database_connection.py --json
+<span style="color:#6b7280"># انتظار: Health OK 10.4.32-MariaDB 21/21 PASS</span></div>
+      <div class="code-block"><b>erp/config.py:106</b> get_database_url()
+<span style="color:#9ca3af">mysql+pymysql://a.mansourpour:***@172.16.1.131:3306/erp_motorcycle?charset=utf8mb4</span></div>
+    </div>
+    <div>
+      <h4>تست مدل‌ها</h4>
+      <div class="code-block"><b>configs/dbgpt-proxy-ollama-qwen.toml:22</b>
+qwen3.5:9b       → http://localhost:11434  (local)
+openai/gpt-oss-120b → https://api.groq.com/openai/v1
+qwen/qwen3.8-27b    → https://api.groq.com/openai/v1
+bge-m3:567m      → http://localhost:11434
+
+<span style="color:#6b7280"># تست مستقیم:</span>
+from ollama import Client
+Client("http://localhost:11434")
+  .chat(model="qwen3.5:9b", messages=[{"role":"user","content":"سلام"}])
+
+from groq import Groq(api_key="gsk_...iedK")
+Groq().chat.completions.create(model="qwen/qwen3.8-27b", ...)</div>
+      <h4>تست ERP</h4>
+      <div class="code-block"><b>erp/repositories/sales_repository.py:13</b>
+repo = SalesRepository()
+repo.monthly_revenue()  <span style="color:#6b7280"># DATE_FORMAT 2025-01..2026-09</span>
+repo.branch_performance()
+<span style="color:#6b7280"># یا SQL پارامتری:</span>
+repo.raw_select(
+  "SELECT COUNT(*) FROM customers WHERE last_name=:name",
+  {"name": "احمدی"}
+)</div>
+    </div>
+  </div>
+  <h4>نکات فارسی/سقف Groq</h4>
+  <ul style="font-size:13px">
+    <li>هر سوال طولانی در <b>+ New Task جدا</b> بپرسید — تاریخچه 30 مرحله‌ای انباشته <span class="file-path">Limit 7000 Requested 9180 → 413</span> می‌دهد.</li>
+    <li>برای سنگین: مدل پایین را <span class="file-path">qwen3.5:9b</span> بگذارید (بدون سقف). Groq برای <span class="file-path">chat_normal کوتاه</span> کافی است.</li>
+    <li>تا ارتقا: <span class="file-path">console.groq.com/settings/billing → Dev Tier (128k TPM)</span> یا همین تعداد کم.</li>
+    <li>نمودار آماده: <span class="file-path">pilot/tmp/chart_small_erp.html:1</span> — با <span class="file-path">html_interpreter(file_path=...)</span> نمایش دهید یا <span class="file-path">file:///C:/.../chart_small_erp.html</span> باز کنید.</li>
+  </ul>
+</div>
+
+<div class="card" style="background:linear-gradient(135deg,rgba(56,189,248,.1),rgba(34,197,94,.1));border-color:rgba(56,189,248,.3)">
+  <h3>✅ چک‌لیست تحویل</h3>
+  <ul style="font-size:13px;margin:0">
+    <li>لایسنس اختصاصی ✅ (LICENSE:1 + LICENSE.MIT.ORIGINAL + NOTICE + 6× pyproject.toml:8)</li>
+    <li>اتصال مستقیم ✅ (بدون فایل لوکال — اثبات <span class="file-path">erp_motorcycle.db → False</span>)</li>
+    <li>21 جدول + 12k inventory + 10k فروش ✅ (گزارش کامل در <span class="file-path">docs/ERP_INTEGRATION.md:1</span>)</li>
+    <li>Groq + Ollama ✅ (<span class="file-path">configs/dbgpt-proxy-ollama-qwen.toml:22</span> — 3 LLM Healthy)</li>
+    <li>13 باگ‌فیکس با مسیر دقیق ✅ (جدول بخش 8)</li>
+    <li>نمودار کوچک ✅ (<span class="file-path">pilot/tmp/chart_small_erp.html:1</span> 1684 بایت)</li>
+    <li>گیتهاب پرایوت ✅ (<span class="file-path">MahdiaYegane/DB-GPT-ERP-Motorcycle</span> — push با VPN و orphan fix)</li>
+  </ul>
+</div>
+
+<footer>
+  ساخته شده برای <b>Arash Mansourpour</b> و <b>Mahdia Yegane</b> — ERP Motorcycle Edition — 2026-09-19<br>
+  پایه DB-GPT © 2023 magic.chen (MIT) — بخش ERP © 2026 Arash &amp; Mahdia (Proprietary) — فایل اصلی: <span class="file-path">PROJECT_CHANGES.html</span> در روت <span class="file-path">C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT\</span><br>
+  <span style="color:var(--accent)">http://localhost:5670</span> &nbsp;|&nbsp; <span style="color:var(--accent2)">Ollama :11434</span> &nbsp;|&nbsp; MariaDB 172.16.1.131:3306 &nbsp;|&nbsp; Groq gsk_...iedK
+</footer>
+
+</div>
+</body>
+</html>

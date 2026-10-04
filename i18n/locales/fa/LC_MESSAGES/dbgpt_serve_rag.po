@@ -1,0 +1,158 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 00:06+0800\n"
+"PO-Revision-Date: 2025-02-23 13:40+0800\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:44
+msgid "Knowledge Space Operator"
+msgstr "عملگر فضای دانش"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:47
+msgid "knowledge space retriever operator."
+msgstr "عملگر بازیاب فضای دانش."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:48
+msgid "Query"
+msgstr "پرسش"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:48
+msgid "user query"
+msgstr "پرسش کاربر"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:51
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:54
+msgid "related chunk content"
+msgstr "محتوای قطعه (chunk) مرتبط"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:59
+msgid "Space Name"
+msgstr "نام فضا"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:65
+msgid "space name."
+msgstr "نام فضا."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:125
+msgid "Knowledge Space Prompt Builder Operator"
+msgstr "عملگر سازنده پرامپت فضای دانش"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:127
+msgid "Build messages from prompt template and chat history."
+msgstr "ساخت پیام‌ها از قالب پرامپت و تاریخچه گفت‌وگو."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:132
+msgid "Chat Prompt Template"
+msgstr "قالب پرامپت گفت‌وگو"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:135
+msgid "The chat prompt template."
+msgstr "قالب پرامپت گفت‌وگو."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:138
+msgid "History Key"
+msgstr "کلید تاریخچه"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:143
+msgid "The key of history in prompt dict."
+msgstr "کلید تاریخچه در دیکشنری پرامپت."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:146
+msgid "String History"
+msgstr "تاریخچه رشته‌ای"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:151
+msgid "Whether to convert the history to string."
+msgstr "مشخص می‌کند آیا تاریخچه به رشته تبدیل شود یا خیر."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:156
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:160
+msgid "user input"
+msgstr "ورودی کاربر"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:163
+msgid "space related context"
+msgstr "زمینه (context) مرتبط با فضا"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:167
+msgid "context of knowledge space."
+msgstr "زمینه فضای دانش."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:170
+msgid "History"
+msgstr "تاریخچه"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:174
+msgid "The history."
+msgstr "تاریخچه."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:179
+msgid "Formatted Messages"
+msgstr "پیام‌های قالب‌بندی‌شده"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/operators/knowledge_space.py:183
+msgid "The formatted messages."
+msgstr "پیام‌های قالب‌بندی‌شده."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:20
+msgid "RAG Serve Configurations"
+msgstr "پیکربندی‌های سرو RAG"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:23
+msgid "This configuration is for the RAG serve module."
+msgstr "این پیکربندی برای ماژول سرو RAG است."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:34
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:38
+msgid "Embedding Model"
+msgstr "مدل امبدینگ"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:42
+msgid "Whether to verify the SSL certificate of the database"
+msgstr "مشخص می‌کند آیا گواهی SSL پایگاه داده راستی‌آزمایی شود یا خیر."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:48
+msgid ""
+"The default thread pool size, If None, use default config of python thread "
+"pool"
+msgstr ""
+"اندازه پیش‌فرض استخر نخ (thread pool)؛ اگر None باشد، از پیکربندی پیش‌فرض\n"
+"استخر نخ پایتون استفاده می‌شود."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:55
+msgid "knowledge search top k"
+msgstr "تعداد K نتیجه برتر جست‌وجوی دانش"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:59
+msgid "knowledge search top similarity score"
+msgstr "حداقل امتیاز شباهت جست‌وجوی دانش"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:63
+msgid "knowledge search rewrite"
+msgstr "بازنویسی جست‌وجوی دانش"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:67
+msgid "knowledge max chunks once load"
+msgstr "حداکثر تعداد قطعه‌های دانش در هر بار بارگذاری"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:71
+msgid "knowledge max load thread"
+msgstr "حداکثر نخ بارگذاری دانش"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/rag/config.py:75
+msgid "knowledge rerank top k"
+msgstr "تعداد K نتیجه برتر بازرتبه‌بندی دانش"

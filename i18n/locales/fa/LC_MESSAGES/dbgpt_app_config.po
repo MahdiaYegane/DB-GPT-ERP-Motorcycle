@@ -1,0 +1,263 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 07:51+0800\n"
+"PO-Revision-Date: 2025-02-23 13:40+0800\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:30
+msgid "Language setting"
+msgstr "تنظیمات زبان"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:37
+msgid "Logging level"
+msgstr "سطح لاگ‌گیری"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:44
+msgid "API keys"
+msgstr "کلیدهای API"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:49
+msgid "The key to encrypt the data"
+msgstr "کلید رمزنگاری داده‌ها"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:60
+msgid "default vector type"
+msgstr "نوع برداری پیش‌فرض"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:66
+msgid "default graph type"
+msgstr "نوع گراف پیش‌فرض"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:85
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:270
+msgid "Whether to verify the SSL certificate of the database"
+msgstr "اعتبارسنجی گواهی SSL پایگاه‌داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:91
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:276
+msgid ""
+"The default thread pool size, If None, use default config of python thread "
+"pool"
+msgstr "اندازه پیش‌فرض استخر نخ‌ها (thread pool)؛ اگر None باشد، از پیکربندی پیش‌فرض thread pool پایتون استفاده می‌شود"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:98
+msgid "knowledge search top k"
+msgstr "تعداد نتایج برتر جست‌وجوی دانش (top k)"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:102
+msgid "knowledge search top similarity score"
+msgstr "حداکثر امتیاز شباهت جست‌وجوی دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:106
+msgid "knowledge search rewrite"
+msgstr "بازنویسی جست‌وجوی دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:110
+msgid "knowledge max chunks once load"
+msgstr "حداکثر چانک دانش در هر بار بارگذاری"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:114
+msgid "knowledge max load thread"
+msgstr "حداکثر نخ بارگذاری دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:118
+msgid "knowledge rerank top k"
+msgstr "تعداد نتایج برتر بازرتبه‌بندی (rerank) دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:122
+msgid "Storage configuration"
+msgstr "پیکربندی ذخیره‌سازی"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:126
+msgid "knowledge graph search top k"
+msgstr "تعداد نتایج برتر جست‌وجوی گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:130
+msgid "graph community summary enabled"
+msgstr "فعال‌سازی خلاصه‌سازی اجتماع (community) گراف"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:134
+msgid "kg extract llm model"
+msgstr "مدل LLM استخراج گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:142
+msgid "kg extract score threshold"
+msgstr "آستانه امتیاز استخراج گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:146
+msgid "kg community top k"
+msgstr "تعداد نتایج برتر اجتماع گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:150
+msgid "kg_community_score_threshold"
+msgstr "آستانه امتیاز اجتماع گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:154
+msgid "kg_triplet_graph_enabled"
+msgstr "فعال‌سازی گراف سه‌تایی (triplet) گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:158
+msgid "kg_document_graph_enabled"
+msgstr "فعال‌سازی گراف سند گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:162
+msgid "kg_chunk_search_top_k"
+msgstr "تعداد نتایج برتر جست‌وجوی چانک گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:166
+msgid "kg_extraction_batch_size"
+msgstr "اندازه بسته (batch) استخراج گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:174
+msgid "kg_embedding_batch_size"
+msgstr "اندازه بسته امبدینگ گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:178
+msgid "kg_similarity_top_k"
+msgstr "تعداد نتایج برتر شباهت گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:182
+msgid "kg_similarity_score_threshold"
+msgstr "آستانه امتیاز شباهت گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:186
+msgid "kg_enable_text_search"
+msgstr "فعال‌سازی جست‌وجوی متنی گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:190
+msgid "kg_text2gql_model_enabled"
+msgstr "فعال‌سازی مدل text2gql گراف دانش"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:194
+msgid "text2gql_model_name"
+msgstr "نام مدل text2gql"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:198
+msgid "bm25_k1"
+msgstr "پارامتر k1 الگوریتم BM25"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:202
+msgid "bm25_b"
+msgstr "پارامتر b الگوریتم BM25"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:209
+msgid "Webserver deploy host"
+msgstr "هاست استقرار وب‌سرور"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:211
+msgid "Webserver deploy port, default is 5670"
+msgstr "پورت استقرار وب‌سرور؛ مقدار پیش‌فرض 5670 است"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:214
+msgid "Run Webserver in light mode"
+msgstr "اجرای وب‌سرور در حالت سبک (light)"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:220
+msgid ""
+"The Model controller address to connect. If None, read model controller "
+"address from environment key `MODEL_SERVER`."
+msgstr "آدرس کنترلر مدل برای اتصال. اگر None باشد، آدرس کنترلر مدل از کلید محیطی `MODEL_SERVER` خوانده می‌شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:231
+msgid "Database connection config, now support SQLite, OceanBase and MySQL"
+msgstr "پیکربندی اتصال پایگاه‌داده؛ در حال حاضر SQLite، OceanBase و MySQL پشتیبانی می‌شود"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:239
+msgid ""
+"The storage type of model configures, if None, use the default "
+"storage(current database). When you run in light mode, it will not use any "
+"storage."
+msgstr "نوع ذخیره‌سازی پیکربندی‌های مدل؛ اگر None باشد، از ذخیره‌سازی پیش‌فرض (پایگاه‌داده فعلی) استفاده می‌شود. در حالت سبک (light) هیچ ذخیره‌سازی استفاده نمی‌شود."
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:249
+msgid "Tracer config for web server, if None, use global tracer config"
+msgstr "پیکربندی ردیاب وب‌سرور؛ اگر None باشد، از پیکربندی ردیاب سراسری استفاده می‌شود"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:256
+msgid "Logging configuration for web server, if None, use global config"
+msgstr "پیکربندی لاگ‌گیری وب‌سرور؛ اگر None باشد، از پیکربندی سراسری استفاده می‌شود"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:264
+msgid "Whether to disable alembic to initialize and upgrade database metadata"
+msgstr "غیرفعال‌سازی alembic برای مقداردهی اولیه و ارتقای فراداده پایگاه‌داده"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:285
+msgid ""
+"Whether to enable remote embedding models. If it is True, you need to start "
+"a embedding model through `dbgpt start worker --worker_type text2vec --"
+"model_name xxx --model_path xxx`"
+msgstr "فعال‌سازی مدل‌های امبدینگ راه‌دور. اگر True باشد، باید یک مدل امبدینگ را با دستور `dbgpt start worker --worker_type text2vec --model_name xxx --model_path xxx` اجرا کنید"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:295
+msgid ""
+"Whether to enable remote rerank models. If it is True, you need to start a "
+"rerank model through `dbgpt start worker --worker_type text2vec --rerank --"
+"model_name xxx --model_path xxx`"
+msgstr "فعال‌سازی مدل‌های بازرتبه‌بندی (rerank) راه‌دور. اگر True باشد، باید یک مدل rerank را با دستور `dbgpt start worker --worker_type text2vec --rerank --model_name xxx --model_path xxx` اجرا کنید"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:303
+msgid "The directories to search awel files, split by `,`"
+msgstr "دایرکتوری‌های جست‌وجوی فایل‌های AWEL؛ با `,` جدا می‌شوند"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:307
+msgid "Whether to use the new web UI, default is True"
+msgstr "استفاده از رابط وب جدید؛ مقدار پیش‌فرض True است"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:311
+msgid "Model cache configuration"
+msgstr "پیکربندی کش مدل"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:316
+msgid "The max sequence length of the embedding model, default is 512"
+msgstr "حداکثر طول دنباله مدل امبدینگ؛ مقدار پیش‌فرض 512 است"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:327
+msgid "Web service configuration"
+msgstr "پیکربندی سرویس وب"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:331
+msgid "Model service configuration"
+msgstr "پیکربندی سرویس مدل"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:343
+msgid ""
+"Configuration hooks, which will be executed before the configuration loading"
+msgstr "هوک‌های پیکربندی که پیش از بارگذاری پیکربندی اجرا می‌شوند"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:352
+msgid "System configuration"
+msgstr "پیکربندی سامانه"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:359
+msgid "Model deployment configuration"
+msgstr "پیکربندی استقرار مدل"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:365
+msgid "Serve configuration"
+msgstr "پیکربندی سرویس‌دهی"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:370
+msgid "Rag Knowledge Parameters"
+msgstr "پارامترهای دانش RAG"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:379
+msgid "Global tracer configuration"
+msgstr "پیکربندی سراسری ردیاب"
+
+#: ../packages/dbgpt-app/src/dbgpt_app/config.py:385
+msgid "Logging configuration"
+msgstr "پیکربندی لاگ‌گیری"

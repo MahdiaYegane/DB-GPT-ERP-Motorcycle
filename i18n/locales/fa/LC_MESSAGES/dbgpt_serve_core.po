@@ -1,0 +1,69 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 00:06+0800\n"
+"PO-Revision-Date: 2025-02-23 13:40+0800\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:19
+msgid "API keys for the endpoint, if None, allow all"
+msgstr "کلیدهای API برای نقطه پایانی؛ اگر None باشد، همه مجاز هستند."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:67
+msgid "The number of start rounds to keep in memory"
+msgstr "تعداد دورهای آغازین که در حافظه نگه داشته می‌شوند"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:71
+msgid "The number of end rounds to keep in memory"
+msgstr "تعداد دورهای پایانی که در حافظه نگه داشته می‌شوند"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:85
+msgid "The max token limit. Default is 100k"
+msgstr "حداکثر سقف توکن. پیش‌فرض 100k است."
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:96
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:131
+msgid "The top k for LLM generation"
+msgstr "پارامتر top-k برای تولید LLM"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:100
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:135
+msgid "The top p for LLM generation"
+msgstr "پارامتر top-p برای تولید LLM"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:104
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:139
+msgid "The temperature for LLM generation"
+msgstr "پارامتر دما (temperature) برای تولید LLM"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:108
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:143
+msgid "The max new tokens for LLM generation"
+msgstr "حداکثر توکن‌های جدید برای تولید LLM"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:111
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:146
+msgid "The name of your app"
+msgstr "نام برنامه شما"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:114
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:149
+msgid "The memory configuration"
+msgstr "پیکربندی حافظه"
+
+#: ../packages/dbgpt-serve/src/dbgpt_serve/core/config.py:154
+msgid "The configs for specific app"
+msgstr "پیکربندی‌های مربوط به برنامه خاص"

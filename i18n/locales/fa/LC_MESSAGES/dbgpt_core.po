@@ -1,0 +1,1029 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-19 07:51+0800\n"
+"PO-Revision-Date: 2025-02-23 13:40+0800\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:135
+msgid "Dict Http Body"
+msgstr "بدنه HTTP دیکشنری"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:139
+msgid "Parse the request body as a dict or response body as a dict"
+msgstr "تجزیه بدنه درخواست به‌صورت دیکشنری یا بدنه پاسخ به‌صورت دیکشنری"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:165
+msgid "String Http Body"
+msgstr "بدنه HTTP رشته‌ای"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:169
+msgid "Parse the request body as a string or response body as string"
+msgstr "تجزیه بدنه درخواست به‌صورت رشته یا بدنه پاسخ به‌صورت رشته"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:195
+msgid "Request Http Body"
+msgstr "بدنه HTTP درخواست"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:199
+msgid "Parse the request body as a starlette Request"
+msgstr "تجزیه بدنه درخواست به‌صورت درخواست Starlette"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:227
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:110
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:225
+msgid "Common LLM Http Request Body"
+msgstr "بدنه رایج درخواست HTTP مدل زبانی (LLM)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:231
+msgid "Parse the request body as a common LLM http body"
+msgstr "تجزیه بدنه درخواست به‌صورت بدنه رایج HTTP مدل زبانی (LLM)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:307
+msgid "Common LLM Http Response Body"
+msgstr "بدنه رایج پاسخ HTTP مدل زبانی (LLM)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:311
+msgid "Parse the response body as a common LLM http body"
+msgstr "تجزیه بدنه پاسخ به‌صورت بدنه رایج HTTP مدل زبانی (LLM)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:759
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:991
+msgid "API Endpoint"
+msgstr "نقطه پایانی API"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:759
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:996
+msgid "The API endpoint"
+msgstr "نقطه پایانی API"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:762
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:774
+msgid "Http Methods"
+msgstr "متدهای HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:767
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:779
+msgid "The methods of the API endpoint"
+msgstr "متدهای نقطه پایانی API"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:769
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:783
+msgid "HTTP Method PUT"
+msgstr "متد PUT در HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:770
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:784
+msgid "HTTP Method POST"
+msgstr "متد POST در HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:781
+msgid "HTTP Method GET"
+msgstr "متد GET در HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:782
+msgid "HTTP Method DELETE"
+msgstr "متد DELETE در HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:788
+msgid "Streaming Response"
+msgstr "پاسخ جریانی (streaming)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:793
+msgid "Whether the response is streaming"
+msgstr "جریانی بودن یا نبودن پاسخ"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:796
+msgid "Http Response Body"
+msgstr "بدنه پاسخ HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:801
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1079
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1130
+msgid "The response body of the API endpoint"
+msgstr "بدنه پاسخ نقطه پایانی API"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:805
+msgid "Response Media Type"
+msgstr "نوع رسانه پاسخ"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:810
+msgid "The response media type"
+msgstr "نوع رسانه پاسخ"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:813
+msgid "Http Status Code"
+msgstr "کد وضعیت HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:818
+msgid "The http status code"
+msgstr "کد وضعیت HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:829
+msgid "Dict Http Trigger"
+msgstr "محرک (trigger) HTTP دیکشنری"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:834
+msgid ""
+"Trigger your workflow by http request, and parse the request body as a dict"
+msgstr "راه‌اندازی گردش‌کار با درخواست HTTP و تجزیه بدنه درخواست به‌صورت دیکشنری"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:840
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:899
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:970
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1119
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1176
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1225
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:42
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:98
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:97
+msgid "Request Body"
+msgstr "بدنه درخواست"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:843
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1122
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1179
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1228
+msgid "The request body of the API endpoint"
+msgstr "بدنه درخواست نقطه پایانی API"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:888
+msgid "String Http Trigger"
+msgstr "محرک HTTP رشته‌ای"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:893
+msgid ""
+"Trigger your workflow by http request, and parse the request body as a string"
+msgstr "راه‌اندازی گردش‌کار با درخواست HTTP و تجزیه بدنه درخواست به‌صورت رشته"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:903
+msgid "The request body of the API endpoint, parse as a json string"
+msgstr "بدنه درخواست نقطه پایانی API؛ تجزیه به‌صورت رشته JSON"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:959
+msgid "Common LLM Http Trigger"
+msgstr "محرک رایج HTTP مدل زبانی (LLM)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:964
+msgid ""
+"Trigger your workflow by http request, and parse the request body as a "
+"common LLM http body"
+msgstr "راه‌اندازی گردش‌کار با درخواست HTTP و تجزیه بدنه درخواست به‌صورت بدنه رایج HTTP مدل زبانی (LLM)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:974
+msgid "The request body of the API endpoint, parse as a common LLM http body"
+msgstr "بدنه درخواست نقطه پایانی API؛ تجزیه به‌صورت بدنه رایج HTTP مدل زبانی (LLM)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:979
+msgid "Request String Messages"
+msgstr "پیام‌های رشته‌ای درخواست"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:983
+msgid ""
+"The request string messages of the API endpoint, parsed from 'messages' "
+"field of the request body"
+msgstr "پیام‌های رشته‌ای درخواست نقطه پایانی API که از فیلد 'messages' بدنه درخواست تجزیه می‌شود"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1036
+msgid "Example Http Response"
+msgstr "پاسخ HTTP نمونه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1040
+msgid "Example Http Request"
+msgstr "درخواست HTTP نمونه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1062
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1082
+msgid "Example Http Hello Operator"
+msgstr "عملگر نمونه سلام (Hello) در HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1068
+msgid "Http Request Body"
+msgstr "بدنه درخواست HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1071
+msgid "The request body of the API endpoint(Dict[str, Any])"
+msgstr "بدنه درخواست نقطه پایانی API (Dict[str, Any])"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1076
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1127
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:106
+msgid "Response Body"
+msgstr "بدنه پاسخ"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1102
+msgid "Request Body To Dict Operator"
+msgstr "عملگر تبدیل بدنه درخواست به دیکشنری"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1107
+msgid "Prefix Key"
+msgstr "کلید پیشوند"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1113
+msgid "The prefix key of the dict, link 'message' or 'extra.info'"
+msgstr "کلید پیشوند دیکشنری؛ مانند 'message' یا 'extra.info'"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1161
+msgid "User Input Parsed Operator"
+msgstr "عملگر تجزیه ورودی کاربر"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1166
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1215
+msgid "Key"
+msgstr "کلید"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1171
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1220
+msgid "The key of the dict, link 'user_input'"
+msgstr "کلید دیکشنری؛ مانند 'user_input'"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1184
+msgid "User Input Dict"
+msgstr "دیکشنری ورودی کاربر"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1187
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1236
+msgid "The user input dict of the API endpoint"
+msgstr "دیکشنری ورودی کاربر نقطه پایانی API"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1191
+msgid ""
+"User input parsed operator, parse the user input from request body and "
+"return as a dict"
+msgstr "عملگر تجزیه ورودی کاربر؛ ورودی کاربر را از بدنه درخواست تجزیه کرده و به‌صورت دیکشنری برمی‌گرداند"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1210
+msgid "Request Body Parsed To String Operator"
+msgstr "عملگر تجزیه بدنه درخواست به رشته"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1233
+msgid "User Input String"
+msgstr "رشته ورودی کاربر"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/http_trigger.py:1240
+msgid ""
+"User input parsed operator, parse the user input from request body and "
+"return as a string"
+msgstr "عملگر تجزیه ورودی کاربر؛ ورودی کاربر را از بدنه درخواست تجزیه کرده و به‌صورت رشته برمی‌گرداند"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:31
+msgid "Request Http Trigger"
+msgstr "محرک درخواست HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:36
+msgid ""
+"Trigger your workflow by http request, and parse the request body as a "
+"starlette Request"
+msgstr "راه‌اندازی گردش‌کار با درخواست HTTP و تجزیه بدنه درخواست به‌صورت درخواست Starlette"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:46
+msgid "The request body of the API endpoint, parse as a starlette Request"
+msgstr "بدنه درخواست نقطه پایانی API؛ تجزیه به‌صورت درخواست Starlette"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:92
+msgid "HTTP Sender"
+msgstr "فرستنده HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:95
+msgid "Send a HTTP request to a specified endpoint"
+msgstr "ارسال یک درخواست HTTP به نقطه پایانی مشخص‌شده"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:101
+msgid "The request body to send"
+msgstr "بدنه درخواستی که باید ارسال شود"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:109
+msgid "The response body of the HTTP request"
+msgstr "بدنه پاسخ درخواست HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:114
+msgid "HTTP Address"
+msgstr "نشانی HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:115
+msgid "address"
+msgstr "نشانی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:117
+msgid "The address to send the HTTP request to"
+msgstr "نشانی مقصد ارسال درخواست HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:122
+msgid "Timeout"
+msgstr "مهلت (timeout)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:127
+msgid "The timeout of the HTTP request in seconds"
+msgstr "مهلت درخواست HTTP بر حسب ثانیه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:130
+msgid "Token"
+msgstr "توکن"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:135
+msgid "The token to use for the HTTP request"
+msgstr "توکن مورد استفاده برای درخواست HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:138
+msgid "Cookies"
+msgstr "کوکی‌ها"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/awel/trigger/ext_http_trigger.py:143
+msgid "The cookies to use for the HTTP request"
+msgstr "کوکی‌های مورد استفاده برای درخواست HTTP"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:42  
+msgid "Conversation Composer Operator"  
+msgstr "عملگر نگارنده (composer) مکالمه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:46  
+msgid ""  
+"A composer operator for conversation.\n"  
+"Including chat history handling, prompt composing, etc. Output is "  
+"ModelRequest."  
+msgstr ""
+"عملگر نگارنده برای مکالمه.\n"
+"شامل مدیریت تاریخچه گفت‌وگو، نگارش پرامپت و موارد مشابه. خروجی ModelRequest است."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:51  
+msgid "Prompt Template"  
+msgstr "قالب پرامپت"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:54  
+msgid "The prompt template for the conversation."  
+msgstr "قالب پرامپت مکالمه."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:57  
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:215  
+msgid "Human Message Key"  
+msgstr "کلید پیام انسانی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:62  
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:220  
+msgid "The key for human message in the prompt format dict."  
+msgstr "کلید پیام انسانی در دیکشنری قالب پرامپت."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:65  
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:356  
+msgid "History Key"  
+msgstr "کلید تاریخچه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:71  
+msgid ""  
+"The chat history key, with chat history message pass to prompt template."  
+msgstr "کلید تاریخچه گفت‌وگو که پیام‌های تاریخچه را به قالب پرامپت منتقل می‌کند."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:76  
+msgid "Keep Start Rounds"  
+msgstr "حفظ دورهای ابتدایی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:81  
+msgid "The start rounds to keep in the chat history."  
+msgstr "دورهای ابتدایی که در تاریخچه گفت‌وگو حفظ می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:84  
+msgid "Keep End Rounds"  
+msgstr "حفظ دورهای پایانی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:89  
+msgid "The end rounds to keep in the chat history."  
+msgstr "دورهای پایانی که در تاریخچه گفت‌وگو حفظ می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:92  
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:130  
+msgid "Conversation Storage"  
+msgstr "ذخیره‌سازی مکالمه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:97  
+msgid "The conversation storage(Not include message detail)."  
+msgstr "ذخیره‌سازی مکالمه (بدون جزئیات پیام‌ها)."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:100  
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:141  
+msgid "Message Storage"  
+msgstr "ذخیره‌سازی پیام"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:105  
+msgid "The message storage."  
+msgstr "ذخیره‌سازی پیام."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:113  
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:228  
+msgid "The common LLM http request body."  
+msgstr "بدنه رایج درخواست HTTP مدل زبانی (LLM)."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:118
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:105
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:208
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:223
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:370
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:154
+msgid "Model Request"
+msgstr "درخواست مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:121
+msgid "The model request with chat history prompt."
+msgstr "درخواست مدل همراه با پرامپت تاریخچه گفت‌وگو."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:207
+msgid "Prompt Format Dict Builder Operator"
+msgstr "عملگر سازنده دیکشنری قالب پرامپت"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:211
+msgid ""
+"A operator to build prompt format dict from common LLM http request body."
+msgstr "عملگری برای ساخت دیکشنری قالب پرامپت از بدنه رایج درخواست HTTP مدل زبانی (LLM)."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:233
+msgid "Prompt Format Dict"
+msgstr "دیکشنری قالب پرامپت"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/composer_operator.py:236
+msgid "The prompt format dict."
+msgstr "دیکشنری قالب پرامپت."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:14
+msgid "Merge String to Dict Operator"
+msgstr "عملگر ادغام رشته در دیکشنری"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:18
+msgid ""
+"Merge two strings to a dict, the fist string which is the value from first "
+"upstream is the value of the key `first_key`, the second string which is the "
+"value from second upstream is the value of the key `second_key`."
+msgstr "ادغام دو رشته در یک دیکشنری؛ رشته نخست (مقدار ورودی از بالادست اول) مقدار کلید `first_key` و رشته دوم (مقدار ورودی از بالادست دوم) مقدار کلید `second_key` خواهد بود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:24
+msgid "First Key"
+msgstr "کلید اول"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:29
+msgid "The key for the first string, default is `user_input`."
+msgstr "کلید رشته اول؛ مقدار پیش‌فرض `user_input` است."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:32
+msgid "Second Key"
+msgstr "کلید دوم"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:37
+msgid "The key for the second string, default is `context`."
+msgstr "کلید رشته دوم؛ مقدار پیش‌فرض `context` است."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:42
+msgid "First String"
+msgstr "رشته اول"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:45
+msgid "The first string from first upstream."
+msgstr "رشته اول از بالادست اول."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:48
+msgid "Second String"
+msgstr "رشته دوم"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:51
+msgid "The second string from second upstream."
+msgstr "رشته دوم از بالادست دوم."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:56
+msgid "Output"
+msgstr "خروجی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/operators/flow/dict_operator.py:60
+msgid "The merged dict. example: {'user_input': 'first', 'context': 'second'}."
+msgstr "دیکشنری ادغام‌شده. مثال: {'user_input': 'first', 'context': 'second'}."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:38
+msgid "Base Output Operator"
+msgstr "عملگر خروجی پایه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:42
+msgid "The base LLM out parse."
+msgstr "تجزیه خروجی پایه مدل زبانی (LLM)."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:46
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:55
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:308
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:349
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:456
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:512
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:557
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:608
+msgid "Model Output"
+msgstr "خروجی مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:50
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:311
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:352
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:507
+msgid "The model output of upstream."
+msgstr "خروجی مدل بالادست."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:59
+msgid "The model output after parsing."
+msgstr "خروجی مدل پس از تجزیه."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:301
+msgid "SQL Output Parser"
+msgstr "تجزیه‌کننده خروجی SQL"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:304
+msgid "Parse the SQL output of an LLM call."
+msgstr "تجزیه خروجی SQL فراخوانی مدل زبانی (LLM)."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:316
+msgid "Dict SQL Output"
+msgstr "خروجی SQL دیکشنری"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:319
+msgid "The dict output after parsing."
+msgstr "خروجی دیکشنری پس از تجزیه."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:340
+msgid "SQL List Output Parser"
+msgstr "تجزیه‌کننده خروجی فهرست SQL"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:344
+msgid "Parse the SQL list output of an LLM call, mostly used for dashboard."
+msgstr "تجزیه خروجی فهرست SQL فراخوانی مدل زبانی (LLM)؛ بیشتر برای داشبورد استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:357
+msgid "List SQL Output"
+msgstr "خروجی SQL فهرستی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/output_parser.py:361
+msgid "The list output after parsing."
+msgstr "خروجی فهرست پس از تجزیه."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/storage.py:391
+msgid "Memory Storage"
+msgstr "ذخیره‌سازی در حافظه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/storage.py:394
+msgid "Save your data in memory."
+msgstr "داده‌های خود را در حافظه ذخیره کنید."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/storage.py:397
+msgid "Serializer"
+msgstr "سریالایزر"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/storage.py:403
+msgid ""
+"The serializer for serializing the data. If not set, the default JSON "
+"serializer will be used."
+msgstr "سریالایزر برای سریالایز کردن داده‌ها. اگر تنظیم نشود، از سریالایزر پیش‌فرض JSON استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:23
+msgid "The name of the model."
+msgstr "نام مدل."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:31
+msgid ""
+"The provider of the model. If model is deployed in local, this is the "
+"inference type. If model is deployed in third-party service, this is "
+"platform name('proxy/<platform>')"
+msgstr "ارائه‌دهنده مدل. اگر مدل به‌صورت محلی مستقر شده باشد، همان نوع استنتاج است. اگر مدل روی سرویس شخص ثالث مستقر شده باشد، نام پلتفرم است ('proxy/<platform>')"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:47
+msgid "Show verbose output."
+msgstr "نمایش خروجی پرجزئیات (verbose)."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:50
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:145
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:163
+msgid "Model concurrency limit"
+msgstr "محدودیت همروندی مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:83
+msgid ""
+"The real model name to pass to the provider, default is None. If backend is "
+"None, use name as the real model name."
+msgstr "نام واقعی مدل که به ارائه‌دهنده ارسال می‌شود؛ مقدار پیش‌فرض None است. اگر backend برابر None باشد، از name به‌عنوان نام واقعی مدل استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:93
+msgid ""
+"Prompt template. If None, the prompt template is automatically determined "
+"from model. Just for local deployment."
+msgstr "قالب پرامپت. اگر None باشد، قالب پرامپت به‌طور خودکار از روی مدل تعیین می‌شود. فقط برای استقرار محلی."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:102
+msgid ""
+"The context length of the model. If None, it is automatically determined "
+"from model."
+msgstr "طول زمینه (context) مدل. اگر None باشد، به‌طور خودکار از روی مدل تعیین می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:201
+msgid ""
+"Whether to load the model in 8 bits(LLM.int8() algorithm), default is False."
+msgstr "بارگذاری مدل به‌صورت ۸ بیتی (الگوریتم LLM.int8())؛ مقدار پیش‌فرض False است."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:209
+msgid "Whether to load the model in 4 bits, default is False."
+msgstr "بارگذاری مدل به‌صورت ۴ بیتی؛ مقدار پیش‌فرض False است."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:262
+msgid "Whether to load the model in 8 bits(LLM.int8() algorithm)."
+msgstr "بارگذاری مدل به‌صورت ۸ بیتی (الگوریتم LLM.int8())."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:270
+msgid ""
+"8-bit models can offload weights between the CPU and GPU to support fitting "
+"very large models into memory. The weights dispatched to the CPU are "
+"actually stored in float32, and aren’t converted to 8-bit. "
+msgstr "مدل‌های ۸ بیتی می‌توانند وزن‌ها را میان CPU و GPU جابه‌جا کنند تا مدل‌های بسیار بزرگ در حافظه جای گیرند. وزن‌های منتقل‌شده به CPU در واقع با فرمت float32 ذخیره می‌شوند و به ۸ بیت تبدیل نمی‌شوند. "
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:280
+msgid ""
+"An “outlier” is a hidden state value greater than a certain threshold, and "
+"these values are computed in fp16. While the values are usually normally "
+"distributed ([-3.5, 3.5]), this distribution can be very different for large "
+"models ([-60, 6] or [6, 60]). 8-bit quantization works well for values ~5, "
+"but beyond that, there is a significant performance penalty. A good default "
+"threshold value is 6, but a lower threshold may be needed for more unstable "
+"models (small models or finetuning)."
+msgstr "«outlier» مقدار حالت پنهان بزرگ‌تر از آستانه مشخصی است و این مقادیر با فرمت fp16 محاسبه می‌شوند. اگرچه این مقادیر معمولاً توزیع نرمال دارند ([-3.5, 3.5])، این توزیع برای مدل‌های بزرگ می‌تواند بسیار متفاوت باشد ([-60, 6] یا [6, 60]). کوانتیزاسیون ۸ بیتی برای مقادیر حدود ۵ خوب عمل می‌کند، اما فراتر از آن افت عملکرد چشمگیری دارد. مقدار آستانه پیش‌فرض مناسب ۶ است، اما برای مدل‌های ناپایدارتر (مدل‌های کوچک یا fine-tuning‌شده) ممکن است آستانه کمتری لازم باشد."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:295
+msgid ""
+"An explicit list of the modules that we do not want to convert in 8-bit. "
+"This is useful for models such as Jukebox that has several heads in "
+"different places and not necessarily at the last position. For example for "
+"`CausalLM` models, the last `lm_head` is kept in its original `dtype`"
+msgstr "فهرست صریح ماژول‌هایی که نمی‌خواهیم به ۸ بیت تبدیل شوند. این برای مدل‌هایی مانند Jukebox که چندین head در مکان‌های مختلف دارند و لزوماً در موقعیت آخر نیستند مفید است. برای مثال در مدل‌های `CausalLM`، آخرین `lm_head` در `dtype` اصلی خود باقی می‌ماند"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:328
+msgid "Whether to load the model in 4 bits."
+msgstr "بارگذاری مدل به‌صورت ۴ بیتی."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:336
+msgid ""
+"To speedup computation, you can change the data type from float32 (the "
+"default value) to bfloat16"
+msgstr "برای تسریع محاسبات، می‌توانید نوع داده را از float32 (مقدار پیش‌فرض) به bfloat16 تغییر دهید"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:351
+msgid ""
+"Quantization datatypes, `fp4` (four bit float) and `nf4` (normal four bit "
+"float), only valid when load_4bit=True"
+msgstr "نوع‌های داده کوانتیزاسیون، `fp4` (اعشاری چهاربیتی) و `nf4` (اعشاری چهاربیتی نرمال)؛ فقط وقتی معتبر است که load_4bit=True باشد"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:360
+msgid ""
+"Nested quantization is a technique that can save additional memory at no "
+"additional performance cost. This feature performs a second quantization of "
+"the already quantized weights to save an additional 0.4 bits/parameter. "
+msgstr "کوانتیزاسیون تودرتو (nested) تکنیکی است که می‌تواند بدون هزینه عملکرد اضافه، حافظه بیشتری ذخیره کند. این قابلیت روی وزن‌های از پیش کوانتیزه‌شده یک کوانتیزاسیون دوم انجام می‌دهد تا به‌ازای هر پارامتر ۰٫۴ بیت دیگر صرفه‌جویی شود. "
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:403
+msgid "The host IP address to bind to."
+msgstr "نشانی IP میزبانی که باید به آن bind شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:406
+msgid "The port number to bind to."
+msgstr "شماره پورتی که باید به آن bind شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:409
+msgid "Run the server as a daemon."
+msgstr "اجرای سرور به‌صورت دیمون (daemon)."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:414
+msgid "Logging configuration"
+msgstr "پیکربندی لاگ‌گیری"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/parameter.py:420
+msgid "Tracer configuration"
+msgstr "پیکربندی ردیاب"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:53
+msgid "Build Model Request"
+msgstr "ساخت درخواست مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:56
+msgid "Build the model request from the http request body."
+msgstr "ساخت درخواست مدل از بدنه درخواست HTTP."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:59
+msgid "Default Model Name"
+msgstr "نام پیش‌فرض مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:64
+msgid "The model name of the model request."
+msgstr "نام مدل در درخواست مدل."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:67
+msgid "Temperature"
+msgstr "دما (temperature)"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:72
+msgid "The temperature of the model request."
+msgstr "پارامتر دمای درخواست مدل."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:79
+msgid "Max New Tokens"
+msgstr "حداکثر توکن‌های جدید"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:84
+msgid "The max new tokens of the model request."
+msgstr "حداکثر توکن‌های جدید درخواست مدل."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:87
+msgid "Context Length"
+msgstr "طول زمینه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:92
+msgid "The context length of the model request."
+msgstr "طول زمینه درخواست مدل."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:100
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:373
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:459
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:552
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:560
+msgid "The input value of the operator."
+msgstr "مقدار ورودی عملگر."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:108
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:226
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:467
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:612
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:657
+msgid "The output value of the operator."
+msgstr "مقدار خروجی عملگر."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:201
+msgid "Merge Model Request Messages"
+msgstr "ادغام پیام‌های درخواست مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:204
+msgid "Merge the model request from the input value."
+msgstr "ادغام درخواست مدل از روی مقدار ورودی."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:211
+msgid "The model request of upstream."
+msgstr "درخواست مدل بالادست."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:214
+msgid "Model messages"
+msgstr "پیام‌های مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:217
+msgid "The model messages of upstream."
+msgstr "پیام‌های مدل بالادست."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:362
+msgid "LLM Branch Operator"
+msgstr "عملگر انشعاب LLM"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:366
+msgid "Branch the workflow based on the stream flag of the request."
+msgstr "انشعاب گردش‌کار بر اساس پرچم جریانی (stream) درخواست."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:378
+msgid "Streaming Model Request"
+msgstr "درخواست جریانی مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:381
+msgid "The streaming request, to streaming Operator."
+msgstr "درخواست جریانی؛ به عملگر جریانی ارسال می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:384
+msgid "Non-Streaming Model Request"
+msgstr "درخواست غیرجریانی مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:387
+msgid "The non-streaming request, to non-streaming Operator."
+msgstr "درخواست غیرجریانی؛ به عملگر غیرجریانی ارسال می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:449
+msgid "Map Model Output to Common Response Body"
+msgstr "نگاشت خروجی مدل به بدنه رایج پاسخ"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:452
+msgid "Map the model output to the common response body."
+msgstr "نگاشت خروجی مدل به بدنه رایج پاسخ."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:464
+msgid "Common Response Body"
+msgstr "بدنه رایج پاسخ"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:495
+msgid "Common Streaming Output Operator"
+msgstr "عملگر رایج خروجی جریانی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:499
+msgid "The common streaming LLM operator, for chat flow."
+msgstr "عملگر رایج LLM جریانی برای جریان گفت‌وگو."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:503
+msgid "Upstream Model Output"
+msgstr "خروجی مدل بالادست"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:517
+msgid "The model output after transform to common stream format"
+msgstr "خروجی مدل پس از تبدیل به فرمت رایج جریانی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:542
+msgid "Map String to ModelOutput"
+msgstr "نگاشت رشته به ModelOutput"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:545
+msgid "Map String to ModelOutput."
+msgstr "نگاشت رشته به ModelOutput."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:549
+msgid "String"
+msgstr "رشته"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:585
+msgid "LLM Branch Join Operator"
+msgstr "عملگر ادغام انشعاب LLM"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:589
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:634
+msgid "Just keep the first non-empty output."
+msgstr "فقط نخستین خروجی غیرخالی حفظ می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:593
+msgid "Streaming Model Output"
+msgstr "خروجی جریانی مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:597
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:642
+msgid "The streaming output."
+msgstr "خروجی جریانی."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:600
+msgid "Non-Streaming Model Output"
+msgstr "خروجی غیرجریانی مدل"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:603
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:648
+msgid "The non-streaming output."
+msgstr "خروجی غیرجریانی."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:630
+msgid "String Branch Join Operator"
+msgstr "عملگر ادغام انشعاب رشته"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:638
+msgid "Streaming String Output"
+msgstr "خروجی رشته‌ای جریانی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:645
+msgid "Non-Streaming String Output"
+msgstr "خروجی رشته‌ای غیرجریانی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/llm_operator.py:653
+msgid "String Output"
+msgstr "خروجی رشته‌ای"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:124
+msgid "Chat History Load Operator"
+msgstr "عملگر بارگذاری تاریخچه گفت‌وگو"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:127
+msgid "The operator to load chat history from storage."
+msgstr "عملگر بارگذاری تاریخچه گفت‌وگو از ذخیره‌سازی."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:136
+msgid ""
+"The conversation storage, store the conversation items(Not include message "
+"items). If None, we will use InMemoryStorage."
+msgstr "ذخیره‌سازی مکالمه که آیتم‌های مکالمه را ذخیره می‌کند (بدون آیتم‌های پیام). اگر None باشد، از InMemoryStorage استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:147
+msgid ""
+"The message storage, store the messages of one conversation. If None, we "
+"will use InMemoryStorage."
+msgstr "ذخیره‌سازی پیام که پیام‌های یک مکالمه را ذخیره می‌کند. اگر None باشد، از InMemoryStorage استفاده می‌شود."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:157
+msgid "The model request."
+msgstr "درخواست مدل."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:162
+msgid "Stored Messages"
+msgstr "پیام‌های ذخیره‌شده"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/message_operator.py:165
+msgid "The messages stored in the storage."
+msgstr "پیام‌های ذخیره‌شده در ذخیره‌سازی."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:37
+msgid "Common Chat Prompt Template"
+msgstr "قالب رایج پرامپت گفت‌وگو"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:40
+msgid "The operator to build the prompt with static prompt."
+msgstr "عملگر ساخت پرامپت با پرامپت ایستا."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:44
+msgid "System Message"
+msgstr "پیام سیستمی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:49
+msgid "The system message."
+msgstr "پیام سیستمی."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:53
+msgid "Message placeholder"
+msgstr "نگه‌دارنده (placeholder) پیام"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:58
+msgid "The chat history message placeholder."
+msgstr "نگه‌دارنده پیام تاریخچه گفت‌وگو."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:61
+msgid "Human Message"
+msgstr "پیام انسانی"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:67
+msgid "The human message."
+msgstr "پیام انسانی."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:257
+msgid "Prompt Builder Operator"
+msgstr "عملگر سازنده پرامپت"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:259
+msgid "Build messages from prompt template."
+msgstr "ساخت پیام‌ها از قالب پرامپت."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:263
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:350
+msgid "Chat Prompt Template"
+msgstr "قالب پرامپت گفت‌وگو"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:266
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:353
+msgid "The chat prompt template."
+msgstr "قالب پرامپت گفت‌وگو."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:271
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:381
+msgid "Prompt Input Dict"
+msgstr "دیکشنری ورودی پرامپت"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:274
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:384
+msgid "The prompt dict."
+msgstr "دیکشنری پرامپت."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:279
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:389
+msgid "Formatted Messages"
+msgstr "پیام‌های قالب‌بندی‌شده"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:283
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:393
+msgid "The formatted messages."
+msgstr "پیام‌های قالب‌بندی‌شده."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:343
+msgid "History Prompt Builder Operator"
+msgstr "عملگر سازنده پرامپت تاریخچه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:345
+msgid "Build messages from prompt template and chat history."
+msgstr "ساخت پیام‌ها از قالب پرامپت و تاریخچه گفت‌وگو."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:361
+msgid "The key of history in prompt dict."
+msgstr "کلید تاریخچه در دیکشنری پرامپت."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:364
+msgid "String History"
+msgstr "تاریخچه رشته‌ای"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:369
+msgid "Whether to convert the history to string."
+msgstr "تبدیل تاریخچه به رشته."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:374
+msgid "History"
+msgstr "تاریخچه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/operators/prompt_operator.py:378
+msgid "The history."
+msgstr "تاریخچه."
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/llm.py:137
+msgid "The media data"
+msgstr "داده رسانه"
+
+#: ../packages/dbgpt-core/src/dbgpt/core/interface/llm.py:237
+msgid "The media object"
+msgstr "شیء رسانه"

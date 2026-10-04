@@ -1,0 +1,78 @@
+# Chinese translations for PACKAGE package
+# PACKAGE 软件包的简体中文翻译.
+# Copyright (C) 2025 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# Automatically generated, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-23 13:40+0800\n"
+"PO-Revision-Date: 2026-09-28 00:00+0000\n"
+"Last-Translator: opencode\n"
+"Language-Team: Persian\n"
+"Language: fa\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:45
+msgid "The path of the AWEL flow"
+msgstr "مسیر جریان AWEL"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:63
+msgid "The name of the AWEL flow"
+msgstr "نام جریان AWEL"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:70
+msgid "The uid of the AWEL flow"
+msgstr "شناسه یکتای جریان AWEL"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:88
+msgid "The messages to run AWEL flow"
+msgstr "پیام‌های اجرای جریان AWEL"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:95
+msgid "The model name of AWEL flow"
+msgstr "نام مدل جریان AWEL"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:104
+msgid "Whether use stream mode to run AWEL flow"
+msgstr "مشخص می‌کند که آیا جریان AWEL در حالت جریانی اجرا شود یا خیر"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:112
+msgid "The temperature to run AWEL flow"
+msgstr "پارامتر دما برای اجرای جریان AWEL"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:119
+msgid "The max new tokens to run AWEL flow"
+msgstr "حداکثر توکن‌های جدید برای اجرای جریان AWEL"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:126
+msgid "The conversation id of the AWEL flow"
+msgstr "شناسه گفت‌وگوی جریان AWEL"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:134
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:199
+msgid "The json data to run AWEL flow, if set, will overwrite other options"
+msgstr ""
+"داده JSON برای اجرای جریان AWEL؛ اگر تنظیم شود، سایر گزینه‌ها را "
+"بازنویسی می‌کند"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:142
+msgid "The extra json data to run AWEL flow."
+msgstr "داده JSON اضافی برای اجرای جریان AWEL."
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:151
+msgid "Whether use interactive mode to run AWEL flow"
+msgstr "مشخص می‌کند که آیا جریان AWEL در حالت تعاملی اجرا شود یا خیر"
+
+#: ../packages/dbgpt-client/src/dbgpt_client/_cli.py:207
+msgid ""
+"The output key of the AWEL flow, if set, it will try to get the output by "
+"the key"
+msgstr ""
+"کلید خروجی جریان AWEL؛ اگر تنظیم شود، تلاش می‌کند خروجی را با آن کلید "
+"دریافت کند"
