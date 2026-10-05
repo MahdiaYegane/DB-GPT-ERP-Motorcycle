@@ -185,7 +185,7 @@ class AIWrapper:
         prompt: str,
         llm_model: Optional[str] = None,
         max_new_tokens: int = 2000,
-        temperature: float = 0.3,
+        temperature: float = 0,
         conv_id: Optional[str] = None,
     ) -> str:
         """Generate text from a single prompt.

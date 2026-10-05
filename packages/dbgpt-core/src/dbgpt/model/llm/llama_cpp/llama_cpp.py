@@ -129,7 +129,7 @@ class LlamaCppModel:
         completion_chunks = self.model.create_chat_completion(
             messages=messages,
             max_tokens=request.max_new_tokens,
-            temperature=request.temperature or 0.8,
+            temperature=request.temperature or 0,
             top_p=request.top_p or 0.95,
             top_k=top_k,
             repeat_penalty=repetition_penalty,

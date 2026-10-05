@@ -35,7 +35,8 @@ max_parallel_subagents = 1
 # Output cap must leave room for full tool-call argument JSON. Too small a
 # value truncates tool arguments mid-JSON -> empty args -> "No code provided"
 # retry loops. 1500 fits a typical matplotlib script + thought.
-temperature = 0.2
+# temperature = 0 for deterministic, stable answers.
+temperature = 0
 max_new_tokens = 1500
 
 [rag.storage]

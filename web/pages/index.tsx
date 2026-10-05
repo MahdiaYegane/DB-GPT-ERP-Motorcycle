@@ -2070,7 +2070,7 @@ const Playground: NextPage = () => {
       chat_mode: chatMode,
       model_name: model,
       select_param: selectParam,
-      temperature: 0.6,
+      temperature: 0,
       max_new_tokens: 4000,
       ext_info: extInfo,
     };
@@ -2086,7 +2086,7 @@ const Playground: NextPage = () => {
           chat_mode: chatMode,
           model_name: model,
           user_input: finalQuery,
-          temperature: 0.6,
+          temperature: 0,
           max_new_tokens: 4000,
           select_param: selectParam,
           ext_info: extInfo,

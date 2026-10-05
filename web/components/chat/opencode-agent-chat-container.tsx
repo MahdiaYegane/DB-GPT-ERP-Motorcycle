@@ -166,7 +166,7 @@ const OpenCodeAgentChatContainer: React.FC = () => {
         chat_mode: scene || 'chat_agent',
         model_name: model,
         select_param: agent,
-        temperature: 0.2,
+        temperature: 0,
         ...data,
       };
 

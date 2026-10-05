@@ -26,7 +26,7 @@ def huggingface_chat_generate_stream(
     context_len=4096,
 ):
     prompt = params["prompt"]
-    temperature = float(params.get("temperature", 0.7))
+    temperature = float(params.get("temperature", 0))
     top_p = float(params.get("top_p", 1.0))
     echo = params.get("echo", False)
     max_new_tokens = int(params.get("max_new_tokens", 4096))

@@ -2,10 +2,10 @@ $ErrorActionPreference = "Continue"
 chcp 65001 | Out-Null
 $env:PYTHONIOENCODING="utf-8"
 $env:PYTHONUTF8="1"
-$python = "C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT\.venv\Scripts\python.exe"
-$config = "C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT\configs\dbgpt-proxy-ollama-qwen.toml"
-$workdir = "C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT"
-$log = "C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT\logs\dbgpt_std.log"
+$python = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT\.venv\Scripts\python.exe"
+$config = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT\configs\dbgpt-proxy-ollama-qwen.toml"
+$workdir = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT"
+$log = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT\logs\dbgpt_std.log"
 
 Write-Host "Starting DB-GPT with Ollama models..."
 Write-Host "Python: $python"
@@ -20,9 +20,9 @@ Start-Sleep -Seconds 2
 
 # Start using Start-Process detached - launch_dbgpt.py supplies the default
 # start/webserver/--config argv itself (do not regenerate it here).
-$helper = "C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT\launch_dbgpt.py"
-$outLog = "C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT\logs\dbgpt_stdout.log"
-$errLog = "C:\Users\a.mansourpour\Desktop\DB_GPT\DB-GPT\logs\dbgpt_stderr.log"
+$helper = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT\launch_dbgpt.py"
+$outLog = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT\logs\dbgpt_stdout.log"
+$errLog = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT\logs\dbgpt_stderr.log"
 $args = @("-X", "utf8", $helper)
 $proc = Start-Process -FilePath $python -ArgumentList $args -WorkingDirectory $workdir -WindowStyle Hidden -RedirectStandardOutput $outLog -RedirectStandardError $errLog -PassThru
 Write-Host "Started PID $($proc.Id)"

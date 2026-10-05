@@ -87,7 +87,7 @@ async def main():
     llm_client = TongyiLLMClient(api_base=api_base, api_key=api_key, model=model)
 
     context: AgentContext = AgentContext(
-        conv_id="test123", language="zh", temperature=0.5, max_new_tokens=2048
+        conv_id="test123", language="zh", temperature=0, max_new_tokens=2048
     )
     agent_memory = AgentMemory()
     agent_memory.gpts_memory.init(conv_id="test123")

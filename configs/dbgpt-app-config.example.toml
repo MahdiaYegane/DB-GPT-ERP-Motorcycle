@@ -38,11 +38,11 @@ type = "sqlite"
 path = "pilot/meta_data/dbgpt.db"
 
 [app]
-temperature = 0.6
+temperature = 0
 
 [[app.configs]]
 name = "chat_excel"
-temperature = 0.1
+temperature = 0
 duckdb_extensions_dir = []
 force_install = true
 

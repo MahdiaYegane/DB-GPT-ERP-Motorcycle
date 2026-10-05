@@ -16,7 +16,7 @@ class LLMCacheKeyData:
 
     prompt: str
     model_name: str
-    temperature: Optional[float] = 0.7
+    temperature: Optional[float] = 0
     max_new_tokens: Optional[int] = None
     top_p: Optional[float] = 1.0
     # See dbgpt.model.base.ModelType

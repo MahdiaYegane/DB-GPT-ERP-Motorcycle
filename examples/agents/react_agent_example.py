@@ -91,7 +91,7 @@ async def main():
 
     # It is important to set the temperature to a low value to get a better result
     context: AgentContext = AgentContext(
-        conv_id="test456", gpts_app_name="ReAct", temperature=0.01
+        conv_id="test456", gpts_app_name="ReAct", temperature=0
     )
 
     tools = ToolPack([simple_calculator, count_directory_files, Terminate()])

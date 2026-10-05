@@ -478,7 +478,7 @@ class ExampleFlowSliderOperator(MapOperator[float, float]):
         ],
     )
 
-    def __init__(self, default_temperature: float = 0.7, **kwargs):
+    def __init__(self, default_temperature: float = 0, **kwargs):
         super().__init__(**kwargs)
         self.default_temperature = default_temperature
 

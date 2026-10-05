@@ -104,7 +104,7 @@ RESPONSE_FORMAT_SIMPLE = {
 # For example, if you adjust the temperature to 0.5, the model will usually generate
 # text that is more predictable and less creative than if you set the temperature to
 # 1.0.
-PROMPT_TEMPERATURE = 0.5
+PROMPT_TEMPERATURE = 0
 
 prompt = ChatPromptTemplate(
     messages=[

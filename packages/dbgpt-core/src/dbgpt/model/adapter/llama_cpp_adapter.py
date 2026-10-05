@@ -82,7 +82,7 @@ class LlamaServerParameters(LLMDeployModelParameters):
 
     # Model parameters
     temperature: float = field(
-        default=0.8, metadata={"help": _("Sampling temperature for text generation")}
+        default=0, metadata={"help": _("Sampling temperature for text generation")}
     )
 
     seed: int = field(

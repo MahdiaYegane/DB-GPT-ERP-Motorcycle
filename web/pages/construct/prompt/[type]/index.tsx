@@ -490,7 +490,7 @@ const AddOrEditPrompt: React.FC = () => {
                 form={bottomForm}
                 initialValues={{
                   model: model,
-                  temperature: 0.5,
+                  temperature: 0,
                   prompt_language: 'en',
                 }}
               >

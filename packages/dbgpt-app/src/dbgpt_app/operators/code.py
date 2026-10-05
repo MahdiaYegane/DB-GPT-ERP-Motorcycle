@@ -156,7 +156,7 @@ def fn_map(args: dict[str, any]) -> dict[str, any]:
     else:
         human_message = messages[0]
         
-    temperature = float(args.get("temperature") or 0.5)
+    temperature = float(args.get("temperature") or 0)
     max_new_tokens = int(args.get("max_new_tokens") or 2048)
     conv_uid = args.get("conv_uid", "")
     print("Conv uid is: ", conv_uid)
@@ -178,7 +178,7 @@ function fn_map(args) {
     var llm_model = args.model || "chatgpt_proxyllm";
     var messages = args.messages || [];
     var human_message = messages[0];
-    var temperature = parseFloat(args.temperature) || 0.5;
+    var temperature = parseFloat(args.temperature) || 0;
     var max_new_tokens = parseInt(args.max_new_tokens) || 2048;
     var conv_uid = args.conv_uid || "";
     console.log("Conv uid is: ", conv_uid);

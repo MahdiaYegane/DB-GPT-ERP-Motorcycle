@@ -67,7 +67,7 @@ export const ChatContentContext = createContext<ChatContentProps>({
   agent: '',
   currentDialogue: {} as any,
   appInfo: {} as any,
-  temperatureValue: 0.5,
+  temperatureValue: 0,
   maxNewTokensValue: 1024,
   resourceValue: {},
   knowledgeValue: null,

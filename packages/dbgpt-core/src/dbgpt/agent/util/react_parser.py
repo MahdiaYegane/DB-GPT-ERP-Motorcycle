@@ -16,28 +16,68 @@ from dbgpt.vis.tags.vis_thinking import VisThinking
 _SPECIAL_TOKEN_PATTERN = re.compile(r"[<＜][|｜│][^|<>\n｜＜＞]*[|｜│][>＞]")
 
 # DSML-style pseudo tool-call blocks emitted as plain text by some models
-# (e.g. DeepSeek variants): ``<|DSML| calls>`` ... ``<|DSML| invoke
-# name="tool">`` ... ``<|DSML| parameter name="x" string="true">...</|DSML|
-# parameter>`` ... ``</|DSML| invoke>`` ... ``</|DSML| calls>``. Brackets and
-# pipes may be FULLWIDTH (＜｜＞ — actually observed in production logs), so
-# every bracket/pipe class below accepts both ASCII and fullwidth forms.
-# Like the Kimi-style protocol above, these are NOT executed — but unlike
-# the Kimi variant they lack a parseable tool/args shape, so the correct
-# handling is to STRIP them before parsing (the real Thought/Action text
-# around them usually contains the actual valid step, which _parse_step
-# then finds).
+# (e.g. DeepSeek / Xiaomi variants served behind OpenAI-compatible gateways):
+# ``<|DSML| calls>`` ... ``<|DSML| invoke name="tool">`` ...
+# ``<|DSML| parameter name="x" string="true">...</|DSML| parameter>`` ...
+# ``</|DSML| invoke>`` ... ``</|DSML| calls>``. Brackets and pipes may be
+# FULLWIDTH (＜｜＞ — actually observed in production logs), and pipes are
+# often DOUBLED (＜｜｜ＤＳＭＬ｜｜ — the exact production shape), so every
+# bracket/pipe class below accepts ASCII + fullwidth forms and one-or-more
+# pipes. Unlike plain markup, ``invoke`` blocks carry a fully parseable
+# tool/args shape, so they are TRANSLATED into ``Action:``/``Action Input:``
+# lines (see _translate_dsml_tool_calls) instead of being stripped — stripping
+# them loses the tool call and the agent collapses into a junk ``terminate``.
+_DSML_PIPE = r"[|｜│]+"
+_DSML_OPEN_TAG = r"[<＜]\s*" + _DSML_PIPE + r"\s*DSML\s*" + _DSML_PIPE
+_DSML_CLOSE_TAG = r"[<＜]\s*/\s*" + _DSML_PIPE + r"\s*DSML\s*" + _DSML_PIPE
 _DSML_BLOCK_PATTERN = re.compile(
-    r"[<＜]\s*[|｜│]\s*DSML\s*[|｜│]\s*calls\s*[>＞]"
-    r".*?"
-    r"[<＜]\s*/\s*[|｜│]\s*DSML\s*[|｜│]\s*calls\s*[>＞]",
+    _DSML_OPEN_TAG
+    + r"\s*calls\s*[>＞]"
+    + r".*?"
+    + _DSML_CLOSE_TAG
+    + r"\s*calls\s*[>＞]",
     re.DOTALL | re.IGNORECASE,
 )
-# Leftover single DSML tags (unclosed blocks, or stray invoke/parameter
-# tags): ``<|DSML| invoke name="x">``, ``</|DSML| parameter>`` ... in either
-# bracket style. Stripped as a second pass after the block pattern.
+# Leftover single DSML tags (unclosed blocks, stray invoke/parameter tags,
+# orphan calls wrappers): ``<|DSML| invoke name="x">``,
+# ``</|DSML| parameter>``, ``<｜｜DSML｜｜ calls>`` ... in either bracket
+# style. Stripped as a second pass after the block pattern (and after
+# _translate_dsml_tool_calls has rescued any parseable invokes).
 _DSML_TAG_PATTERN = re.compile(
-    r"[<＜]\s*/?\s*[|｜│]\s*DSML\s*[|｜│][^<>＜＞\n]*[>＞]",
+    _DSML_OPEN_TAG + r"[^<>＜＞\n]*[>＞]"
+    r"|"
+    + _DSML_CLOSE_TAG + r"[^<>＜＞\n]*[>＞]",
     re.IGNORECASE,
+)
+# A single DSML tool invocation with its parameters. The optional
+# enclosing ``calls`` wrapper tags are consumed as part of the match so the
+# later block-strip pass cannot eat the translated ``Action:`` lines.
+# Tolerates truncated generations: a missing ``parameter``/``invoke``
+# closing tag falls back to end-of-text so a cut-off call still executes
+# (and fails loudly at the tool with a retryable error instead of killing
+# the run with junk terminate).
+_DSML_INVOKE_PATTERN = re.compile(
+    r"(?:" + _DSML_OPEN_TAG + r"\s*calls\s*[>＞]\s*)?"
+    + _DSML_OPEN_TAG
+    + r"\s*invoke\b"
+    r"(?P<attrs>[^<>＜＞\n]*)[>＞]"
+    r"(?P<body>.*?)"
+    r"(?:"
+    + _DSML_CLOSE_TAG
+    + r"\s*invoke\s*[>＞]"
+    + r"(?:\s*" + _DSML_CLOSE_TAG + r"\s*calls\s*[>＞])?"
+    + r"|$)",
+    re.DOTALL | re.IGNORECASE,
+)
+_DSML_PARAM_PATTERN = re.compile(
+    _DSML_OPEN_TAG + r"\s*parameter\b"
+    r"(?P<attrs>[^<>＜＞\n]*)[>＞]"
+    r"(?P<value>.*?)"
+    r"(?:" + _DSML_CLOSE_TAG + r"\s*parameter\s*[>＞]|$)",
+    re.DOTALL | re.IGNORECASE,
+)
+_DSML_NAME_ATTR_PATTERN = re.compile(
+    r"""name\s*=\s*["'](?P<name>[^"'<>\n]+)["']""", re.IGNORECASE
 )
 
 
@@ -230,14 +270,57 @@ class ReActOutputParser:
 
         return _NATIVE_TOOL_CALL_PATTERN.sub(_render, text)
 
+    def _translate_dsml_tool_calls(self, text: str) -> str:
+        """Translate DSML invoke blocks into ReAct text lines.
+
+        Some models emit tool calls as DSML markup instead of the textual
+        ReAct format (or instead of native ``tool_calls``)::
+
+            <｜｜DSML｜｜ invoke name="sql_query">
+            <｜｜DSML｜｜ parameter name="sql" string="true">SELECT 1</...>
+            </｜｜DSML｜｜ invoke>
+
+        Each ``invoke`` becomes ``Action: <tool>`` + ``Action Input: <json>``
+        so the call executes through the standard path. Free text around the
+        block (e.g. the ``Thought:`` line) is preserved. Invokes without a
+        ``name`` attribute are dropped (leftover tags are stripped right
+        after by :meth:`_normalize_react_text`). Runs BEFORE the DSML strip
+        pass so parseable calls survive it.
+        """
+        if "dsml" not in text.lower():
+            return text
+
+        def _render(match: "re.Match[str]") -> str:
+            name_match = _DSML_NAME_ATTR_PATTERN.search(match.group("attrs") or "")
+            if not name_match:
+                return ""
+            tool = name_match.group("name").strip()
+            if not tool:
+                return ""
+            args: dict = {}
+            for param in _DSML_PARAM_PATTERN.finditer(match.group("body") or ""):
+                param_name_match = _DSML_NAME_ATTR_PATTERN.search(
+                    param.group("attrs") or ""
+                )
+                if not param_name_match:
+                    continue
+                param_name = param_name_match.group("name").strip()
+                if param_name:
+                    args[param_name] = (param.group("value") or "").strip()
+            return f"\nAction: {tool}\nAction Input: {json.dumps(args, ensure_ascii=False)}\n"
+
+        return _DSML_INVOKE_PATTERN.sub(_render, text)
+
     def _normalize_react_text(self, text: str) -> str:
         """Normalize common wrappers before ReAct parsing."""
         if not text:
             return text
 
-        # DSML blocks carry no executable meaning; strip them first so the
-        # real Thought/Action text around them parses cleanly. Unclosed
-        # leftovers are caught by the single-tag pass below.
+        # DSML invoke blocks carry real tool calls: translate them into
+        # Action:/Action Input: lines first. Whatever is left (calls
+        # wrappers, stray tags, unparseable junk) is stripped below so the
+        # real Thought/Action text around them parses cleanly.
+        text = self._translate_dsml_tool_calls(text)
         text = _DSML_BLOCK_PATTERN.sub("", text)
         text = _DSML_TAG_PATTERN.sub("", text)
         text = self._translate_native_tool_calls(text)

@@ -266,7 +266,7 @@ const EmbeddedChat: React.FC<EmbeddedChatProps> = ({ spaceName }) => {
       conv_uid: convUid,
       chat_mode: 'chat_react_agent',
       model_name: modelValue,
-      temperature: 0.6,
+      temperature: 0,
       select_param: '',
       ext_info: {
         knowledge_space_name: knowledgeValue,

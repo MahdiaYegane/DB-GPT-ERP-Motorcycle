@@ -389,7 +389,7 @@ class BatchOperator(JoinOperator[str]):
                 )
             )
             model_pre_handle_task = RequestBuilderOperator(
-                model=model_name, temperature=0.1, max_new_tokens=max_new_token
+                model=model_name, temperature=0, max_new_tokens=max_new_token
             )
             llm_task = LLMOperator(llm_client)
             out_parse_task = OutputParser()

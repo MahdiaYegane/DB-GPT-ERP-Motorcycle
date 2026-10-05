@@ -144,7 +144,7 @@ export const NewEvaluationModal = (props: Props) => {
         layout='vertical'
         requiredMark={false}
         initialValues={{
-          temperature: 0.6,
+          temperature: 0,
           evaluation_type: 'LLM',
           parse_strategy: 'JSON_PATH',
           http_method: 'POST',

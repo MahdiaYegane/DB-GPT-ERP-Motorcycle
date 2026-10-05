@@ -2,7 +2,7 @@
 Unit tests for the ReActOutputParser using pytest.
 """
 
-from ..react_parser import ReActOutputParser
+from ..react_parser import ReActOutputParser, clean_final_text
 
 
 class TestReActOutputParser:
@@ -601,3 +601,80 @@ Action Input: {"demo": true}
         parser = ReActOutputParser()
 
         assert parser.parse("根据分析，答案是 42。") == []
+
+    def test_dsml_invoke_with_doubled_fullwidth_pipes_is_translated(self):
+        """Production shape (DeepSeek/Xiaomi via OpenAI-compatible gateway):
+        ``<｜｜DSML｜｜ ...>`` with doubled fullwidth pipes must become an
+        executable step — otherwise the round collapses into junk terminate.
+        """
+        parser = ReActOutputParser()
+        text = (
+            "Thought: برای گزارش مالی جامع، ساختار treasuryinvoices را هم نیاز دارم.\n"
+            "<｜｜DSML｜｜ calls>\n"
+            '<｜｜DSML｜｜ invoke name="sql_query">\n'
+            '<｜｜DSML｜｜ parameter name="sql" string="true">'
+            "SELECT MIN(m_regdate) AS min_date FROM dbo.factors"
+            "</｜｜DSML｜｜ parameter>\n"
+            "</｜｜DSML｜｜ invoke>\n"
+            "</｜｜DSML｜｜ calls>"
+        )
+
+        steps = parser.parse_current_step(text)
+
+        assert len(steps) == 1
+        assert steps[0].action == "sql_query"
+        assert steps[0].action_input == {
+            "sql": "SELECT MIN(m_regdate) AS min_date FROM dbo.factors"
+        }
+
+    def test_dsml_invoke_ascii_single_pipe_is_translated(self):
+        """ASCII single-pipe variant of the same protocol."""
+        parser = ReActOutputParser()
+        text = (
+            "Thought: check columns.\n"
+            "<|DSML| calls>\n"
+            '<|DSML| invoke name="sql_query">\n'
+            '<|DSML| parameter name="sql">SELECT 1</|DSML| parameter>\n'
+            "</|DSML| invoke>\n"
+            "</|DSML| calls>"
+        )
+
+        steps = parser.parse_current_step(text)
+
+        assert len(steps) == 1
+        assert steps[0].action == "sql_query"
+        assert steps[0].action_input == {"sql": "SELECT 1"}
+
+    def test_dsml_truncated_invoke_still_executes(self):
+        """A generation cut off mid-SQL (no closing tags at all) must still
+        produce the tool call — it fails loudly at the tool with a retryable
+        SQL error instead of killing the run with junk terminate."""
+        parser = ReActOutputParser()
+        text = (
+            "Thought: گردش دریافت را بررسی می کنم.\n"
+            "<｜｜DSML｜｜ calls>\n"
+            '<｜｜DSML｜｜ invoke name="sql_query">\n'
+            '<｜｜DSML｜｜ parameter name="sql" string="true">'
+            "SELECT MIN(m_regdate) AS min_date, SUM(mainprice) AS tot"
+        )
+
+        steps = parser.parse_current_step(text)
+
+        assert len(steps) == 1
+        assert steps[0].action == "sql_query"
+        assert steps[0].action_input == {
+            "sql": "SELECT MIN(m_regdate) AS min_date, SUM(mainprice) AS tot"
+        }
+
+    def test_dsml_blocks_are_stripped_from_final_text(self):
+        """DSML markup must never leak into user-visible final answers."""
+        text = (
+            "گزارش آماده است.\n"
+            "<｜｜DSML｜｜ calls>\n"
+            '<｜｜DSML｜｜ invoke name="sql_query">\n'
+            '<｜｜DSML｜｜ parameter name="sql">SELECT 1</｜｜DSML｜｜ parameter>\n'
+            "</｜｜DSML｜｜ invoke>\n"
+            "</｜｜DSML｜｜ calls>"
+        )
+
+        assert clean_final_text(text) == "گزارش آماده است."
