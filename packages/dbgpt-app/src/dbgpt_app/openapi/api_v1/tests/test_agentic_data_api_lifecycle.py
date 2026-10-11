@@ -213,6 +213,29 @@ def test_truncated_tool_call_trace_is_detected() -> None:
     assert agentic_data_api._is_truncated_tool_call(leaked) is True
 
 
+def test_dsml_tool_call_trace_is_detected_as_non_user_facing_output() -> None:
+    leaked = (
+        "<｜｜DSML｜｜ calls> <｜｜DSML｜｜ invoke name=\"sql_query\"> "
+        "<｜｜DSML｜｜ parameter name=\"sql\" string=\"true\">"
+        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS "
+        "ORDER BY TABLE_NAME"
+        "</｜｜DSML｜｜ parameter> </｜｜DSML｜｜ invoke> "
+        "</｜｜DSML｜｜ calls>"
+    )
+
+    assert agentic_data_api._is_truncated_tool_call(leaked) is True
+
+
+def test_xml_tool_call_trace_is_detected_as_non_user_facing_output() -> None:
+    leaked = (
+        "<tool_call><function=sql_query><parameter=sql>"
+        "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS"
+        "</tool_call>"
+    )
+
+    assert agentic_data_api._is_truncated_tool_call(leaked) is True
+
+
 def test_genuine_answers_are_not_flagged_as_tool_traces() -> None:
     # Prose mentioning a tool name must not match without the JSON blob...
     assert (

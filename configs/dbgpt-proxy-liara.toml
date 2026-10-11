@@ -29,6 +29,18 @@ persist_path = "pilot/data"
 # - Auth:      Authorization: Bearer $LIARA_API_KEY (no x-teamid header needed)
 # - NEVER put TeamID (6aba3e24...) in the URL path -> 403 access denied.
 # Docs: https://docs.liara.ir/ai/quick-start/
+# Jev is exposed separately as the TypeSafe decision tool, not as a chat model:
+# Liara model ID: typesafe/jev-1.13; endpoint: /api/{workspace_id}/v1/decisions.
+# It uses LIARA_API_KEY and LIARA_API_BASE just like the Liara chat models below.
+# Automatic input triage runs per user turn (advisory only, fail-open):
+#   LIARA_JEV_AUTO_ENABLE=1 (default; set 0/false/no to disable)
+#   LIARA_JEV_AUTO_TIMEOUT=8.0 (seconds, fail-open on timeout)
+#   LIARA_JEV_TRIAGE_MAX_CHARS=2000 (triage state budget; verification keeps more)
+#   LIARA_JEV_REPORT_THRESHOLD=0.6 (noul threshold for report detection; tune it)
+#   LIARA_JEV_VERIFY_ENABLE=1 / LIARA_JEV_VERIFY_TIMEOUT=4.0 (post-loop check)
+#   LIARA_JEV_FALLBACK_REPORT=1 (synthesize fallback HTML when missing)
+#   LIARA_JEV_MID_REMINDER_EVERY=5 (mid-loop guard cadence, adaptive on confidence)
+#   LIARA_JEV_MAX_STATE_CHARS=6000 (max input chars sent to Jev)
 #
 # Setup:
 #   1. $env:LIARA_API_KEY="<your-liara-ai-key>"   # PowerShell
@@ -54,6 +66,15 @@ backend = "xiaomi/mimo-v2.5-pro"
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
 
+# --- Liara: Xiaomi MiMo-V2.6 Flash (1M context) ---
+[[models.llms]]
+name = "xiaomi/mimo-v2.6-flash (liara)"
+provider = "proxy/liara"
+backend = "xiaomi/mimo-v2.6-flash"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+context_length = 1000000
+
 # --- Liara: DeepSeek V4.1 Flash (text+image in, ~1M context) ---
 [[models.llms]]
 name = "deepseek/deepseek-v4.1-flash (liara)"
@@ -61,6 +82,7 @@ provider = "proxy/liara"
 backend = "deepseek/deepseek-v4.1-flash"
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
+context_length = 1048576
 
 # --- Liara: Z.ai GLM 5.3 Flash (multimodal in, 1.31M context) ---
 [[models.llms]]
@@ -86,6 +108,33 @@ backend = "qwen/qwen3.7-flash"
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
 
+# --- Liara: Meta Muse Spark 1.3 Contributor (1M context) ---
+[[models.llms]]
+name = "meta/muse-spark-1.3-contributor (liara)"
+provider = "proxy/liara"
+backend = "meta/muse-spark-1.3-contributor"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+context_length = 1048576
+
+# --- Liara: Qwen 3.5 Flash (1M context; pinned Liara snapshot) ---
+[[models.llms]]
+name = "qwen/qwen3.5-flash (liara)"
+provider = "proxy/liara"
+backend = "qwen/qwen3.5-flash-02-23"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+context_length = 1000000
+
+# --- Liara: Qwen Plus (1M context) ---
+[[models.llms]]
+name = "qwen/qwen-plus (liara)"
+provider = "proxy/liara"
+backend = "qwen/qwen-plus"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+api_key = "${env:LIARA_API_KEY}"
+context_length = 1000000
+
 # --- Liara: DeepSeek V4 Pro 0423 (text-to-text, 1M context) ---
 [[models.llms]]
 name = "deepseek/deepseek-v4-pro (liara)"
@@ -95,9 +144,7 @@ api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a4519264
 api_key = "${env:LIARA_API_KEY}"
 
 [[models.embeddings]]
-name = "BAAI/bge-large-zh-v1.5"
-provider = "hf"
-# If not provided, the model will be downloaded from the Hugging Face model hub
-# uncomment the following line to specify the model path in the local file system
-# path = "the-model-path-in-the-local-file-system"
-path = "models/bge-large-zh-v1.5"
+name = "bge-m3:567m"
+provider = "proxy/ollama"
+api_url = "http://localhost:11434"
+api_key = ""

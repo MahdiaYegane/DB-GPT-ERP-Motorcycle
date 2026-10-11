@@ -103,6 +103,71 @@ def _try_repair_truncated_code(raw_code: str) -> Optional[str]:
     return None
 
 
+def _harvest_absolute_savefig_images(
+    code: str, react_state: Dict[str, Any]
+) -> List[Dict[str, Any]]:
+    """Recover chart files saved to absolute paths outside the work dir.
+
+    Models sometimes save charts to guessed locations (``/mnt/data/...``,
+    ``/tmp/...``) instead of ``$PLOT_DIR``. Those files are invisible to the
+    work-dir scan, so the chart is silently lost and the final report ends up
+    with no image. This sweeps ``savefig()`` paths found in the executed code
+    and attaches any existing image file (copy -> static dir -> image chunk).
+    Never raises.
+    """
+    import re as _re
+    import uuid as _uuid
+
+    harvested: List[Dict[str, Any]] = []
+    try:
+        from dbgpt.configs.model_config import STATIC_MESSAGE_IMG_PATH
+
+        paths = _re.findall(
+            r"savefig\(\s*[a-zA-Z_]*\(?[^)]*?['\"]([^'\"]+\.(?:png|jpg|jpeg|gif|svg|webp))['\"]",
+            code or "",
+            flags=_re.IGNORECASE,
+        )
+        # Also match plain savefig('path') without nested calls.
+        paths += _re.findall(
+            r"savefig\(\s*['\"]([^'\"]+\.(?:png|jpg|jpeg|gif|svg|webp))['\"]",
+            code or "",
+            flags=_re.IGNORECASE,
+        )
+        seen: set = set()
+        os.makedirs(STATIC_MESSAGE_IMG_PATH, exist_ok=True)
+        known = set(react_state.get("generated_images", []) or [])
+        for raw_path in paths:
+            if not raw_path or raw_path in seen:
+                continue
+            seen.add(raw_path)
+            # Skip env-based paths (PLOT_DIR) — already covered by work-dir scan.
+            if "PLOT_DIR" in raw_path or "plot_dir" in raw_path.lower():
+                continue
+            candidate = os.path.expandvars(os.path.expanduser(raw_path))
+            if not os.path.isfile(candidate):
+                continue
+            try:
+                unique_name = f"{_uuid.uuid4().hex[:8]}_{os.path.basename(candidate)}"
+                dest = os.path.join(STATIC_MESSAGE_IMG_PATH, unique_name)
+                shutil.copy2(candidate, dest)
+                img_url = f"/images/{unique_name}"
+                if img_url not in known:
+                    known.add(img_url)
+                    react_state.setdefault("generated_images", []).append(img_url)
+                    harvested.append({"output_type": "image", "content": img_url})
+                    logger.warning(
+                        "code_interpreter: recovered chart saved outside "
+                        "PLOT_DIR (%s -> %s)",
+                        candidate,
+                        img_url,
+                    )
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return harvested
+
+
 def make_code_interpreter(react_state: Dict[str, Any]):
     @tool(
         description=(
@@ -114,6 +179,10 @@ def make_code_interpreter(react_state: Dict[str, Any]):
             "are attached automatically. This tool CANNOT see images — "
             "for image attachments use OCR/CV libraries (pytesseract, cv2) "
             "inside the code, or ask the user to describe the image. "
+            "[Charts] ALWAYS save figures with "
+            "plt.savefig(os.path.join(os.environ['PLOT_DIR'], '<name>.png')) "
+            "— files saved to any other location (e.g. /mnt/data) are LOST "
+            "and never reach the user. "
             "Emit tool calls ONLY in the textual Thought/Action/Action Input "
             "format — never as <|DSML|...|> or other markup blocks, which "
             "are stripped and never executed. "
@@ -281,6 +350,12 @@ def make_code_interpreter(react_state: Dict[str, Any]):
                         img_url = f"/images/{unique_name}"
                         chunks.append({"output_type": "image", "content": img_url})
                         react_state.setdefault("generated_images", []).append(img_url)
+        except Exception:
+            pass
+
+        # Recover charts saved to guessed absolute paths (e.g. /mnt/data).
+        try:
+            chunks.extend(_harvest_absolute_savefig_images(code, react_state))
         except Exception:
             pass
 

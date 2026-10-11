@@ -6,6 +6,7 @@ from .execute_tool import make_execute_tool
 from .html_interpreter import make_html_interpreter
 from .kb_tools import make_kb_tools
 from .knowledge_retrieve import make_knowledge_retrieve
+from .liara_jev import make_liara_jev_decision
 from .load_file import make_load_file
 from .load_tools import make_load_tools
 from .question import make_question
@@ -23,6 +24,7 @@ __all__ = [
     "make_html_interpreter",
     "make_kb_tools",
     "make_knowledge_retrieve",
+    "make_liara_jev_decision",
     "make_load_file",
     "make_load_tools",
     "make_question",
