@@ -73,6 +73,57 @@ if TYPE_CHECKING:
 REACT_AGENT_MEMORY_CACHE: Dict[str, "GptsMemory"] = {}
 
 DEFAULT_SKILLS_DIR = SKILLS_DIR
+
+
+def _rank_database_tables_for_request(
+    table_names: List[str], user_input: Any, *, limit: int = 12
+) -> List[str]:
+    """Choose a small, question-relevant schema set for the model prompt.
+
+    The previous prompt included every schema in the 1,200+ table MSSQL
+    database. That bloated context, caused overflow, and encouraged unrelated
+    tables (e.g. inventory) to dominate a sales-by-province question.
+    """
+    names = [name for name in table_names if isinstance(name, str) and name]
+    text = user_input if isinstance(user_input, str) else str(user_input or "")
+    lowered = text.casefold()
+    asks_sales_by_province = any(
+        token in lowered for token in ("استان", "استانها", "province", "provinces", "state")
+    ) and any(
+        token in lowered
+        for token in ("فروش", "فروخت", "sales", "sale", "revenue", "sold")
+    )
+
+    if asks_sales_by_province:
+        preferred = (
+            "factors",
+            "bill",
+            "statecity",
+            "statename",
+            "salescustomers",
+            "uses",
+            "salesorders",
+            "salesordersitems",
+            "pishfactors",
+        )
+        by_lower = {name.casefold().split(".")[-1]: name for name in names}
+        selected = [by_lower[key] for key in preferred if key in by_lower]
+        return selected[: max(1, limit)]
+
+    words = [word for word in re.findall(r"[a-z0-9_\u0600-\u06ff]+", lowered) if len(word) > 2]
+    ranked: List[Tuple[int, str]] = []
+    for name in names:
+        leaf = name.casefold().split(".")[-1]
+        score = sum(2 for word in words if word in leaf)
+        if score:
+            ranked.append((score, name))
+    if ranked:
+        ranked.sort(key=lambda item: (-item[0], item[1].casefold()))
+        return [name for _, name in ranked[: max(1, limit)]]
+
+    # No reliable table keyword: show only a small neutral shortlist. The
+    # prompt teaches the model to inspect INFORMATION_SCHEMA before guessing.
+    return names[: max(1, limit)]
 AUTO_DATA_MARKER_PATTERN = re.compile(
     r"###([A-Z0-9_]+)_START###\s*(.*?)\s*###\1_END###", re.DOTALL
 )
@@ -211,6 +262,7 @@ _KNOWN_TOOL_NAMES = frozenset(
         "load_tools",
         "execute_tool",
         "dispatch_parallel_tasks",
+        "liara_jev_decision",
     }
 )
 
@@ -231,6 +283,21 @@ _TOOL_ARG_KEYS = frozenset(
         "tool_name",
         "args",
     }
+)
+_DSML_TOOL_CALL_TRACE_PATTERN = re.compile(
+    r"[<＜]\s*[|｜│]+\s*DSML\s*[|｜│]+\s*calls\s*[>＞]"
+    r".*?"
+    r"[<＜]\s*[|｜│]+\s*DSML\s*[|｜│]+\s*invoke\b"
+    r"[^<>＜＞\n]*\bname\s*=\s*(['\"])(?:functions\.)?[\w.-]+\1"
+    r".*?"
+    r"[<＜]\s*[|｜│]+\s*DSML\s*[|｜│]+\s*parameter\b"
+    r"[^<>＜＞\n]*\bname\s*=\s*(['\"])[\w.-]+\2",
+    re.IGNORECASE | re.DOTALL,
+)
+_XML_TOOL_CALL_TRACE_PATTERN = re.compile(
+    r"<tool_call\b[^>]*>.*?<function\s*=\s*[\"']?[\w.-]+[\"']?\s*>"
+    r".*?<parameter\s*(?:=\s*[\"']?[\w.-]+|\bname\s*=\s*[\"'][\w.-]+)",
+    re.IGNORECASE | re.DOTALL,
 )
 
 _NO_PROGRESS_REPEAT_LIMIT = 3
@@ -264,6 +331,10 @@ def _is_truncated_tool_call(text: str) -> bool:
     """
     if not text:
         return False
+    if _DSML_TOOL_CALL_TRACE_PATTERN.search(text):
+        return True
+    if _XML_TOOL_CALL_TRACE_PATTERN.search(text):
+        return True
     has_bare_tool_line = any(
         line.strip().lower() in _KNOWN_TOOL_NAMES for line in text.splitlines()
     )
@@ -1422,6 +1493,17 @@ async def _react_agent_stream_impl(
     # Connector selection (Task C): only inject user-selected connectors.
     connector_ids: List[str] = _parse_connector_ids(dialogue.ext_info)
 
+    # Explicit wording is a deterministic intent signal. Keep it separate
+    # from Jev's probabilistic classification so skills cannot hijack a plain
+    # factual database question.
+    request_intent = None
+    try:
+        from .liara_jev_auto import classify_request_intent
+
+        request_intent = classify_request_intent(user_input)
+    except Exception:
+        request_intent = None
+
     def _has_code_graph(knowledge_space_id: str) -> bool:
         """Check if the knowledge space has a built code graph index.
 
@@ -1698,19 +1780,37 @@ async def _react_agent_stream_impl(
             local_db_manager = ConnectorManager.get_instance(CFG.SYSTEM_APP)
             database_connector = local_db_manager.get_connector(database_name)
             table_names = list(database_connector.get_table_names())
-            table_info = database_connector.get_table_info_no_throw()
+            relevant_tables = _rank_database_tables_for_request(
+                table_names, user_input, limit=12
+            )
+            try:
+                table_info = database_connector.get_table_info_no_throw(
+                    relevant_tables
+                )
+            except TypeError:
+                # Compatibility with older/custom connector implementations.
+                table_info = database_connector.get_table_info_no_throw()
+            max_schema_chars = 24_000
+            if isinstance(table_info, str) and len(table_info) > max_schema_chars:
+                table_info = table_info[:max_schema_chars] + "\n... [schema truncated]"
+            visible_tables = table_names[:80]
             database_context = f"""
 ## Database Info
 - Database name: {database_name}
-- Available tables: {", ".join(table_names)}
-- Table schemas:
+- Total tables: {len(table_names)}
+- Available table names (first 80): {", ".join(visible_tables)}
+- Schemas selected for this question ({len(relevant_tables)}): {", ".join(relevant_tables)}
+- Relevant table schemas (other schemas are intentionally omitted; inspect INFORMATION_SCHEMA before using an unlisted table):
 {table_info}
+- Relevance contract: Answer the exact metric and dimensions requested. Never substitute inventory/stock/product-group analysis for sales/revenue by province. If no matching sales rows/columns are found, say that the query could not be verified; do not fabricate a different report.
 - Use the 'sql_query' tool to execute SQL queries
 - **Only SELECT queries are allowed. INSERT/UPDATE/DELETE/DROP/ALTER/TRUNCATE are prohibited.**
 """
             logger.info(
-                f"Loaded database connector: {database_name} "
-                f"(tables: {', '.join(table_names)})"
+                "Loaded database connector: %s (total_tables=%d, schema_tables=%s)",
+                database_name,
+                len(table_names),
+                ", ".join(relevant_tables),
             )
         except Exception as e:
             logger.warning(f"Failed to load database connector: {e}", exc_info=e)
@@ -1785,6 +1885,23 @@ async def _react_agent_stream_impl(
         "available skills list in system prompt."
     )
     def select_skill(query: str) -> str:
+        if request_intent == "database_query" and not skill_name:
+            react_state["matched"] = None
+            return json.dumps(
+                {
+                    "chunks": [
+                        {
+                            "output_type": "text",
+                            "content": (
+                                "Skill routing skipped: the user asked a factual "
+                                "database question. Query the selected database "
+                                "directly; do not substitute an unrelated analysis skill."
+                            ),
+                        }
+                    ]
+                },
+                ensure_ascii=False,
+            )
         match_input = query or ""
         if react_state.get("file_path"):
             match_input = f"{match_input} excel xlsx spreadsheet file"
@@ -2209,6 +2326,7 @@ print(json.dumps(summary, ensure_ascii=False))
         make_html_interpreter,
         make_kb_tools,
         make_knowledge_retrieve,
+        make_liara_jev_decision,
         make_load_file,
         make_load_skill,
         make_load_tools,
@@ -2263,6 +2381,7 @@ print(json.dumps(summary, ensure_ascii=False))
     html_interpreter_tool = make_html_interpreter(react_state, DEFAULT_SKILLS_DIR)
     todowrite_tool = make_todowrite(_todo_list, stream_callback)
     question_tool = make_question(react_state, stream_callback)
+    liara_jev_decision_tool = make_liara_jev_decision()
     # read_file lets the agent read back persisted tool results / snapshots
     # from disk when a <persisted-output> block references a file path.
     read_file_tool = make_read_file(react_state)
@@ -2520,6 +2639,54 @@ print(json.dumps(summary, ensure_ascii=False))
         return getattr(CFG, "LANGUAGE", "en") or "en"
 
     detected_lang = _detect_language(user_input)
+    # ── P0: launch Jev triage early as a background task ──
+    # The Jev network call overlaps the model-window probe and the prompt
+    # building below; the result is awaited where the hint is consumed.
+    # Trivial greetings skip the call entirely (fail-open).
+    _jev_task = None
+    _jev_triage_skipped = False
+    try:
+        from .liara_jev_auto import (
+            build_jev_triage_state as _jev_build_state,
+        )
+        from .liara_jev_auto import (
+            run_jev_triage as _jev_run,
+        )
+        from .liara_jev_auto import (
+            should_skip_jev_triage as _jev_should_skip,
+        )
+
+        if _jev_should_skip(user_input):
+            _jev_triage_skipped = True
+            logger.info("Jev triage skipped for trivial input (no report keywords)")
+        else:
+            _jev_extra_hints: List[str] = []
+            try:
+                if all_skills:
+                    _jev_extra_hints.append(f"{len(all_skills)} skills registered")
+            except Exception:
+                pass
+            try:
+                if connector_ids:
+                    _jev_extra_hints.append(
+                        f"{len(connector_ids)} connectors selected"
+                    )
+            except Exception:
+                pass
+            _jev_state_early = _jev_build_state(
+                user_input,
+                skill_name=skill_name,
+                database_name=database_name,
+                knowledge_space=knowledge_space,
+                has_file=bool(file_path or attachment_ctx is not None),
+                extra_hints=_jev_extra_hints,
+            )
+            _jev_task = asyncio.create_task(_jev_run(_jev_state_early))
+    except Exception:
+        logger.debug(
+            "Early Jev triage launch failed; will retry inline", exc_info=True
+        )
+        _jev_task = None
     # Resolve effective context budget from TOML, clamped to the model's
     # real window (999K global would overflow Groq 131K / Ollama 262K).
     _toml_budget = 999000
@@ -2570,6 +2737,54 @@ print(json.dumps(summary, ensure_ascii=False))
     # file_ids requests use the public manifest block; legacy file_path and
     # pure-text requests keep their existing wording byte-for-byte.
     file_context = build_file_context(attachment_ctx, file_path)
+
+    # ── Jev Governor: Pre (triage) + Mid (guard) + Post (verifier) state ──
+    # html_rendered tracks whether any html_interpreter output was observed;
+    # jev_tool_steps counts completed tool steps for the mid-loop guard.
+    react_state["html_rendered"] = False
+    react_state["jev_tool_steps"] = 0
+    react_state["jev_guard_count"] = 0
+    # ── Automatic Jev input triage (fail-open, advisory only) ──
+    # Awaited here where the hint shapes the workflow prompt. Launched early
+    # above so the Jev network call overlapped the window probe + prompt build.
+    jev_triage_result = None
+    jev_guidance_section = ""
+    try:
+        from .liara_jev_auto import (
+            build_jev_triage_state,
+            format_jev_guidance_for_prompt,
+            run_jev_triage,
+            summarize_jev_triage,
+        )
+
+        if _jev_task is not None:
+            try:
+                jev_triage_result = await _jev_task
+            except Exception:
+                logger.warning("Automatic Jev triage skipped", exc_info=True)
+                jev_triage_result = None
+        elif _jev_triage_skipped:
+            jev_triage_result = None
+        else:
+            # Early launch failed; fall back to the original inline call.
+            _jev_state = build_jev_triage_state(
+                user_input,
+                skill_name=skill_name,
+                database_name=database_name,
+                knowledge_space=knowledge_space,
+                has_file=bool(file_path or attachment_ctx is not None),
+            )
+            jev_triage_result = await run_jev_triage(_jev_state)
+        if jev_triage_result is not None:
+            _jev_summary = summarize_jev_triage(
+                jev_triage_result, user_input=user_input
+            )
+            react_state["jev_triage"] = _jev_summary
+            jev_guidance_section = format_jev_guidance_for_prompt(_jev_summary)
+    except Exception:
+        logger.warning("Automatic Jev triage skipped", exc_info=True)
+        jev_triage_result = None
+        jev_guidance_section = ""
 
     skill_prompt_context = ""
     execution_instruction = ""
@@ -2766,10 +2981,14 @@ Parameters: {{"todos": [{{...}}]}}
 8. **question**: Ask the user a question and wait for their response. Use this tool
    when you need user input, clarification, or a decision to proceed. The tool blocks
    until the user answers.
-   Parameters: {{"questions": [{{"question": "...", "header": "...", "options": [
-   {{"label": "...", "description": "..."}}, ...]}}]}}. Set multiple=true to allow
-   multiple selections. The tool returns the user's selected answers.
-9. **terminate**: Return the final answer when the task is completed. Action Input
+    Parameters: {{"questions": [{{"question": "...", "header": "...", "options": [
+    {{"label": "...", "description": "..."}}, ...]}}]}}. Set multiple=true to allow
+    multiple selections. The tool returns the user's selected answers.
+9. **liara_jev_decision**: Use TypeSafe Jev 1.13 via Liara for structured
+   classification, yes/no judgments, or scoring. It returns structured answers,
+   not chat text. Parameters: {{"state": "text or JSON state",
+   "questions": "JSON object of named noul/choice/score questions"}}
+10. **terminate**: Return the final answer when the task is completed. Action Input
 must be {{"result": "your final answer content"}}.
 
 ## Task Management
@@ -2806,18 +3025,18 @@ Do not use ellipsis.
 Action: The selected tool name (must be one of the tools listed above)
 Action Input: The JSON format of tool parameters
 
-IMPORTANT: Never emit native tool-call markup such as
-<|tool_calls_section_begin|>, <|tool_call_begin|>, <|tool_call_argument_begin|>,
-<|DSML| ... |> (ASCII or fullwidth brackets/pipes), or any other <|...|> tokens.
-Tool calls are ONLY valid in the textual Thought/Action/Action Input format
-shown above. Markup-style blocks are stripped and never executed.
+IMPORTANT: Write tool calls only in the textual Thought/Action/Action Input format
+shown above. Do not emit XML <tool_call>/<function>/<parameter> wrappers, DSML,
+or other protocol markup as user-visible text.
+If the model provider returns a supported native tool-call encoding, the runtime
+normalizes it to the same validated action format before dispatch.
 """.strip()
 
         if tool_mode == "knowledge":
             # Knowledge-chat mode: only kb tools + todowrite + terminate.
             # No skill/shell/sql/html/code tools to keep the agent focused.
             tool_pack = ToolPack(
-                [todowrite_tool, question_tool, Terminate()]
+                [todowrite_tool, question_tool, liara_jev_decision_tool, Terminate()]
                 + business_tools
                 + connector_tool_extras
             )
@@ -2832,6 +3051,7 @@ shown above. Markup-style blocks are stripped and never executed.
                     sql_query_tool,
                     todowrite_tool,
                     question_tool,
+                    liara_jev_decision_tool,
                     Terminate(),
                 ]
                 + business_tools
@@ -2987,8 +3207,12 @@ Parameters: {{"tasks": [{{"goal": "...", "context": "...", "title": "..."}}]}}
    until the user answers.
    Parameters: {{"questions": [{{"question": "...", "header": "...", "options": [
    {{"label": "...", "description": "..."}}, ...]}}]}}. Set multiple=true to allow
-   multiple selections. The tool returns the user's selected answers.
-17. **terminate**: Finish the task. Parameters: {{"result": "final answer"}}
+    multiple selections. The tool returns the user's selected answers.
+17. **liara_jev_decision**: Use TypeSafe Jev 1.13 through Liara for typed
+    classification, yes/no judgments, or scoring. Jev returns structured answers;
+    it does not generate chat text. Parameters: {{"state": "text or JSON state",
+    "questions": "JSON object of named noul/choice/score questions"}}
+18. **terminate**: Finish the task. Parameters: {{"result": "final answer"}}
 
 {file_context}
 {knowledge_context}
@@ -3006,11 +3230,11 @@ Do not use ellipsis.
 Action: The selected tool name
 Action Input: The JSON format of tool parameters
 
-IMPORTANT: Never emit native tool-call markup such as
-<|tool_calls_section_begin|>, <|tool_call_begin|>, <|tool_call_argument_begin|>,
-<|DSML| ... |> (ASCII or fullwidth brackets/pipes), or any other <|...|> tokens.
-Tool calls are ONLY valid in the textual Thought/Action/Action Input format
-shown above. Markup-style blocks are stripped and never executed.
+IMPORTANT: Write tool calls only in the textual Thought/Action/Action Input format
+shown above. Do not emit XML <tool_call>/<function>/<parameter> wrappers, DSML,
+or other protocol markup as user-visible text.
+If the model provider returns a supported native tool-call encoding, the runtime
+normalizes it to the same validated action format before dispatch.
 """.strip()
 
         workflow_prompt = workflow_prompt + "\n\n" + DISPATCH_PROMPT_SECTION
@@ -3022,7 +3246,7 @@ shown above. Markup-style blocks are stripped and never executed.
             # kb_cat and optionally codegraph tools.
             tool_pack = ToolPack(
                 kb_tool_list
-                + [todowrite_tool, question_tool, Terminate()]
+                + [todowrite_tool, question_tool, liara_jev_decision_tool, Terminate()]
                 + business_tools
                 + connector_tool_extras
             )
@@ -3048,6 +3272,7 @@ shown above. Markup-style blocks are stripped and never executed.
                     execute_tool_tool,
                     dispatch_parallel_tasks,
                     question_tool,
+                    liara_jev_decision_tool,
                     Terminate(),
                 ]
                 + business_tools
@@ -3144,6 +3369,21 @@ shown above. Markup-style blocks are stripped and never executed.
         pass  # graceful degradation
     # --- End connector system prompt injection ---
 
+    # Inject the automatic Jev triage hint (advisory only; never overrides
+    # tool observations). Empty when triage was disabled or failed.
+    if jev_guidance_section:
+        workflow_prompt += "\n\n" + jev_guidance_section
+    if request_intent == "database_query":
+        workflow_prompt += """
+
+## Exact-Question / Database Evidence Contract (mandatory)
+- The user's request is a factual database question, not a request to choose a skill.
+- Answer the exact metric and grouping requested. For "sales by province", query sales/factor data grouped by the customer's `statename`; do not use inventory (`ware.balance`), stock counts, or product groups.
+- Only claim results that appear in successful `sql_query` observations. If SQL fails, returns no relevant columns, or cannot be verified, say so explicitly and ask for clarification; never replace the requested analysis with an unrelated report.
+- Do not call an inventory/financial-report skill unless the user explicitly requests that domain/report.
+- Before rendering HTML, confirm the successful SQL result columns and report title describe the same measure and dimensions as the user's request.
+"""
+
     # Convert workflow_prompt to PromptTemplate so it is used as system prompt
     # Use jinja2 format to avoid issues with JSON braces { } in the prompt
     workflow_prompt_template = PromptTemplate(
@@ -3153,7 +3393,7 @@ shown above. Markup-style blocks are stripped and never executed.
     )
 
     agent_builder = (
-        ToolCallingReActAgent(max_retry_count=57)
+        ToolCallingReActAgent(max_retry_count=137)
         .bind(context)
         .bind(agent_memory)
         .bind(llm_config)
@@ -3248,6 +3488,40 @@ shown above. Markup-style blocks are stripped and never executed.
         yield step_done(skill_step_id)
         history_steps.append(current_history_step)
         current_history_step = None
+
+    # Emit automatic Jev triage as a visible SSE step (fail-open: nothing
+    # emitted when triage was disabled, skipped, or failed).
+    if jev_triage_result is not None and jev_guidance_section:
+        try:
+            from .liara_jev_auto import render_jev_step_content
+
+            _jev_summary = react_state.get("jev_triage") or summarize_jev_triage(
+                jev_triage_result
+            )
+            _jev_step_id, _jev_step_event = build_step(
+                f"Jev 1.13 · {_jev_summary.get('intent', 'general_answer')}",
+                "Automatic input triage (advisory)",
+                phase="Understanding request",
+            )
+            yield _jev_step_event
+            _jev_content = render_jev_step_content(_jev_summary)
+            yield step_chunk(_jev_step_id, "text", _jev_content)
+            yield step_done(_jev_step_id)
+            history_steps.append(
+                {
+                    "id": _jev_step_id,
+                    "title": f"Jev 1.13 · {_jev_summary.get('intent', 'general_answer')}",
+                    "detail": "Automatic input triage (advisory)",
+                    "phase": "Understanding request",
+                    "thought": None,
+                    "action": "liara_jev_decision",
+                    "action_input": None,
+                    "outputs": [{"output_type": "text", "content": _jev_content}],
+                    "status": "done",
+                }
+            )
+        except Exception:
+            logger.warning("Failed to emit automatic Jev triage step", exc_info=True)
 
     while True:
         if agent_task.done() and stream_queue.empty():
@@ -3663,6 +3937,89 @@ shown above. Markup-style blocks are stripped and never executed.
 
             # Mark step as done and track as last completed
             yield step_done(react_step_id, status)
+            # ── Jev Governor Mid-loop guard (fail-open, advisory only) ──
+            # Tracks html_interpreter success and reminds the model when a
+            # report is expected but no HTML was rendered after N steps.
+            try:
+                if status == "done" and action and action.lower() != "todowrite":
+                    react_state["jev_tool_steps"] = (
+                        int(react_state.get("jev_tool_steps") or 0) + 1
+                    )
+                if (
+                    status == "done"
+                    and action
+                    and action.lower() == "html_interpreter"
+                ):
+                    _obs_html = False
+                    try:
+                        _parsed_obs = (
+                            json.loads(observation_text)
+                            if isinstance(observation_text, str)
+                            else observation_text
+                        )
+                        if isinstance(_parsed_obs, dict) and isinstance(
+                            _parsed_obs.get("chunks"), list
+                        ):
+                            for _item in _parsed_obs["chunks"]:
+                                if (
+                                    isinstance(_item, dict)
+                                    and _item.get("output_type") == "html"
+                                    and isinstance(_item.get("content"), str)
+                                    and len(_item["content"].strip()) > 200
+                                ):
+                                    _obs_html = True
+                                    break
+                    except Exception:
+                        _obs_html = False
+                    if _obs_html:
+                        react_state["html_rendered"] = True
+                _jev_mid_summary = react_state.get("jev_triage")
+                _expects = bool(
+                    isinstance(_jev_mid_summary, dict)
+                    and _jev_mid_summary.get("expects_report")
+                )
+                if _expects and not react_state.get("html_rendered"):
+                    from .liara_jev_auto import (
+                        build_jev_mid_reminder,
+                    )
+                    from .liara_jev_auto import (
+                        get_jev_mid_reminder_every_for,
+                    )
+
+                    # P2: adaptive cadence — low-confidence triage nags less.
+                    _every = get_jev_mid_reminder_every_for(_jev_mid_summary)
+                    _steps = int(react_state.get("jev_tool_steps") or 0)
+                    _guards = int(react_state.get("jev_guard_count") or 0)
+                    if _steps > 0 and _steps % _every == 0 and _guards < 3:
+                        _reminder = build_jev_mid_reminder(
+                            _jev_mid_summary or {}, _steps
+                        )
+                        _guard_id, _guard_event = build_step(
+                            "Jev guard · report missing",
+                            "Advisory reminder (no block)",
+                            phase="Verifying output",
+                        )
+                        yield _guard_event
+                        yield step_chunk(_guard_id, "text", _reminder)
+                        yield step_done(_guard_id)
+                        history_steps.append(
+                            {
+                                "id": _guard_id,
+                                "title": "Jev guard · report missing",
+                                "detail": "Advisory reminder (no block)",
+                                "phase": "Verifying output",
+                                "thought": None,
+                                "action": "liara_jev_decision",
+                                "action_input": None,
+                                "outputs": [
+                                    {"output_type": "text", "content": _reminder}
+                                ],
+                                "status": "done",
+                            }
+                        )
+                        react_state["jev_guard_count"] = _guards + 1
+            except Exception:
+                logger.debug("Jev mid-loop guard skipped", exc_info=True)
             if (
                 status == "done"
                 and action
@@ -3703,6 +4060,75 @@ shown above. Markup-style blocks are stripped and never executed.
             logger.debug("Agent stopped after repeated tool calls", exc_info=True)
 
         fail_running_subagent_history(subagent_history)
+        # ── Jev Governor repair on stalled loop (heuristic only, no network) ──
+        try:
+            from .liara_jev_auto import (
+                build_fallback_report_html as _stalled_fallback,
+            )
+            from .liara_jev_auto import (
+                harvest_lost_chart_images as _stalled_harvest,
+            )
+            from .liara_jev_auto import (
+                history_has_html as _stalled_has_html,
+            )
+            from .liara_jev_auto import (
+                is_jev_fallback_enabled as _stalled_fallback_on,
+            )
+            from .liara_jev_auto import (
+                needs_report_repair as _stalled_needs_repair,
+            )
+
+            try:
+                _stalled_harvest(
+                    history_steps, react_state.get("generated_images", [])
+                )
+            except Exception:
+                pass
+            _stalled_html = bool(react_state.get("html_rendered")) or _stalled_has_html(
+                history_steps
+            )
+            _stalled_triage = react_state.get("jev_triage")
+            if not isinstance(_stalled_triage, dict):
+                _stalled_triage = None
+            if _stalled_needs_repair(
+                user_input=user_input,
+                triage_summary=_stalled_triage,
+                verification_summary=None,
+                has_html=_stalled_html,
+            ) and _stalled_fallback_on():
+                _stalled_html_doc = _stalled_fallback(
+                    title="گزارش تحلیل",
+                    user_input=user_input,
+                    final_content=stalled_reason,
+                    history_steps=history_steps,
+                    generated_images=react_state.get("generated_images", []),
+                )
+                _stalled_id, _stalled_event = build_step(
+                    "Jev repair · HTML report",
+                    "Fallback report (loop stalled)",
+                    phase="Rendering report",
+                )
+                yield _stalled_event
+                yield step_chunk(_stalled_id, "html", _stalled_html_doc)
+                yield step_done(_stalled_id)
+                history_steps.append(
+                    {
+                        "id": _stalled_id,
+                        "title": "Jev repair · HTML report",
+                        "detail": "Fallback report (loop stalled)",
+                        "phase": "Rendering report",
+                        "thought": None,
+                        "action": "html_interpreter",
+                        "action_input": None,
+                        "outputs": [
+                            {"output_type": "html", "content": _stalled_html_doc}
+                        ],
+                        "status": "done",
+                    }
+                )
+                react_state["html_rendered"] = True
+        except Exception:
+            logger.debug("Jev stalled-loop repair skipped", exc_info=True)
         final_answer = final_answer_assembler.finalize(stalled_reason)
         history_payload = _build_react_history_payload(
             final_content=final_answer.content,
@@ -3834,6 +4260,229 @@ shown above. Markup-style blocks are stripped and never executed.
             )
         else:
             final_content = raw
+
+    # ── Jev Governor Post-loop verifier + repair (fail-open) ──
+    # If a visual report was expected but no HTML was rendered, verify with
+    # Jev and synthesize a fallback HTML report so the final output ALWAYS
+    # contains charts instead of plain text.
+    try:
+        from .liara_jev_auto import (
+            build_fallback_report_html,
+            assess_database_answer_relevance,
+            build_jev_verification_state,
+            build_database_relevance_failure_html,
+            harvest_lost_chart_images,
+            history_has_html,
+            is_jev_fallback_enabled,
+            is_jev_verify_enabled,
+            needs_report_repair,
+            render_jev_verification_content,
+            run_jev_verification,
+            summarize_jev_verification,
+        )
+
+        _has_html = bool(react_state.get("html_rendered")) or history_has_html(
+            history_steps
+        )
+        # ── Recover charts saved outside PLOT_DIR (e.g. /mnt/data/...) ──
+        # Runs BEFORE the HTML check so a recovered chart image counts as a
+        # visual deliverable. Never raises.
+        try:
+            _recovered = harvest_lost_chart_images(
+                history_steps, react_state.get("generated_images", [])
+            )
+            if _recovered and not isinstance(react_state.get("generated_images"), list):
+                react_state["generated_images"] = list(_recovered)
+        except Exception:
+            logger.debug("Jev lost-chart harvest skipped", exc_info=True)
+        _triage_summary = react_state.get("jev_triage")
+        if not isinstance(_triage_summary, dict):
+            _triage_summary = None
+        # Run a deterministic evidence gate for factual DB questions even if
+        # the agent already emitted HTML. A rendered but unrelated report is
+        # still a wrong answer and must be replaced before the final event.
+        _db_assessment = assess_database_answer_relevance(user_input, history_steps)
+        react_state["database_answer_assessment"] = _db_assessment
+        _verify_summary: Optional[Dict[str, Any]] = None
+        if is_jev_verify_enabled() and (
+            not _has_html or _db_assessment.get("requires_database")
+        ):
+            try:
+                _verify_state = build_jev_verification_state(
+                    user_input, history_steps, final_content, has_html=_has_html
+                )
+                _verify_result = await run_jev_verification(_verify_state)
+                if _verify_result is not None:
+                    _verify_summary = summarize_jev_verification(_verify_result)
+            except Exception:
+                logger.debug("Jev verification call failed", exc_info=True)
+                _verify_summary = None
+        # Deterministic guard is authoritative when it recognizes a strict
+        # metric/dimension mismatch; Jev's semantic verdict is supplemental.
+        if (
+            _db_assessment.get("requires_database")
+            and not _db_assessment.get("relevant")
+        ):
+            logger.warning(
+                "Suppressing off-topic database answer: request=%r assessment=%s",
+                user_input,
+                _db_assessment,
+            )
+            _mismatch_html = build_database_relevance_failure_html(
+                user_input, _db_assessment
+            )
+            _mismatch_id, _mismatch_event = build_step(
+                "Database answer verification",
+                "SQL evidence did not match the requested metric/dimensions",
+                phase="Verifying output",
+            )
+            yield _mismatch_event
+            yield step_chunk(
+                _mismatch_id,
+                "text",
+                "پاسخ قبلی با سؤال تطبیق نداشت؛ از نمایش آمار نامرتبط جلوگیری شد.",
+            )
+            yield step_chunk(_mismatch_id, "html", _mismatch_html)
+            yield step_done(_mismatch_id, "failed")
+            history_steps.append(
+                {
+                    "id": _mismatch_id,
+                    "title": "Database answer verification",
+                    "detail": "SQL evidence did not match the requested metric/dimensions",
+                    "phase": "Verifying output",
+                    "thought": None,
+                    "action": "sql_query",
+                    "action_input": None,
+                    "outputs": [
+                        {
+                            "output_type": "text",
+                            "content": json.dumps(_db_assessment, ensure_ascii=False),
+                        },
+                        {"output_type": "html", "content": _mismatch_html},
+                    ],
+                    "status": "failed",
+                }
+            )
+            final_content = (
+                "نمی‌توانم پاسخ قبلی را به‌عنوان پاسخ سؤال شما تأیید کنم: "
+                "شواهد کوئری با شاخص و بُعد درخواستی تطبیق نداشت. "
+                "هیچ عددی دربارهٔ فروش استان‌ها بدون نتیجهٔ معتبر SQL گزارش نمی‌شود."
+            )
+            react_state["html_rendered"] = True
+            _has_html = True
+        if needs_report_repair(
+            user_input=user_input,
+            triage_summary=_triage_summary,
+            verification_summary=_verify_summary,
+            has_html=_has_html,
+        ):
+            if is_jev_fallback_enabled():
+                from .liara_jev_auto import clean_answer_text, strip_context_tags
+
+                _report_title = "گزارش تحلیل"
+                try:
+                    _raw_title = (
+                        str(user_input).strip().splitlines()[0]
+                        if isinstance(user_input, str) and user_input.strip()
+                        else ""
+                    )
+                    if _raw_title:
+                        _report_title = strip_context_tags(_raw_title)[:80]
+                except Exception:
+                    pass
+                _fallback_html = build_fallback_report_html(
+                    title=_report_title,
+                    user_input=user_input,
+                    final_content=final_content,
+                    history_steps=history_steps,
+                    generated_images=react_state.get("generated_images", []),
+                    verification_summary=_verify_summary,
+                )
+                _repair_id, _repair_event = build_step(
+                    "Jev repair · HTML report",
+                    "Fallback report synthesized (agent skipped html_interpreter)",
+                    phase="Rendering report",
+                )
+                yield _repair_event
+                yield step_chunk(
+                    _repair_id,
+                    "text",
+                    "Jev verifier detected a missing report — "
+                    "fallback HTML assembled from verified steps.",
+                )
+                yield step_chunk(_repair_id, "html", _fallback_html)
+                yield step_done(_repair_id)
+                history_steps.append(
+                    {
+                        "id": _repair_id,
+                        "title": "Jev repair · HTML report",
+                        "detail": "Fallback report synthesized "
+                        "(agent skipped html_interpreter)",
+                        "phase": "Rendering report",
+                        "thought": None,
+                        "action": "html_interpreter",
+                        "action_input": None,
+                        "outputs": [
+                            {
+                                "output_type": "text",
+                                "content": "Fallback HTML report synthesized "
+                                "by Jev Governor.",
+                            },
+                            {"output_type": "html", "content": _fallback_html},
+                        ],
+                        "status": "done",
+                    }
+                )
+                react_state["html_rendered"] = True
+                _has_html = True
+                # Clean the final text as well: the model sometimes terminates
+                # with a raw tool-call JSON blob instead of a human answer.
+                try:
+                    _cleaned_final = clean_answer_text(final_content)
+                    if _cleaned_final:
+                        final_content = (
+                            _cleaned_final
+                            + "\n\nگزارش تعاملی HTML نیز ساخته و نمایش داده شد."
+                        )
+                    else:
+                        final_content = (
+                            "تحلیل انجام شد و گزارش تعاملی HTML نیز ساخته و "
+                            "نمایش داده شد."
+                        )
+                except Exception:
+                    pass
+        if _verify_summary is not None:
+            try:
+                _v_content = render_jev_verification_content(
+                    _verify_summary, bool(_has_html)
+                )
+                _v_id, _v_event = build_step(
+                    "Jev verification",
+                    "Post-loop output check (advisory)",
+                    phase="Verifying output",
+                )
+                yield _v_event
+                yield step_chunk(_v_id, "text", _v_content)
+                yield step_done(_v_id)
+                history_steps.append(
+                    {
+                        "id": _v_id,
+                        "title": "Jev verification",
+                        "detail": "Post-loop output check (advisory)",
+                        "phase": "Verifying output",
+                        "thought": None,
+                        "action": "liara_jev_decision",
+                        "action_input": None,
+                        "outputs": [
+                            {"output_type": "text", "content": _v_content}
+                        ],
+                        "status": "done",
+                    }
+                )
+            except Exception:
+                logger.debug("Jev verification card skipped", exc_info=True)
+    except Exception:
+        logger.debug("Jev post-loop verifier skipped", exc_info=True)
 
     final_answer = final_answer_assembler.finalize(final_content)
 

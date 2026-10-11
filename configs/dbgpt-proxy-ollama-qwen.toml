@@ -117,6 +117,14 @@ api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a4519264
 context_length = 1050000
 
 [[models.llms]]
+name = "xiaomi/mimo-v2.6-flash (liara)"
+provider = "proxy/liara"
+backend = "xiaomi/mimo-v2.6-flash"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1000000
+
+[[models.llms]]
 name = "deepseek/deepseek-v4.1-flash (liara)"
 provider = "proxy/liara"
 backend = "deepseek/deepseek-v4.1-flash"
@@ -147,6 +155,30 @@ context_length = 1048576
 name = "qwen/qwen3.7-flash (liara)"
 provider = "proxy/liara"
 backend = "qwen/qwen3.7-flash"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1000000
+
+[[models.llms]]
+name = "meta/muse-spark-1.3-contributor (liara)"
+provider = "proxy/liara"
+backend = "meta/muse-spark-1.3-contributor"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1048576
+
+[[models.llms]]
+name = "qwen/qwen3.5-flash (liara)"
+provider = "proxy/liara"
+backend = "qwen/qwen3.5-flash-02-23"
+api_key = "${env:LIARA_API_KEY}"
+api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
+context_length = 1000000
+
+[[models.llms]]
+name = "qwen/qwen-plus (liara)"
+provider = "proxy/liara"
+backend = "qwen/qwen-plus"
 api_key = "${env:LIARA_API_KEY}"
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 context_length = 1000000

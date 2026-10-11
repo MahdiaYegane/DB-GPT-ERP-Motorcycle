@@ -1,32 +1,47 @@
 ﻿import os
 import sys
 
-_config = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "configs",
-    "dbgpt-proxy-ollama-qwen.toml",
-)
+# Repo root = directory containing this file (portable, no hardcoded path).
+_REPO_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
-def _load_env_file(path):
-    """Export KEY=VALUE lines from .env (without overriding real environment variables)."""
-    if not os.path.isfile(path):
-        return
-    with open(path, encoding="utf-8-sig") as f:
-        for line in f:
-            line = line.strip()
-            if not line or line.startswith("#") or "=" not in line:
-                continue
-            key, _, value = line.partition("=")
-            os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+def _load_dotenv() -> None:
+    """Load ``.env`` (repo root, gitignored) into ``os.environ`` (no override).
+
+    Connectors stored with ``${env:...}`` placeholders (e.g. the sorooshan1040
+    MSSQL ``${env:SQL_SERVER_PASSWORD}``) resolve at request time, so the
+    variables must exist in the server process environment — not just the
+    launcher shell.
+    """
+    dotenv = os.path.join(_REPO_ROOT, ".env")
+    try:
+        with open(dotenv, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, _, value = line.partition("=")
+                key, value = key.strip(), value.strip()
+                if key and key not in os.environ:
+                    os.environ[key] = value
+    except OSError:
+        pass
 
 
-# The config references secrets as ${env:...}; load them from .env before it is parsed.
-# Fall back to env.txt (legacy name in this repo) so direct `python launch_dbgpt.py`
-# works even without the .bat / .env.
-_load_env_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
-_load_env_file(os.path.join(os.path.dirname(os.path.abspath(__file__)), "env.txt"))
+_load_dotenv()
+# Fallback: make workspace packages importable even when the .venv editable
+# .pth files still point to the old checkout path (DB_GPT/DB-GPT).
+for _pkg in ("dbgpt-core", "dbgpt-client", "dbgpt-ext", "dbgpt-serve", "dbgpt-app", "dbgpt-sandbox"):
+    _src = os.path.join(_REPO_ROOT, "packages", _pkg, "src")
+    if os.path.isdir(_src) and _src not in sys.path:
+        sys.path.insert(0, _src)
 
-sys.argv = ["dbgpt", "start", "webserver", "--config", _config]
+sys.argv = [
+    "dbgpt",
+    "start",
+    "webserver",
+    "--config",
+    os.path.join(_REPO_ROOT, "configs", "dbgpt-proxy-liara.toml"),
+]
 from dbgpt.cli.cli_scripts import cli
 cli()

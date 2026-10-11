@@ -62,6 +62,7 @@ def mount_routers(app: FastAPI):
     )
     from dbgpt_app.openapi.api_v1.examples_api import router as examples_router
     from dbgpt_app.openapi.api_v1.feedback.api_fb_v1 import router as api_fb_v1
+    from dbgpt_app.openapi.api_v1.liara_jev_api import router as liara_jev_router
     from dbgpt_app.openapi.api_v1.python_upload_api import (
         router as python_upload_router,
     )
@@ -70,6 +71,7 @@ def mount_routers(app: FastAPI):
     from dbgpt_serve.agent.app.endpoints import router as app_v2
 
     app.include_router(api_v1, prefix="/api", tags=["Chat"])
+    app.include_router(liara_jev_router, prefix="/api", tags=["Liara Jev"])
     app.include_router(api_v2, prefix="/api", tags=["ChatV2"])
     app.include_router(api_editor_route_v1, prefix="/api", tags=["Editor"])
     app.include_router(api_fb_v1, prefix="/api", tags=["FeedBack"])
