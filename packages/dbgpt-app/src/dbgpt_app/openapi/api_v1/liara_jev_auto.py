@@ -91,6 +91,25 @@ TRIAGE_QUESTIONS: Dict[str, Dict[str, Any]] = {
             "general_answer": "Answer directly without tools.",
         },
     },
+    "off_topic": {
+        "type": "noul",
+        "instructions": (
+            "This assistant only analyses a company's own business data (sales, "
+            "invoices, customers, products, parts, inventory, warehouse, service, "
+            "accounting, calls, staff, branches...) and can introduce itself. "
+            "Is the request CLEARLY unrelated to that — general knowledge, news, "
+            "currency/gold/market prices, weather, coding help, poems or stories, "
+            "recipes, translation, homework, personal advice? Answer near 1 only "
+            "when it obviously cannot be about the company's data. Answer near 0 "
+            "for any business or analysis question, anything that might be "
+            "answered from company records, follow-ups, greetings, and questions "
+            "about the assistant. When unsure, answer near 0."
+        ),
+        "criteria": {
+            "true": "Clearly unrelated to the company's data and to the assistant.",
+            "false": "About company data/analysis, the assistant, or unsure.",
+        },
+    },
     "needs_clarification": {
         "type": "noul",
         "instructions": (
@@ -688,9 +707,18 @@ def summarize_jev_triage(
     )
     expects_report = mentions_visualization(user_input)
 
+    off_topic: Optional[float] = None
+    try:
+        _off = answers.get("off_topic")
+        if isinstance(_off, dict):
+            off_topic = _as_float(_off.get("noul"))
+    except Exception:
+        off_topic = None
+
     return {
         "intent": intent,
         "intent_confidence": intent_confidence,
+        "off_topic": off_topic,
         "needs_clarification": needs_clarification,
         "complexity": complexity,
         "complexity_label": complexity_label,

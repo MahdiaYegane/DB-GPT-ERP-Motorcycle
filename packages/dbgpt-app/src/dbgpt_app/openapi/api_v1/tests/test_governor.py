@@ -86,3 +86,18 @@ def test_data_question_without_database_routes_to_no_db():
         has_connectors=False, has_history=False,
     )
     assert st.route == "no_db" and st.profile == "fast"
+
+
+def test_off_topic_gate_is_conservative():
+    off = lambda text, score=0.97, hist=False: _route(  # noqa: E731
+        triage={"intent": "general_answer", "off_topic": score}, user_input=text, has_history=hist
+    ).route
+    assert off("پایتخت فرانسه کجاست؟") == "out_of_scope"
+    assert off("یک شعر کوتاه درباره بهار برام بنویس") == "out_of_scope"
+    # business words, the assistant itself, low score, short follow-ups: never gated
+    assert off("قیمت فروش قطعه پیستون چنده؟") != "out_of_scope"
+    assert off("تو کی هستی؟") != "out_of_scope"
+    assert off("پایتخت فرانسه کجاست؟", score=0.5) != "out_of_scope"
+    assert off("سال بعدش چطور؟", hist=True) != "out_of_scope"
+    assert _route(triage={"intent": "general_answer", "off_topic": 0.99},
+                  user_input="یک شعر بنویس", has_file=True).route != "out_of_scope"

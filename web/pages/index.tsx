@@ -3361,6 +3361,7 @@ const Playground: NextPage = () => {
                               'درباره پایگاه داده خود بپرسید، یک فایل CSV بارگذاری کنید یا گزارش بسازید...'
                             }
                             autoSize={{ minRows: 2, maxRows: 6 }}
+                            maxLength={4000}
                             className='flex-1 resize-none !border-none !shadow-none !bg-transparent px-0 py-2'
                             style={{ backgroundColor: 'transparent' }}
                           />
@@ -4072,6 +4073,7 @@ const Playground: NextPage = () => {
                           'درباره پایگاه داده خود بپرسید، یک فایل CSV بارگذاری کنید یا گزارش بسازید...'
                         }
                         autoSize={{ minRows: 3, maxRows: 8 }}
+                        maxLength={4000}
                         className='text-lg resize-none !border-none !shadow-none !bg-transparent px-2 py-2 mb-2'
                         style={{ backgroundColor: 'transparent' }}
                       />

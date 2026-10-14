@@ -1453,6 +1453,32 @@ def _close_turn_attachments_quietly(
         logger.warning("Failed to close session attachment context", exc_info=True)
 
 
+def _max_input_chars() -> int:
+    try:
+        return max(200, int(os.getenv("DBGPT_MAX_INPUT_CHARS", "4000")))
+    except ValueError:
+        return 4000
+
+
+def _input_too_long_message(user_input: Any) -> Optional[str]:
+    """Polite refusal when the typed question exceeds the input limit."""
+    text = user_input if isinstance(user_input, str) else str(user_input or "")
+    # "[Database: x]" / "[Skill: y]" context tags do not count.
+    body = re.sub(r"^\s*(?:\[[^\]\n]{0,300}\]\s*)+", "", text)
+    limit = _max_input_chars()
+    if len(body) <= limit:
+        return None
+    if re.search(r"[\u0600-\u06FF]", body):
+        return (
+            f"پیام شما {len(body):,} کاراکتر است و حداکثر طول مجاز {limit:,} کاراکتر است. "
+            "لطفاً سؤال را کوتاه‌تر و مشخص‌تر بنویسید."
+        )
+    return (
+        f"Your message is {len(body):,} characters; the maximum is {limit:,}. "
+        "Please shorten the question."
+    )
+
+
 async def _react_agent_stream_inner(
     dialogue: ConversationVo,
     tool_mode: str = "full",
@@ -1465,6 +1491,12 @@ async def _react_agent_stream_inner(
     round_holder: Dict[str, Any] = {}
     final_emitted = False
     done_emitted = False
+    _too_long = _input_too_long_message(getattr(dialogue, "user_input", ""))
+    if _too_long:
+        # Rejected before any model call (no cost, no timeout risk).
+        yield _sse_event(AgentFinalAnswer(content=_too_long).to_sse_payload())
+        yield _sse_event({"type": "done"})
+        return
     try:
         async for event in _react_agent_stream_impl(
             dialogue,
@@ -3046,6 +3078,37 @@ print(json.dumps(summary, ensure_ascii=False))
         logger.warning("Governor routing skipped (legacy flow)", exc_info=True)
         _gov = None
     _gov_route_name = _gov.route if _gov is not None else "legacy"
+
+    if _gov_route_name == "out_of_scope":
+        # Clearly unrelated to the company's data: fixed reply, no model call.
+        from .governor import out_of_scope_message as _gov_oos_message
+        from .governor import write_telemetry as _gov_telemetry_oos
+
+        final_answer = AgentFinalAnswer(content=_gov_oos_message(user_input))
+        try:
+            _gov_telemetry_oos(
+                _gov,
+                model=dialogue.model_name,
+                final_chars=len(final_answer.content),
+                has_html=False,
+                tool_steps=0,
+            )
+        except Exception:
+            logger.debug("Governor telemetry skipped", exc_info=True)
+        history_payload = _build_react_history_payload(
+            final_content=final_answer.content,
+            steps=[],
+            task_plan=[],
+            generated_images=[],
+            sub_agents=build_subagent_history_snapshot({}),
+            input_files=input_files_snapshot,
+            citations=[],
+        )
+        for terminal_event in _react_terminal_events(
+            storage_conv, history_payload, final_answer
+        ):
+            yield terminal_event
+        return
 
     skill_prompt_context = ""
     execution_instruction = ""

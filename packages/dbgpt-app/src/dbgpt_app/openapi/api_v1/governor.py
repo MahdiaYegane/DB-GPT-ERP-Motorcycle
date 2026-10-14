@@ -154,6 +154,7 @@ class RunState:
     expects_report: bool = False
     route: str = "legacy"
     route_reason: str = ""
+    off_topic: Optional[float] = None
     profile: str = "standard"
     clarify_first: bool = False
     steps: int = 0
@@ -189,6 +190,70 @@ class RunState:
 
 
 # ── intake: routing ─────────────────────────────────────────────────────────
+# Generic business vocabulary: a request containing any of these is never
+# treated as off-topic (the gate must not swallow real analysis questions).
+_BUSINESS_TERMS = (
+    "فروش", "خرید", "فاکتور", "مشتری", "کالا", "قطعه", "انبار", "موجودی", "موتور",
+    "گارانتی", "تعمیر", "استان", "گزارش", "نمودار", "تحلیل", "پیش‌بینی", "پیشبینی",
+    "پیش بینی", "روند", "داده", "دیتابیس", "پایگاه", "جدول", "تعداد", "مجموع",
+    "میانگین", "سود", "هزینه", "درآمد", "پرداخت", "حساب", "سند", "تماس", "نمایندگی",
+    "شعبه", "پرسنل", "کارمند", "سفارش", "حواله", "شرکت", "کسب", "عملکرد", "شاخص",
+    "ماهانه", "سالانه", "مقایسه", "رکورد", "ستون",
+    "sale", "invoice", "customer", "product", "stock", "inventory", "report",
+    "chart", "table", "record", "revenue", "profit", "cost", "trend", "forecast",
+)
+_ABOUT_ASSISTANT = re.compile(
+    r"(کی هستی|کی هستین|اسمت|اسم تو|اسم شما|چیکار|چه کار|چه کمکی|معرفی|چی بلدی|"
+    r"who are you|your name|what can you|help me with)",
+    re.I,
+)
+
+
+def OFF_TOPIC() -> bool:
+    return _env_bool("DBGPT_GOV_OFF_TOPIC", True)
+
+
+def TH_OFF_TOPIC() -> float:
+    return _env_float("DBGPT_GOV_TH_OFF_TOPIC", 0.85)
+
+
+def is_off_topic(
+    off_topic: Optional[float],
+    text: str,
+    *,
+    has_attachments: bool,
+    has_history: bool,
+) -> bool:
+    """Conservative gate: only clear off-topic requests, never business ones."""
+    if not OFF_TOPIC() or off_topic is None or has_attachments:
+        return False
+    lowered = re.sub(r"\s+", " ", (text or "").casefold()).strip()
+    if not lowered or any(t in lowered for t in _BUSINESS_TERMS):
+        return False
+    if _ABOUT_ASSISTANT.search(lowered):
+        return False
+    # Inside a conversation a short message may be a follow-up ("and next
+    # year?"); never gate those, and be stricter for longer ones.
+    if has_history and len(lowered) <= 40:
+        return False
+    threshold = max(TH_OFF_TOPIC(), 0.95) if has_history else TH_OFF_TOPIC()
+    return off_topic >= threshold
+
+
+def out_of_scope_message(user_input: str) -> str:
+    if re.search(r"[\u0600-\u06FF]", user_input or ""):
+        return (
+            "من دستیار هوشمند کویر موتور هستم و فقط به سؤال‌های مربوط به تحلیل "
+            "داده‌های شرکت (مثل فروش، فاکتورها، مشتریان، کالا و موجودی) پاسخ می‌دهم. "
+            "لطفاً سؤالتان را دربارهٔ داده‌های شرکت بپرسید."
+        )
+    return (
+        "I am the Kavir Motor Intelligent Assistant and only answer questions about "
+        "the company's data (sales, invoices, customers, products, inventory). "
+        "Please ask a question about the company's data."
+    )
+
+
 def decide_route(
     state: RunState,
     *,
@@ -221,8 +286,18 @@ def decide_route(
     lowered = re.sub(r"\s+", " ", text.casefold()).strip()
     mentions_data = any(k in lowered for k in _DATABASE_QUERY_KEYWORDS)
 
+    state.off_topic = triage.get("off_topic")
     if not enabled():
         state.route, state.route_reason = "legacy", "governor disabled"
+    elif is_off_topic(
+        state.off_topic,
+        text,
+        has_attachments=bool(has_skill or has_file or has_kb or has_connectors),
+        has_history=has_history,
+    ):
+        # Answered with a fixed reply, no model call at all.
+        state.route, state.route_reason = "out_of_scope", f"off-topic {state.off_topic:.2f}"
+        state.profile = "fast"
     elif (
         FAST_PATH()
         and not (has_skill or has_file or has_kb)
@@ -263,6 +338,7 @@ def decide_route(
     )
     state.decide("intake.route", "jev+rule", {"route": state.route, "profile": state.profile,
                                               "intent": state.intent, "ambiguity": state.ambiguity,
+                                              "off_topic": state.off_topic,
                                               "complexity": state.complexity})
     return state
 
