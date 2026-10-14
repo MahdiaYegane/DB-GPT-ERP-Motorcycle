@@ -118,7 +118,7 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
       direction='rtl'
       theme={{
         token: {
-          colorPrimary: '#E30613',
+          colorPrimary: mode === 'dark' ? '#FF4D55' : '#E30613',
           borderRadius: 4,
           fontFamily: 'Arad, sans-serif',
         },
