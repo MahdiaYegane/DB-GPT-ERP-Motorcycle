@@ -1,8 +1,0 @@
-llama:
-  label: LLama
-  permalink: /llama
-  description: A series of language models developed by Meta AI 
-LLM:
-  label: LLM
-  permalink: /llm
-  description: Large Language Models

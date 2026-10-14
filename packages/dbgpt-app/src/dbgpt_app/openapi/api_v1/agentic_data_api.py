@@ -3002,6 +3002,51 @@ print(json.dumps(summary, ensure_ascii=False))
         jev_triage_result = None
         jev_guidance_section = ""
 
+    # ── Governor (governor.py): one intent / route / budget decision per run ──
+    # fast  = small talk, no tools; data = database question with a compact
+    # prompt and 4 tools; legacy = unchanged full-tool flow. Fail-open.
+    _gov = None
+    try:
+        from .governor import DATA_TEMPERATURE as _gov_data_temp
+        from .governor import RunState as _GovState
+        from .governor import decide_route as _gov_decide_route
+        from .liara_jev_auto import strip_context_tags as _gov_strip
+
+        _gov = _GovState(
+            conv_id=conv_id,
+            question=_gov_strip(str(user_input or ""))[:2000],
+            database=database_name,
+        )
+        _gov_decide_route(
+            _gov,
+            triage=react_state.get("jev_triage"),
+            rule_intent=request_intent,
+            user_input=str(user_input or ""),
+            has_db=database_connector is not None,
+            has_skill=pre_matched_skill is not None,
+            has_kb=bool(knowledge_space),
+            has_file=bool(file_path or attachment_ctx is not None),
+            has_connectors=bool(connector_ids),
+            has_history=bool(historical_dialogues),
+        )
+        react_state["governor"] = _gov
+        # One intent for the whole run (Jev + explicit wording).
+        if _gov.intent:
+            request_intent = _gov.intent
+        if _gov.route in ("fast", "no_db", "data"):
+            context.enable_native_function_calling = False
+            # Never lower the ceiling below the default (only a cap, not cost).
+            context.max_new_tokens = max(
+                int(context.max_new_tokens or 0), _gov.budget.max_tokens
+            )
+            if _gov.route == "data":
+                context.temperature = _gov_data_temp()
+        logger.info(_gov.describe())
+    except Exception:
+        logger.warning("Governor routing skipped (legacy flow)", exc_info=True)
+        _gov = None
+    _gov_route_name = _gov.route if _gov is not None else "legacy"
+
     skill_prompt_context = ""
     execution_instruction = ""
     if pre_matched_skill and react_state.get("skill_prompt"):
@@ -3096,7 +3141,33 @@ The following are the complete instructions of the user-selected skill. Please f
         max_parallel=_max_parallel_subagents,
     )
 
-    if is_skill_mode:
+    if _gov_route_name in ("fast", "no_db", "data"):
+        from .governor import build_data_prompt as _gov_data_prompt
+        from .governor import build_no_db_prompt as _gov_no_db_prompt
+        from .governor import build_fast_prompt as _gov_fast_prompt
+
+        _gov_identity = (
+            f"You are the {_KAVIR_NAME_EN} («{_KAVIR_NAME_FA}»), answering the "
+            "user's questions from the company's data."
+        )
+        if _gov_route_name == "fast":
+            workflow_prompt = _gov_fast_prompt(_gov_identity, _KAVIR_PROMPT_SECTIONS)
+            tool_pack = ToolPack([Terminate()])
+        elif _gov_route_name == "no_db":
+            workflow_prompt = _gov_no_db_prompt(_gov_identity, _KAVIR_PROMPT_SECTIONS)
+            tool_pack = ToolPack([Terminate()])
+        else:
+            workflow_prompt = _gov_data_prompt(
+                identity_line=_gov_identity,
+                sections=_KAVIR_PROMPT_SECTIONS,
+                database_context=database_context,
+                clarify_first=bool(_gov and _gov.clarify_first),
+                expects_report=bool(_gov and _gov.expects_report),
+            )
+            tool_pack = ToolPack(
+                [sql_query_tool, html_interpreter_tool, question_tool, Terminate()]
+            )
+    elif is_skill_mode:
         # Simplified prompt for skill mode - only skill-related tools +
         # html_interpreter
         workflow_prompt = f"""
@@ -3515,7 +3586,7 @@ normalizes it to the same validated action format before dispatch.
 
     # Debug: print all registered tools
     logger.info(f"ToolPack resources: {list(tool_pack._resources.keys())}")
-    if "execute_skill_script" not in tool_pack._resources:
+    if _gov_route_name == "legacy" and "execute_skill_script" not in tool_pack._resources:
         logger.error("execute_skill_script NOT in ToolPack!")
 
     # Combine tool_pack and knowledge_resources into a single ResourcePack
@@ -3605,9 +3676,9 @@ normalizes it to the same validated action format before dispatch.
 
     # Inject the automatic Jev triage hint (advisory only; never overrides
     # tool observations). Empty when triage was disabled or failed.
-    if jev_guidance_section:
+    if jev_guidance_section and _gov_route_name not in ("fast", "no_db"):
         workflow_prompt += "\n\n" + jev_guidance_section
-    if request_intent == "database_query":
+    if request_intent == "database_query" and _gov_route_name not in ("fast", "no_db"):
         workflow_prompt += """
 
 ## Exact-Question / Database Evidence Contract (mandatory)
@@ -3636,6 +3707,27 @@ normalizes it to the same validated action format before dispatch.
     )
 
     agent = await agent_builder.build()
+
+    if _gov is not None:
+        try:
+            if _gov_route_name in ("fast", "no_db", "data"):
+                agent.max_timeout = _gov.budget.seconds
+                object.__setattr__(agent, "step_budget", _gov.budget.steps)
+            if _gov_route_name != "fast" and database_connector is not None:
+                from dbgpt_serve.datasource.service import db_catalog as _gov_catalog
+
+                from .governor import StepPolicy as _GovPolicy
+
+                object.__setattr__(
+                    agent,
+                    "step_policy",
+                    _GovPolicy(
+                        _gov,
+                        catalog_loader=lambda: _gov_catalog.load_catalog(database_name),
+                    ),
+                )
+        except Exception:
+            logger.warning("Governor policy not attached", exc_info=True)
 
     parser = ReActOutputParser()
     received = AgentMessage(content=user_input)
@@ -3744,6 +3836,8 @@ normalizes it to the same validated action format before dispatch.
             )
             yield _jev_step_event
             _jev_content = render_jev_step_content(_jev_summary)
+            if _gov is not None:
+                _jev_content += "\n" + _gov.describe()
             yield step_chunk(_jev_step_id, "text", _jev_content)
             yield step_done(_jev_step_id)
             history_steps.append(
@@ -4760,6 +4854,21 @@ normalizes it to the same validated action format before dispatch.
         logger.debug("Answer number check skipped", exc_info=True)
 
     final_answer = final_answer_assembler.finalize(final_content)
+
+    if _gov is not None:
+        try:
+            from .governor import write_telemetry as _gov_telemetry
+            from .liara_jev_auto import history_has_html as _gov_has_html
+
+            _gov_telemetry(
+                _gov,
+                model=dialogue.model_name,
+                final_chars=len(final_answer.content or ""),
+                has_html=bool(_gov_has_html(history_steps)),
+                tool_steps=len(history_steps),
+            )
+        except Exception:
+            logger.debug("Governor telemetry skipped", exc_info=True)
 
     # Persist AI reply with structured history payload
     history_payload = _build_react_history_payload(

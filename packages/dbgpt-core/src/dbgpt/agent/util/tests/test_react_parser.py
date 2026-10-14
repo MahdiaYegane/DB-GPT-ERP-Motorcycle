@@ -703,3 +703,16 @@ def test_canonicalize_tool_markup_keeps_one_action():
     assert step.action_input == {"sql": "SELECT 1"}
     plain = "Thought: ok\nAction: terminate\nAction Input: {}"
     assert canonicalize_tool_markup(plain) == plain
+
+
+def test_decorated_labels_are_parsed_as_a_step():
+    from dbgpt.agent.util.react_parser import ReActOutputParser, canonicalize_tool_markup
+
+    raw = (
+        "<font color='blue'><b>Thought:</b></font> need schema\n"
+        "<font color='green'><b>Action Intention:</b></font> list tables\n"
+        "**Action:** `sql_query`\n"
+        '**Action Input:** {"sql": "SELECT 1"}'
+    )
+    steps = ReActOutputParser().parse_current_step(canonicalize_tool_markup(raw))
+    assert steps and steps[0].action == "sql_query"

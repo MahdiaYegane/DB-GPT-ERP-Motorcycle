@@ -214,3 +214,6 @@ test_docs
 openspec/
 docs/superpowers/
 .gstack/
+
+/scripts/eval/results/
+/pilot/meta_data/run_telemetry/

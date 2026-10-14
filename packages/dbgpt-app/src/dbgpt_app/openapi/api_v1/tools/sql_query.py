@@ -102,7 +102,11 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
             separator = "| " + " | ".join(["---"] * len(col_names)) + " |"
             md_rows = []
             for row in rows[:50]:
-                md_rows.append("| " + " | ".join(str(v) for v in row) + " |")
+                # CHAR columns come back space-padded; trim them so the
+                # model does not copy (and pay for) the padding.
+                md_rows.append(
+                    "| " + " | ".join(str(v).strip() for v in row) + " |"
+                )
             table = "\n".join([header, separator] + md_rows)
             if len(rows) > 50:
                 table += f"\n\n(Showing first 50 rows of {len(rows)} rows)"

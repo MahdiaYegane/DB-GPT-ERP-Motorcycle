@@ -105,6 +105,34 @@ PROTOCOL_MARKUP_START = re.compile(r"[<\uff1c]\s*[|\uff5c\u2502]")
 _ACTION_LINE_PATTERN = re.compile(r"^\s*Action\s*:", re.MULTILINE)
 
 
+# Some models copy the UI's rendered step back as their own reply:
+# ``<font color='blue'><b>Thought:</b></font>`` / ``**Action:** `sql_query```.
+# Those decorations hide the ReAct labels from the parser (the reply was then
+# mistaken for a plain-text final answer), so they are removed first.
+_DECORATED_LABEL = re.compile(
+    r"(?i)(?:<(?:font|b|strong)\b[^>]*>|\*\*|__)\s*"
+    r"(?:Thought|Action\s+Intention|Action\s+Reason|Action\s+Input|Action)\s*[:：]"
+)
+_DECOR_TAG = re.compile(r"(?i)</?(?:font|b|strong)\b[^>]*>")
+_BOLD_LABEL = re.compile(
+    r"(?i)(?:\*\*|__)\s*(Thought|Action\s+Intention|Action\s+Reason|Action\s+Input|Action)"
+    r"\s*([:：])\s*(?:\*\*|__)?"
+)
+_TICKED_ACTION = re.compile(r"(?im)^(\s*Action\s*[:：]\s*)`+\s*([^`\n]+?)\s*`+\s*$")
+_TICKED_INPUT = re.compile(r"(?im)^(\s*Action\s+Input\s*[:：]\s*)`+([^`\n]+)`+\s*$")
+
+
+def strip_label_decorations(text: Any) -> Any:
+    """Undo HTML/markdown decoration around ReAct labels (no-op otherwise)."""
+    if not isinstance(text, str) or not _DECORATED_LABEL.search(text):
+        return text
+    out = _DECOR_TAG.sub("", text)
+    out = _BOLD_LABEL.sub(lambda m: f"{m.group(1)}{m.group(2)} ", out)
+    out = _TICKED_ACTION.sub(lambda m: m.group(1) + m.group(2), out)
+    out = _TICKED_INPUT.sub(lambda m: m.group(1) + m.group(2), out)
+    return out
+
+
 def canonicalize_tool_markup(text: Any) -> Any:
     """Rewrite a raw LLM reply so it never carries DSML tool-call markup.
 
@@ -118,6 +146,7 @@ def canonicalize_tool_markup(text: Any) -> Any:
     model re-issues them in later steps). Keeping raw markup out of the
     stored reply matters: it is fed back as history and the model copies it.
     """
+    text = strip_label_decorations(text)
     if not isinstance(text, str) or "dsml" not in text.lower():
         return text
     first_invoke = _DSML_INVOKE_PATTERN.search(text)

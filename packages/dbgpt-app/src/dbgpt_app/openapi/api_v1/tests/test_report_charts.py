@@ -20,3 +20,13 @@ def test_pie_and_errors():
         build_sql_chart_report(["m", "n"], [])
     with pytest.raises(ValueError):
         build_sql_chart_report(["m", "n"], [["a", "x"], ["b", "y"]])
+
+def test_many_categories_use_horizontal_bars_with_every_label():
+    from dbgpt_app.openapi.api_v1.report_charts import build_sql_chart_report
+
+    rows = [[f"استان شماره {i}", 1000 - i * 10] for i in range(32)] + [["", 5]]
+    html, _ = build_sql_chart_report(["province", "total"], rows, chart="bar")
+    for i in range(32):
+        assert f"استان شماره {i}<" in html  # every name written, none thinned
+    assert "(نامشخص)" in html
+    assert 'class="axis cat"' in html

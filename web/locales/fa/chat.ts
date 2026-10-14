@@ -73,7 +73,7 @@ export const ChatEn = {
   task_completed: 'وظیفه تکمیل شد',
   steps_completed_count: '{{count}} مرحله تکمیل شد',
   view_all_task_files: 'مشاهده همه فایل‌های این وظیفه',
-  db_gpt_thinking: 'کویر موتور در حال فکر کردن است...',
+  db_gpt_thinking: 'دستیار کویر موتور در حال فکر کردن است...',
   replay_badge: 'بازپخش',
   replay_page_title: 'بازپخش گفتگوی کویر موتور',
   replay_page_title_with_question: '{{question}} · بازپخش کویر موتور',

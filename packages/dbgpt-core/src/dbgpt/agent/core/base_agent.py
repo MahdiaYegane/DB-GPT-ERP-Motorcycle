@@ -552,6 +552,7 @@ class ConversableAgent(Role, Agent):
             # Wrap-up state: once the step/time budget is used up the model is
             # told to finish, and the loop stops if it keeps exploring anyway.
             object.__setattr__(self, "_wrap_up_note", None)
+            object.__setattr__(self, "_policy_note", None)
             wrap_up_rounds = 0
             is_success = True
             observation = received_message.content or ""
@@ -763,11 +764,72 @@ class ConversableAgent(Role, Agent):
                         current_retry_counter=current_retry_counter,
                     )
                     if self.run_mode != AgentRunMode.LOOP or act_out.terminate:
-                        logger.debug(f"Agent {self.name} reply success!{reply_message}")
-                        break
+                        # Let the step policy reject a final answer once
+                        # (e.g. numbers not found in any query result).
+                        _reject = None
+                        _policy = getattr(self, "step_policy", None)
+                        if (
+                            _policy is not None
+                            and self.run_mode == AgentRunMode.LOOP
+                            and act_out.terminate
+                        ):
+                            try:
+                                _reject = await _policy(
+                                    {
+                                        "round": current_retry_counter + 1,
+                                        "action": getattr(act_out, "action", None),
+                                        "action_input": getattr(act_out, "action_input", None)
+                                        or getattr(act_out, "content", None),
+                                        "observation": getattr(act_out, "content", None),
+                                        "success": True,
+                                        "terminal": True,
+                                        "elapsed": time.time() - start_time,
+                                        "agent": self,
+                                    }
+                                )
+                            except Exception:
+                                logger.warning("step_policy (terminal) failed", exc_info=True)
+                                _reject = None
+                        if not (isinstance(_reject, dict) and _reject.get("continue")):
+                            logger.debug(f"Agent {self.name} reply success!{reply_message}")
+                            break
+                        object.__setattr__(self, "_policy_note", str(_reject.get("hint") or ""))
+                        current_retry_counter += 1
+                        if current_retry_counter < self.max_retry_count:
+                            await self.send(reply_message, sender, reviewer, request_reply=False)
+                        continue
+                # Step policy (optional, set by the host app): decides after each
+                # step whether to hint, finish early or stop. Fail-open.
+                _policy = getattr(self, "step_policy", None)
+                if _policy is not None and self.run_mode == AgentRunMode.LOOP:
+                    try:
+                        _verdict = await _policy(
+                            {
+                                "round": current_retry_counter + 1,
+                                "action": getattr(act_out, "action", None),
+                                "action_input": getattr(act_out, "action_input", None),
+                                "observation": getattr(act_out, "observations", None)
+                                or getattr(act_out, "content", None),
+                                "success": bool(
+                                    check_pass and getattr(act_out, "is_exe_success", True)
+                                ),
+                                "elapsed": time.time() - start_time,
+                                "agent": self,
+                            }
+                        )
+                    except Exception:
+                        logger.warning("step_policy failed (ignored)", exc_info=True)
+                        _verdict = None
+                    if isinstance(_verdict, dict):
+                        if _verdict.get("hint"):
+                            object.__setattr__(self, "_policy_note", str(_verdict["hint"]))
+                        if _verdict.get("stop"):
+                            logger.info("step_policy stopped the loop: %s", _verdict.get("reason"))
+                            break
                 time_cost = time.time() - start_time
+                _budget = getattr(self, "step_budget", None) or _react_step_budget()
                 if self.run_mode == AgentRunMode.LOOP and (
-                    current_retry_counter + 1 >= _react_step_budget()
+                    current_retry_counter + 1 >= _budget
                     or time_cost > self.max_timeout * _WRAP_UP_TIME_FRACTION
                 ):
                     wrap_up_rounds += 1
@@ -1535,7 +1597,13 @@ class ConversableAgent(Role, Agent):
                     role=ModelMessageRoleType.HUMAN,
                 )
             )
-        wrap_up_note = getattr(self, "_wrap_up_note", None)
+        # One-shot step-policy hint (consumed here) + persistent wrap-up note.
+        policy_note = getattr(self, "_policy_note", None)
+        if policy_note:
+            object.__setattr__(self, "_policy_note", None)
+        wrap_up_note = "\n\n".join(
+            n for n in (policy_note, getattr(self, "_wrap_up_note", None)) if n
+        )
         if wrap_up_note:
             last = agent_messages[-1] if agent_messages else None
             if last is not None and last.role == ModelMessageRoleType.HUMAN:

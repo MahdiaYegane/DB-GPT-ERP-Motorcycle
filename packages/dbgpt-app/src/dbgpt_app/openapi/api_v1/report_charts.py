@@ -77,6 +77,103 @@ def _nice_max(v: float) -> float:
     return 10 * exp
 
 
+def _nice_step(span: float, target: int = 4) -> float:
+    """Round tick step (1/2/2.5/5 x 10^k) giving about ``target`` intervals."""
+    if span <= 0:
+        return 1.0
+    raw = span / target
+    exp = 10 ** math.floor(math.log10(raw))
+    for m in (1, 2, 2.5, 5, 10):
+        if m * exp >= raw:
+            return m * exp
+    return 10 * exp
+
+
+def _fmt_compact(v: float) -> str:
+    """Short value label with its own unit, e.g. '143 میلیارد'."""
+    div, unit = _unit_for(abs(v))
+    x = v / div
+    s = f"{x:,.0f}" if abs(x) >= 100 else (f"{x:,.1f}" if abs(x) >= 10 else f"{x:,.2f}")
+    if "." in s:
+        s = s.rstrip("0").rstrip(".")
+    return f"{s} {unit}".strip()
+
+
+def _label_width(text: str) -> float:
+    return 6.6 * len(text)
+
+
+def _svg_hbar_chart(
+    labels: List[str], series: List[Tuple[str, List[Optional[float]], int]]
+) -> str:
+    """Horizontal bars: every category name is written in full (RTL, right side)."""
+    n = max(len(labels), 1)
+    k = len(series)
+    row_h = 22 + 12 * (k - 1)
+    shown = [(str(l).strip() or "(نامشخص)")[:32] for l in labels]
+    label_w = min(220.0, max(60.0, max((_label_width(l) for l in shown), default=60.0) + 16))
+    width = 880
+    pad_t, pad_b, pad_l = 8, 30, 96  # pad_l leaves room for value labels
+    plot_r = width - label_w
+    pw = plot_r - pad_l
+    height = int(pad_t + n * row_h + pad_b)
+    vals = [v for _, vs, _ in series for v in vs if v is not None]
+    vmax = max([abs(v) for v in vals] + [0.0])
+    step = _nice_step(vmax)
+    top = max(step, math.ceil(vmax / step) * step)
+    div, _unit = _unit_for(top)
+
+    def w(v: float) -> float:
+        return abs(v) / top * pw
+
+    parts: List[str] = []
+    t = 0.0
+    while t <= top + 1e-9:  # vertical grid, value axis at the bottom
+        gx = plot_r - w(t)
+        parts.append(f'<line x1="{gx:.1f}" y1="{pad_t}" x2="{gx:.1f}" y2="{height - pad_b}" class="grid"/>')
+        parts.append(
+            f'<text x="{gx:.1f}" y="{height - pad_b + 16}" class="axis" text-anchor="middle">'
+            f"{_html.escape(_fmt_axis(t, div))}</text>"
+        )
+        t += step
+    parts.append(f'<line x1="{plot_r:.1f}" y1="{pad_t}" x2="{plot_r:.1f}" y2="{height - pad_b}" class="base"/>')
+    bar_h = min(16.0, (row_h - 6 - 2 * (k - 1)) / k)
+    for i, lab in enumerate(shown):
+        y_row = pad_t + i * row_h
+        cy = y_row + row_h / 2
+        parts.append(
+            f'<text x="{width - 6}" y="{cy + 4:.1f}" class="axis cat" direction="rtl" '
+            f'text-anchor="start">{_html.escape(lab)}</text>'
+        )
+        group_h = bar_h * k + 2 * (k - 1)
+        for si, (name, vs, color_idx) in enumerate(series):
+            v = vs[i] if i < len(vs) else None
+            if v is None:
+                continue
+            bw = max(w(v), 1.0)
+            y0 = y_row + (row_h - group_h) / 2 + si * (bar_h + 2)
+            tip = _html.escape(f"{labels[i]} — {name}: {_fmt_exact(v)}", quote=True)
+            parts.append(
+                f'<rect x="{plot_r - bw:.1f}" y="{y0:.1f}" width="{bw:.1f}" height="{bar_h:.1f}" '
+                f'rx="{min(3.0, bar_h / 2):.1f}" class="s{color_idx}" data-tip="{tip}"/>'
+            )
+            parts.append(
+                f'<text x="{plot_r - bw - 6:.1f}" y="{y0 + bar_h / 2 + 4:.1f}" class="axis val" '
+                f'direction="rtl" text-anchor="start">{_html.escape(_fmt_compact(v))}</text>'
+            )
+    return (
+        f'<svg viewBox="0 0 {width} {height}" role="img" class="chart">' + "".join(parts) + "</svg>"
+    )
+
+
+def _use_hbar(labels: List[str], time_like: bool) -> bool:
+    """Categories that would not fit (or be thinned) under vertical bars."""
+    if time_like or len(labels) < 2:
+        return False
+    longest = max(len(str(l)) for l in labels)
+    return len(labels) > 12 or (len(labels) > 6 and longest > 10)
+
+
 def pick_columns(
     columns: Sequence[str], rows: Sequence[Sequence[Any]], x: str = "", y: Any = None
 ) -> Tuple[int, List[int]]:
@@ -129,8 +226,9 @@ def _svg_xy_chart(
     vals = [v for _, vs, _ in series for v in vs if v is not None]
     vmax = max(vals + [0.0])
     vmin = min(vals + [0.0])
-    top = _nice_max(vmax) if vmax > 0 else 0.0
-    bottom = -_nice_max(-vmin) if vmin < 0 else 0.0
+    tick = _nice_step(max(vmax, 0.0) - min(vmin, 0.0))
+    top = math.ceil(vmax / tick) * tick if vmax > 0 else 0.0
+    bottom = math.floor(vmin / tick) * tick if vmin < 0 else 0.0
     span = (top - bottom) or 1.0
     div, _unit = _unit_for(max(abs(top), abs(bottom)))
 
@@ -140,8 +238,9 @@ def _svg_xy_chart(
     n = max(len(labels), 1)
     band = pw / n
     parts: List[str] = []
-    for k in range(5):  # recessive grid + value axis
-        val = bottom + span * k / 4
+    n_ticks = int(round(span / tick)) if tick else 4
+    for k in range(n_ticks + 1):  # recessive grid + value axis at round values
+        val = bottom + tick * k
         gy = ypos(val)
         parts.append(f'<line x1="{pad_l}" y1="{gy:.1f}" x2="{width - pad_r}" y2="{gy:.1f}" class="grid"/>')
         parts.append(f'<text x="{pad_l - 8}" y="{gy + 4:.1f}" class="axis" text-anchor="end">{_html.escape(_fmt_axis(val, div))}</text>')
@@ -237,7 +336,7 @@ def _css() -> str:
         "h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:0 0 10px}.muted{color:var(--muted);font-size:12px}"
         ".chart{width:100%;height:auto;direction:ltr;display:block}.chart.pie{max-width:360px;margin:0 auto}"
         ".grid{stroke:var(--grid);stroke-width:1}.base{stroke:var(--muted);stroke-width:1}"
-        ".axis{fill:var(--muted);font-size:11px}"
+        ".axis{fill:var(--muted);font-size:11px}.axis.cat{fill:var(--text);font-size:12px}"
         "[data-tip]{cursor:default}"
         + series_css
         + "rect[data-tip],.slice{stroke:var(--surface);stroke-width:2}"
@@ -305,7 +404,10 @@ def build_sql_chart_report(
         else:
             kind = chart if chart in ("bar", "line") else ("line" if time_like and len(labels) >= 3 else "bar")
             series = [(columns[i], data[i], k) for k, i in enumerate(g)]
-            svg = _svg_xy_chart(kind, labels, series)
+            if kind == "bar" and _use_hbar(labels, time_like):
+                svg = _svg_hbar_chart(labels, series)
+            else:
+                svg = _svg_xy_chart(kind, labels, series)
             legend = (
                 '<div class="legend">'
                 + "".join(f'<span><i class="k{k}"></i>{_html.escape(columns[i])}</span>' for k, i in enumerate(g))

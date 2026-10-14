@@ -11,6 +11,20 @@ from ...resource.tool.pack import ToolPack
 from ...util.react_parser import ReActOutputParser, ReActStep, clean_final_text
 from .tool_action import ToolAction, run_tool
 
+# A reply that starts a ReAct step (Thought:/Action Intention:/...) but has no
+# Action line was cut off (output-token ceiling, dropped stream) — it is NOT a
+# plain-text final answer and must not be shown to the user as one.
+_INCOMPLETE_STEP_RE = re.compile(
+    r"(?im)^\s*(?:Thought|Action\s+Intention|Action\s+Reason)\s*[:：]"
+)
+_INCOMPLETE_STEP_NUDGE = (
+    "Your previous reply stopped after the Thought without an Action, so "
+    "nothing was executed. Do not repeat the reasoning. Output the next step "
+    "now, briefly: Thought (one sentence), then Action and Action Input. If "
+    "the data you already have answers the question, use terminate with the "
+    "complete final answer."
+)
+
 logger = logging.getLogger(__name__)
 
 
@@ -406,6 +420,27 @@ class ReActAction(ToolAction):
             #     Return a retryable failure (NOT an exception: raising here
             #     kills the whole turn via "Generate reply exception!").
             #     The breaker below still terminates after repeated failures.
+            if ai_message and _INCOMPLETE_STEP_RE.search(ai_message):
+                logger.warning(
+                    "Incomplete ReAct step (Thought without Action, %d chars); "
+                    "asking the model to continue",
+                    len(ai_message),
+                )
+                breaker_out = self._note_parse_failure(ai_message)
+                if breaker_out is None and self._consecutive_parse_failures >= 3:
+                    # Cap the paid retries for cut-off replies.
+                    self._consecutive_parse_failures = (
+                        self.MAX_CONSECUTIVE_PARSE_FAILURES - 1
+                    )
+                    breaker_out = self._note_parse_failure(ai_message)
+                if breaker_out is not None:
+                    return breaker_out
+                return ActionOutput(
+                    is_exe_success=False,
+                    content=_INCOMPLETE_STEP_NUDGE,
+                    observations=_INCOMPLETE_STEP_NUDGE,
+                    have_retry=True,
+                )
             if ai_message and ai_message.strip():
                 self._reset_parse_failures()
                 self._consecutive_empty_args = 0

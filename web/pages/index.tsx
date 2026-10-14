@@ -487,60 +487,72 @@ const convertToManusFormat = (
   return { sections, activeStep, outputs, stepThoughts };
 };
 
-const EXAMPLE_CARDS = [
+interface ExampleCard {
+  id: string;
+  icon: string;
+  title: string;
+  description: string;
+  query: string;
+  color: string;
+  borderColor: string;
+  iconBg: string;
+  fileName?: string;
+  fileType?: string;
+  fileSize?: number;
+  skillName?: string;
+  dbName?: string;
+  /** Run on the selected database, or the most recently connected one. */
+  useDb?: boolean;
+}
+
+const EXAMPLE_CARDS: ExampleCard[] = [
   {
-    id: 'walmart_sales',
-    icon: '📊',
-    title: 'تحلیل داده‌های فروش وال‌مارت',
-    description: 'تحلیل فایل CSV فروش وال‌مارت و تولید گزارش وب بصری',
+    id: 'sales_trend',
+    icon: '📈',
+    title: 'تحلیل روند فروش شرکت',
+    description: 'بررسی میزان فروش در سال‌های مختلف و مقایسه عملکرد دوره‌های زمانی.',
     query:
-      'لطفاً این داده‌های فروش وال‌مارت را به‌طور جامع تحلیل کنید؛ شامل روندهای فروش در فروشگاه‌های مختلف، تأثیر تعطیلات و اثرات دما و قیمت سوخت بر فروش، و یک گزارش تحلیلی وب تعاملی و زیبا تولید کنید.',
-    fileName: 'Walmart_Sales.csv',
-    fileType: 'text/csv',
-    fileSize: 98304, // ~96 KB
+      'روند فروش شرکت را در سال‌های مختلف بررسی کن: مجموع مبلغ و تعداد فاکتورهای فروش هر سال را محاسبه کن و عملکرد دوره‌ها را با هم مقایسه کن (رشد یا افت نسبت به سال قبل).',
+    color: 'from-red-500/10 to-rose-500/10',
+    borderColor: 'border-red-200/60 dark:border-red-800/40',
+    iconBg: 'bg-red-100 dark:bg-red-900/40',
+    useDb: true,
+  },
+  {
+    id: 'sales_by_province',
+    icon: '🗺️',
+    title: 'بررسی فروش به تفکیک استان',
+    description: 'شناسایی استان‌های برتر از نظر تعداد فاکتور و مبلغ فروش.',
+    query:
+      'فروش را به تفکیک استان بررسی کن: تعداد فاکتور و مجموع مبلغ فروش هر استان را محاسبه کن و استان‌های برتر را مشخص کن.',
     color: 'from-blue-500/10 to-cyan-500/10',
     borderColor: 'border-blue-200/60 dark:border-blue-800/40',
     iconBg: 'bg-blue-100 dark:bg-blue-900/40',
-    skillName: 'csv-data-analysis',
+    useDb: true,
   },
   {
-    id: 'db_profile_report',
-    icon: '🗄️',
-    title: 'پروفایل و گزارش تحلیل پایگاه داده',
-    description: 'اتصال به پایگاه داده، تولید پروفایل پایگاه داده و گزارش وب بصری',
+    id: 'inventory_turnover',
+    icon: '📦',
+    title: 'تحلیل موجودی و گردش کالا',
+    description: 'بررسی وضعیت موجودی انبار و شناسایی کالاهای پرفروش و کم‌گردش.',
     query:
-      'لطفاً پایگاه داده متصل فعلی را تحلیل کنید، یک پروفایل پایگاه داده (شامل ساختار جداول، اطلاعات فیلدها، آمار حجم داده و غیره) تهیه کنید و یک گزارش تحلیلی وب زیبا و تعاملی تولید کنید.',
-    dbName: 'Walmart_Sales',
+      'وضعیت موجودی انبار و گردش کالا را بررسی کن: کالاهای پرفروش و کالاهای کم‌گردش (موجودی زیاد با فروش کم) را شناسایی کن.',
     color: 'from-emerald-500/10 to-teal-500/10',
     borderColor: 'border-emerald-200/60 dark:border-emerald-800/40',
     iconBg: 'bg-emerald-100 dark:bg-emerald-900/40',
+    useDb: true,
   },
   {
-    id: 'fin_report',
-    icon: '📈',
-    title: 'تحلیل عمیق گزارش مالی',
-    description: 'تحلیل گزارش سالانه دارویی هیانگ ژجیانگ و تولید گزارش تجسم داده',
+    id: 'management_report',
+    icon: '🧭',
+    title: 'تهیه گزارش مدیریتی هوشمند',
+    description: 'استخراج شاخص‌های کلیدی از دیتابیس و ارائه خلاصه‌ای از وضعیت کسب‌وکار.',
     query:
-      'لطفاً این گزارش سالانه 2019 شرکت دارویی هیانگ ژجیانگ را عمیقاً تحلیل کنید؛ شامل روندهای درآمد و سود، ساختار دارایی و بدهی، تحلیل جریان نقدی و شاخص‌های کلیدی مالی، و یک گزارش تحلیلی تعاملی حرفه‌ای تولید کنید.',
-    fileName: '2020-01-23__浙江海翔药业股份有限公司__002099__海翔药业__2019年__年度报告.pdf',
-    fileType: 'application/pdf',
-    fileSize: 2621440, // ~2.5 MB
-    color: 'from-violet-500/10 to-purple-500/10',
-    borderColor: 'border-violet-200/60 dark:border-violet-800/40',
-    iconBg: 'bg-violet-100 dark:bg-violet-900/40',
-    skillName: 'financial-report-analyzer',
-  },
-  {
-    id: 'create_sql_skill',
-    icon: '🛠️',
-    title: 'ایجاد مهارت تحلیل SQL',
-    description: 'با skill-creator یک مهارت کاربردی تحلیل SQL بسازید',
-    query:
-      'لطفاً با کمک skill-creator یک مهارت کاربردی تحلیل SQL برایم بسازید؛ شامل کارکردهای اصلی مانند اتصال به پایگاه داده، اجرای کوئری‌های SQL و تجسم داده.',
+      'یک گزارش مدیریتی تهیه کن: شاخص‌های کلیدی کسب‌وکار (فروش کل، تعداد فاکتور، روند فروش، استان‌ها و کالاهای برتر) را از دیتابیس استخراج کن و خلاصه‌ای کوتاه از وضعیت کسب‌وکار ارائه بده.',
     color: 'from-amber-500/10 to-orange-500/10',
     borderColor: 'border-amber-200/60 dark:border-amber-800/40',
     iconBg: 'bg-amber-100 dark:bg-amber-900/40',
-    skillName: 'skill-creator',
+    useDb: true,
   },
 ];
 
@@ -2648,6 +2660,14 @@ const Playground: NextPage = () => {
           matchedDb = found;
           setSelectedDb(found);
         }
+      }
+      if (!matchedDb && example.useDb) {
+        matchedDb =
+          selectedDb ||
+          (dataSources && dataSources.length
+            ? dataSources.reduce((a: DataSource, b: DataSource) => (Number(b.id) > Number(a.id) ? b : a))
+            : null);
+        if (matchedDb) setSelectedDb(matchedDb);
       }
 
       // Transfer the single-flight ownership to the common send entry point.

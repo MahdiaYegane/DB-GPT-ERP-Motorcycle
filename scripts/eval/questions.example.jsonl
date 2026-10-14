@@ -1,0 +1,4 @@
+# Measurement only - the assistant never reads this file. One JSON object per line.
+# expected_numbers: values that must appear in the answer (any digit style / separators).
+{"id": "sales_total_2019_2026", "question": "مجموع مبلغ فروش شرکت را از ابتدای سال ۲۰۱۹ تا پایان سال ۲۰۲۶ محاسبه کن و مبلغ دقیق کل فروش را اعلام کن.", "expected_numbers": ["3409670719977.40"]}
+{"id": "greeting", "question": "سلام", "expected_numbers": []}

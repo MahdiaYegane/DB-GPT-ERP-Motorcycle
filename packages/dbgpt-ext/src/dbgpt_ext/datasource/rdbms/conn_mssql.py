@@ -14,6 +14,58 @@ from dbgpt.core.awel.flow import (
 from dbgpt.datasource.rdbms.base import RDBMSConnector, RDBMSDatasourceParameters
 from dbgpt.util.i18n_utils import _
 
+# Persian letters/digits that legacy single-byte code pages (cp1256) cannot
+# encode, mapped to the equivalent the code page has. Without this pymssql
+# fails with "'charmap' codec can't encode character" as soon as a query
+# contains e.g. a Persian alias or literal, and literals would not match the
+# Arabic-form letters stored in such databases anyway.
+_CODEPAGE_FALLBACKS = {
+    "\u06cc": "\u064a",  # Persian yeh -> Arabic yeh
+    "\u06c0": "\u0647\u0654",  # heh with yeh above -> heh + hamza
+    "\u06c1": "\u0647",
+    "\u06d5": "\u0647",
+    "\u0629": "\u0647",
+}
+_CODEPAGE_FALLBACKS.update({chr(0x06F0 + i): str(i) for i in range(10)})
+_CODEPAGE_FALLBACKS.update({chr(0x0660 + i): str(i) for i in range(10)})
+
+
+def _fit_sql_to_charset(statement: str, charset: str) -> str:
+    """Return ``statement`` with characters the code page lacks replaced."""
+    try:
+        statement.encode(charset)
+        return statement
+    except (UnicodeEncodeError, LookupError):
+        pass
+    out = []
+    for ch in statement:
+        try:
+            ch.encode(charset)
+            out.append(ch)
+        except UnicodeEncodeError:
+            out.append(_CODEPAGE_FALLBACKS.get(ch, ch))
+        except LookupError:
+            return statement
+    return "".join(out)
+
+
+def _install_sql_charset_guard(engine: Any) -> None:
+    """Rewrite outgoing SQL so it always fits the connection's code page."""
+    try:
+        charset = (engine.url.query or {}).get("charset")
+        if isinstance(charset, (tuple, list)):
+            charset = charset[0] if charset else None
+        if not charset or str(charset).lower().replace("-", "") in ("utf8", "utf16"):
+            return
+        from sqlalchemy import event
+
+        def _before(conn, cursor, statement, parameters, context, executemany):
+            return _fit_sql_to_charset(statement, charset), parameters
+
+        event.listen(engine, "before_cursor_execute", _before, retval=True)
+    except Exception:  # never block connector creation
+        pass
+
 
 @auto_register_resource(
     label=_("MSSQL datasource"),
@@ -142,6 +194,7 @@ class MSSQLConnector(RDBMSConnector):
 
         self._is_closed = False
         self._engine = engine
+        _install_sql_charset_guard(engine)
         self._schema = schema
         if include_tables and ignore_tables:
             raise ValueError("Cannot specify both include_tables and ignore_tables")
