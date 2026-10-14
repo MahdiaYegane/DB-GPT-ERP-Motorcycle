@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-36 -5 292 245" width="292" height="245" role="img" aria-label="دستیار هوشمند کویر موتور">
+  <defs>
+    <linearGradient id="shell" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#e9ecf1"/>
+    </linearGradient>
+    <linearGradient id="visor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a2d36"/>
+      <stop offset="1" stop-color="#14161c"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ff4d55" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#ff4d55" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .ink{stroke:#c9ced8;stroke-width:2}
+      .red{fill:#d7141a}
+      .float{animation:float 3.6s ease-in-out infinite;transform-box:view-box;transform-origin:100px 120px}
+      .shadow{animation:shadow 3.6s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+      .arm{transform-box:view-box}
+      .arm-l{transform-origin:66px 122px;animation:wave-l 2.6s ease-in-out .3s 1 both}
+      .arm-r{transform-origin:134px 122px;animation:wave-r 2.6s ease-in-out .3s 1 both}
+      .flag-hold{transform-box:view-box;transform-origin:156px 163px;animation:hold-r 2.6s ease-in-out .3s 1 both}
+      .flag-cloth{transform-box:view-box;transform-origin:157px 109px;animation:flutter 2.8s ease-in-out infinite}
+      .eyes{animation:blink 5s ease-in-out 2.8s infinite;transform-box:fill-box;transform-origin:center}
+      @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+      @keyframes shadow{0%,100%{transform:scaleX(1);opacity:.22}50%{transform:scaleX(.86);opacity:.14}}
+      @keyframes wave-l{0%,100%{transform:rotate(0)}18%{transform:rotate(100deg)}30%{transform:rotate(72deg)}42%{transform:rotate(104deg)}54%{transform:rotate(72deg)}66%{transform:rotate(100deg)}}
+      @keyframes wave-r{0%,100%{transform:rotate(0)}18%{transform:rotate(-100deg)}30%{transform:rotate(-72deg)}42%{transform:rotate(-104deg)}54%{transform:rotate(-72deg)}66%{transform:rotate(-100deg)}}
+      @keyframes hold-r{0%,100%{transform:rotate(0)}18%{transform:rotate(100deg)}30%{transform:rotate(72deg)}42%{transform:rotate(104deg)}54%{transform:rotate(72deg)}66%{transform:rotate(100deg)}}
+      @keyframes flutter{0%,100%{transform:skewY(0deg)}50%{transform:skewY(-3deg)}}
+      @keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.15)}}
+      @media (prefers-reduced-motion: reduce){.float,.shadow,.arm-l,.arm-r,.eyes,.flag-hold,.flag-cloth{animation:none}}
+    </style>
+  </defs>
+
+  <!-- ground shadow -->
+  <ellipse class="shadow" cx="100" cy="216" rx="38" ry="6" fill="#0b0b0b" opacity=".2"/>
+
+  <g class="float">
+    <!-- arms (behind body) -->
+    <g class="arm arm-l">
+      <rect x="44" y="118" width="16" height="44" rx="8" transform="rotate(22 68 124)" fill="url(#shell)" class="ink"/>
+      <circle cx="44" cy="163" r="9" class="red"/>
+    </g>
+    <g class="arm arm-r">
+      <rect x="140" y="118" width="16" height="44" rx="8" transform="rotate(-22 132 124)" fill="url(#shell)" class="ink"/>
+      <!-- flag: counter-rotates at the hand so it stays upright while waving -->
+      <g class="flag-hold">
+        <line x1="156" y1="172" x2="156" y2="92" stroke="#9aa1ad" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="156" cy="90" r="3.5" fill="#9aa1ad"/>
+        <g class="flag-cloth">
+          <path d="M157.5 95 H226 Q221 109 226 123 H157.5 Z" fill="#d7141a"/>
+          <text x="190" y="113.5" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="12.5" letter-spacing=".6" fill="#ffffff">KAVIR AI</text>
+        </g>
+      </g>
+      <circle cx="156" cy="163" r="9" class="red"/>
+    </g>
+
+    <!-- body -->
+    <path d="M64 118 C64 108 76 104 100 104 C124 104 136 108 136 118 L132 168 C130 184 118 192 100 192 C82 192 70 184 68 168 Z" fill="url(#shell)" class="ink"/>
+    <rect x="86" y="136" width="28" height="18" rx="9" class="red"/>
+    <circle cx="94" cy="145" r="3" fill="#ffffff" opacity=".9"/>
+    <rect x="80" y="174" width="40" height="6" rx="3" fill="#d7141a" opacity=".85"/>
+
+    <!-- head -->
+    <rect x="46" y="22" width="108" height="88" rx="40" fill="url(#shell)" class="ink"/>
+    <!-- ear pods -->
+    <rect x="36" y="52" width="14" height="30" rx="7" class="red"/>
+    <rect x="150" y="52" width="14" height="30" rx="7" class="red"/>
+    <!-- antenna -->
+    <line x1="100" y1="22" x2="100" y2="10" stroke="#c9ced8" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="100" cy="8" r="5" class="red"/>
+    <!-- visor -->
+    <rect x="58" y="38" width="84" height="58" rx="27" fill="url(#visor)"/>
+    <ellipse cx="100" cy="67" rx="34" ry="22" fill="url(#glow)"/>
+    <path d="M66 50 C74 43 88 41 98 42" fill="none" stroke="#ffffff" stroke-opacity=".18" stroke-width="3" stroke-linecap="round"/>
+    <!-- smiling eyes -->
+    <g class="eyes">
+      <path d="M77 70 Q85 60 93 70" fill="none" stroke="#ff3b44" stroke-width="5" stroke-linecap="round"/>
+      <path d="M107 70 Q115 60 123 70" fill="none" stroke="#ff3b44" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <path d="M93 82 Q100 87 107 82" fill="none" stroke="#ff3b44" stroke-opacity=".75" stroke-width="3" stroke-linecap="round"/>
+  </g>
+</svg>

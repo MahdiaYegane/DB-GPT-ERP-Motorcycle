@@ -3954,33 +3954,15 @@ const Playground: NextPage = () => {
           ) : (
             // Welcome Mode: Display Hero Section
             <div className='flex-1 flex flex-col items-center justify-center px-6 pt-2 pb-2 overflow-y-auto'>
-              {/* Rider line art (gray-600 lines on light theme, gray-300 on dark), matches the composer width */}
+              {/* Kavir Motor assistant robot: waves on load, then floats gently (animation inside the SVG) */}
               <h1 className='sr-only'>{t('home_title')}</h1>
               <div
-                className='relative z-10 pointer-events-none select-none animate-fade-in-up'
-                style={{
-                  // composer width; shrinks only on short screens so the page never scrolls
-                  width: 'min(860px, 100%, max(360px, calc((100vh - 654px) * 3.5)))',
-                  marginBottom: 'calc(min(860px, 100%, max(360px, calc((100vh - 654px) * 3.5))) * -0.0646)',
-                }}
+                className='relative z-10 pointer-events-none select-none animate-fade-in-up mb-3'
+                style={{ width: 210 }}
                 aria-hidden='true'
               >
-                <Image
-                  src='/pictures/hero-rider-on-light.webp'
-                  alt=''
-                  width={1672}
-                  height={602}
-                  priority
-                  className='block dark:hidden w-full h-auto'
-                />
-                <Image
-                  src='/pictures/hero-rider-on-dark.webp'
-                  alt=''
-                  width={1672}
-                  height={602}
-                  priority
-                  className='hidden dark:block w-full h-auto'
-                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src='/pictures/kavir-robot.svg?v=2' alt='' width={210} height={176} className='block w-full h-auto' />
               </div>
               <div className='relative z-10 w-full max-w-[860px] flex flex-col items-center animate-fade-in-up'>
 
