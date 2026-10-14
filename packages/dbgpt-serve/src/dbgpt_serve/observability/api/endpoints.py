@@ -2,7 +2,7 @@
 
 All endpoints delegate to the active :class:`ObservabilityProvider` via the
 service layer. DTOs are returned as plain dicts (via :func:`dataclasses.asdict`)
-wrapped in :class:`Result`, matching the DB-GPT frontend envelope
+wrapped in :class:`Result`, matching the Kavir Motor frontend envelope
 ``{data, err_code, err_msg, success}``.
 """
 

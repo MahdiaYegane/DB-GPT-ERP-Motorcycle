@@ -31,9 +31,9 @@ Return:
 Question: Who is the colleague of Bob?
 Return:
 {{"category": "Two Hop Entity Search", "rewritten_question": "Query all entities that have a two hop path between them and the entity named Bob, both entities should have a work for relation with the middle entity.", "entities": ["Bob"], "relations": ["work for"]}}
-Question: Introduce TuGraph and DB-GPT separately.
+Question: Introduce TuGraph and Kavir Motor separately.
 Return:
-{{"category": "Freestyle Question", "rewritten_question": "Query the entity named TuGraph and the entity named DB-GPT, then return two-hop sub-graphs centered on them.", "entities": ["TuGraph", "DBGPT"], "relations": []}}
+{{"category": "Freestyle Question", "rewritten_question": "Query the entity named TuGraph and the entity named Kavir Motor, then return two-hop sub-graphs centered on them.", "entities": ["TuGraph", "DBGPT"], "relations": []}}
 ---------------------
 Text: {text}
 Return:

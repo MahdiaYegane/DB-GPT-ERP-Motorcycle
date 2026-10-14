@@ -203,7 +203,7 @@ def initialize_controller(
             trace_file,
             system_app=system_app,
             root_operation_name=trace_config.root_operation_name
-            or "DB-GPT-ModelController",
+            or "KavirMotor-ModelController",
             tracer_parameters=trace_config,
         )
 
@@ -289,7 +289,7 @@ def _create_registry(controller_params: ModelControllerParameters) -> ModelRegis
             db_name = db_config.database
         else:
             raise ValueError(
-                "DB-GPT only support SQLite, MySQL and OceanBase database as metadata "
+                "Kavir Motor only support SQLite, MySQL and OceanBase database as metadata "
                 "storage database"
             )
         connector = db_config.create_connector()
@@ -316,7 +316,7 @@ def _create_registry(controller_params: ModelControllerParameters) -> ModelRegis
 def parse_args():
     import argparse
 
-    parser = argparse.ArgumentParser(description="DB-GPT API Server")
+    parser = argparse.ArgumentParser(description="Kavir Motor API Server")
     parser.add_argument(
         "-c",
         "--config",

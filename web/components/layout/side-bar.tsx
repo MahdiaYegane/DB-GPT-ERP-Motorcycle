@@ -274,7 +274,7 @@ function SideBar() {
           {/* Logo slot */}
           <div className='flex justify-center items-center px-2 pt-2 pb-4'>
             <Link href='/' className='flex justify-center items-center h-8'>
-              <Image src='/LOGO_SMALL.png' alt='DB-GPT' width={32} height={32} className='object-contain' />
+              <Image src='/LOGO_SMALL.png' alt='Kavir Motor' width={32} height={32} className='object-contain' />
             </Link>
           </div>
           {/* Title slot */}
@@ -350,7 +350,7 @@ function SideBar() {
       {/* LOGO + Collapse Toggle */}
       <div className='flex items-center justify-between p-2 pt-8 pb-1 h-[176px]'>
         <Link href='/' className='flex items-center'>
-          <Image src={logo} alt='DB-GPT' width={140} height={32} />
+          <Image src={logo} alt='Kavir Motor' width={140} height={32} />
         </Link>
         <Tooltip title={t('Close_Sidebar') || 'بستن نوار کناری'}>
           <div

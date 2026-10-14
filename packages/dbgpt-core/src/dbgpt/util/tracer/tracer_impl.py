@@ -33,7 +33,13 @@ class DefaultTracer(Tracer):
         span_storage_type: SpanStorageType = SpanStorageType.ON_CREATE_END,
     ):
         super().__init__(system_app)
-        self._span_stack_var = ContextVar("span_stack", default=[])
+        # NOTE: never use a mutable default (``default=[]``) here. That single list
+        # object is shared by every asyncio task / request, so spans started in
+        # one chat leak into all later chats (their trace_id and parent span get
+        # inherited). The stack is treated as immutable: copy-on-write per context.
+        self._span_stack_var: ContextVar[Optional[tuple]] = ContextVar(
+            "span_stack", default=None
+        )
 
         if not default_storage:
             default_storage = MemorySpanStorage(system_app)
@@ -77,9 +83,8 @@ class DefaultTracer(Tracer):
             SpanStorageType.ON_CREATE_END,
         ]:
             self.append_span(span)
-        current_stack = self._span_stack_var.get()
-        current_stack.append(span)
-        self._span_stack_var.set(current_stack)
+        current_stack = self._span_stack_var.get() or ()
+        self._span_stack_var.set(current_stack + (span,))
 
         span.add_end_caller(self._remove_from_stack_top)
         return span
@@ -90,13 +95,23 @@ class DefaultTracer(Tracer):
 
     def _remove_from_stack_top(self, span: Span):
         current_stack = self._span_stack_var.get()
-        if current_stack:
-            current_stack.pop()
-        self._span_stack_var.set(current_stack)
+        if not current_stack:
+            return
+        # Remove this exact span (spans may end out of order).
+        new_stack = tuple(s for s in current_stack if s is not span)
+        if len(new_stack) != len(current_stack):
+            self._span_stack_var.set(new_stack)
 
     def get_current_span(self) -> Optional[Span]:
         current_stack = self._span_stack_var.get()
-        return current_stack[-1] if current_stack else None
+        if not current_stack:
+            return None
+        # A span may have been ended in another context (e.g. a child task), in
+        # which case it is still on this context's stack: skip ended spans.
+        for span in reversed(current_stack):
+            if span.end_time is None:
+                return span
+        return None
 
     def _get_current_storage(self) -> SpanStorage:
         return self.system_app.get_component(
@@ -132,17 +147,25 @@ class TracerManager:
         parent_span_id: str = None,
         span_type: SpanType = None,
         metadata: Dict = None,
+        new_trace: bool = False,
     ) -> Span:
         """Start a new span with operation_name
         This method must not throw an exception under any case and try not to block as
          much as possible
+
+        Args:
+            new_trace: Start a brand-new trace (fresh trace_id, no parent) instead
+                of attaching to the current span. Used for per-request roots such
+                as a new agent conversation turn.
         """
         tracer = self._get_tracer()
         if not tracer:
             return Span(
                 "empty_span", "empty_span", span_type=span_type, metadata=metadata
             )
-        if not parent_span_id:
+        if new_trace:
+            parent_span_id = None
+        elif not parent_span_id:
             parent_span_id = self.get_current_span_id()
         if not span_type and parent_span_id:
             span_type = self._get_current_span_type()
@@ -399,7 +422,7 @@ class TracerParameters(BaseParameters):
 
 def initialize_tracer(
     tracer_filename: str,
-    root_operation_name: str = "DB-GPT-Webserver",
+    root_operation_name: str = "KavirMotor-Webserver",
     system_app: Optional[SystemApp] = None,
     create_system_app: bool = False,
     tracer_parameters: Optional[TracerParameters] = None,

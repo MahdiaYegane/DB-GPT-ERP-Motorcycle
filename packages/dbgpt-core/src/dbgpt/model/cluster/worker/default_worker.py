@@ -513,7 +513,7 @@ class DefaultModelWorker(ModelWorker):
             msg = traceback.format_exc()
             logger.error(f"Model inference error, detail: {msg}")
             model_output = ModelOutput(
-                text=f"**LLMServer Generate Error, Please CheckErrorInfo.**: {e}",
+                text=f"**LLMServer Generate Error, Please CheckErrorInfo.**: {type(e).__name__}: {e}",
                 error_code=1,
             )
         return model_output

@@ -239,7 +239,7 @@ class ModelCard(BaseModel):
     created: int = Field(
         default_factory=lambda: int(time.time()), description="Created time"
     )
-    owned_by: str = Field("DB-GPT", description="Owned by")
+    owned_by: str = Field("Kavir Motor", description="Owned by")
     root: Optional[str] = Field(None, description="Root")
     parent: Optional[str] = Field(None, description="Parent")
     permission: List[ModelPermission] = Field(

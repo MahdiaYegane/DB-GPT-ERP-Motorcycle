@@ -147,7 +147,7 @@ class ModelWorker(ABC):
              Example:
                 {
                     "model": "text2vec-large-chinese",
-                    "input": ["Hello world", "DB-GPT is amazing"]
+                    "input": ["Hello world", "Kavir Motor is amazing"]
                 }
 
         Returns:

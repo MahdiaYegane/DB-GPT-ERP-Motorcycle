@@ -460,10 +460,10 @@ msgstr "کلاینت LLM"
 #: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:306
 msgid ""
 "The LLM Client, how to connect to the LLM model, if not provided, it will "
-"use the default client deployed by DB-GPT."
+"use the default client deployed by Kavir Motor."
 msgstr ""
 "کلاینت LLM؛ نحوه اتصال به مدل LLM. اگر ارائه نشود، از کلاینت پیش‌فرض "
-"مستقرشده توسط DB-GPT استفاده می‌شود."
+"مستقرشده توسط کویر موتور استفاده می‌شود."
 
 #: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:311
 msgid "History Message Merge Mode"

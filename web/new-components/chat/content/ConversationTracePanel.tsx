@@ -17,7 +17,7 @@
 import type { SpanNode, TraceSummary, TraceTree } from '@/client/api';
 import { apiInterceptors, getObservabilityTrace, searchObservabilityTraces } from '@/client/api';
 import { Empty, Spin, Tag } from 'antd';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ConversationTracePanelProps {
@@ -76,6 +76,36 @@ function msToSeconds(ms?: number | null): string {
 function flattenSpans(node: SpanNode, acc: SpanNode[] = []): SpanNode[] {
   acc.push(node);
   (node.children || []).forEach(c => flattenSpans(c, acc));
+  return acc;
+}
+
+/** Conversation id recorded on a span (agent spans carry `conv_uid`). */
+function spanConvId(span: SpanNode): string | undefined {
+  const m = span.metadata || {};
+  const v = m.conv_uid ?? m.conversation_id ?? m.conv_id ?? m.chat_session_id;
+  return v ? String(v) : undefined;
+}
+
+function convMatches(spanConv: string, conversationId: string): boolean {
+  return spanConv === conversationId || spanConv.startsWith(conversationId);
+}
+
+/**
+ * Flatten a span tree, keeping only spans that belong to `conversationId`.
+ *
+ * A span belongs to the conversation of its nearest ancestor-or-self that
+ * carries a conversation id. Older traces may contain several chats under one
+ * trace_id (they were all nested under the server's root span), so without this
+ * filter the panel would show a previous chat's question and steps.
+ */
+function flattenConversationSpans(node: SpanNode, conversationId: string): SpanNode[] {
+  const acc: SpanNode[] = [];
+  const walk = (n: SpanNode, inheritedConv?: string) => {
+    const conv = spanConvId(n) ?? inheritedConv;
+    if (conv && convMatches(conv, conversationId)) acc.push(n);
+    (n.children || []).forEach(c => walk(c, conv));
+  };
+  walk(node);
   return acc;
 }
 
@@ -266,33 +296,53 @@ const ConversationTracePanel: React.FC<ConversationTracePanelProps> = ({ convers
   const [activeTraceId, setActiveTraceId] = useState<string | null>(null);
   const [tree, setTree] = useState<TraceTree | null>(null);
   const [treeLoading, setTreeLoading] = useState(false);
+  // True once the user picked a trace by hand; until then we follow the newest.
+  const pinnedRef = useRef(false);
+  const [refreshTick, setRefreshTick] = useState(0);
 
   // Load the list of traces linked to this conversation.
   // NOTE: use functional setActiveTraceId to avoid depending on `activeTraceId`
   // here — depending on it would re-create loadTraces on every selection change,
   // which re-runs this effect (it resets activeTraceId), causing an infinite
   // request loop.
-  const loadTraces = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const [, data] = await apiInterceptors(searchObservabilityTraces({ conversation_id: conversationId, limit: 50 }));
-      const list = data || [];
-      setTraces(list);
-      setActiveTraceId(prev => prev ?? list[0]?.trace_id ?? null);
-    } catch (e: any) {
-      setError(e?.message || String(e));
-    } finally {
-      setLoading(false);
-    }
-  }, [conversationId]);
+  const loadTraces = useCallback(
+    async (silent = false) => {
+      if (!silent) {
+        setLoading(true);
+        setError(null);
+      }
+      try {
+        const [, data] = await apiInterceptors(
+          searchObservabilityTraces({ conversation_id: conversationId, limit: 50 }),
+        );
+        const list = data || [];
+        setTraces(list);
+        // The list is newest-first: follow the latest turn unless the user
+        // explicitly selected an older trace.
+        setActiveTraceId(prev => (pinnedRef.current && prev ? prev : list[0]?.trace_id ?? null));
+      } catch (e: any) {
+        if (!silent) setError(e?.message || String(e));
+      } finally {
+        if (!silent) setLoading(false);
+      }
+    },
+    [conversationId],
+  );
 
   useEffect(() => {
     if (!conversationId) return;
+    pinnedRef.current = false;
     setActiveTraceId(null);
     setTraces([]);
     setTree(null);
     void loadTraces();
+    // Keep the panel live while the agent is running: new turns create new
+    // traces and the current trace keeps growing.
+    const timer = window.setInterval(() => {
+      void loadTraces(true);
+      setRefreshTick(x => x + 1);
+    }, 4000);
+    return () => window.clearInterval(timer);
   }, [conversationId, loadTraces]);
 
   // Load the span tree for the selected trace.
@@ -308,7 +358,7 @@ const ConversationTracePanel: React.FC<ConversationTracePanelProps> = ({ convers
         if (!cancelled) setTree(data || null);
       })
       .catch(() => {
-        if (!cancelled) setTree(null);
+        /* keep the last good tree on a transient refresh error */
       })
       .finally(() => {
         if (!cancelled) setTreeLoading(false);
@@ -316,12 +366,20 @@ const ConversationTracePanel: React.FC<ConversationTracePanelProps> = ({ convers
     return () => {
       cancelled = true;
     };
+  }, [activeTraceId, refreshTick]);
+
+  // Clear the previous trace's tree as soon as the selection changes, so a
+  // stale (previous turn's) timeline is never shown for the current question.
+  useEffect(() => {
+    setTree(null);
   }, [activeTraceId]);
 
   const messages = useMemo(() => {
     if (!tree?.root) return [];
-    return extractMessages(flattenSpans(tree.root));
-  }, [tree]);
+    const scoped = flattenConversationSpans(tree.root, conversationId);
+    // If nothing carries a conversation id (non-agent traces), fall back to all spans.
+    return extractMessages(scoped.length ? scoped : flattenSpans(tree.root));
+  }, [tree, conversationId]);
 
   if (loading) {
     return (
@@ -353,7 +411,10 @@ const ConversationTracePanel: React.FC<ConversationTracePanelProps> = ({ convers
           <span className='text-gray-400'>{t('observability_trace') || 'ردیابی'}:</span>
           <select
             value={activeTraceId || ''}
-            onChange={e => setActiveTraceId(e.target.value)}
+            onChange={e => {
+              pinnedRef.current = e.target.value !== traces[0]?.trace_id;
+              setActiveTraceId(e.target.value);
+            }}
             className='rounded border border-gray-200 dark:border-gray-700 bg-transparent px-2 py-1 text-xs'
           >
             {traces.map(t0 => (

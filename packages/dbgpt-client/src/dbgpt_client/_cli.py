@@ -1,4 +1,4 @@
-"""CLI for DB-GPT client."""
+"""CLI for Kavir Motor client."""
 
 import asyncio
 import functools

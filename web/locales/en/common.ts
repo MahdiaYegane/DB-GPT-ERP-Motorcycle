@@ -106,7 +106,7 @@ export const CommonEn = {
   language: 'Language',
   choose_model: 'Please choose a model',
   data_center_desc:
-    'DB-GPT also offers a user-friendly data center management interface for efficient data maintenance.',
+    'Kavir Motor also offers a user-friendly data center management interface for efficient data maintenance.',
   create_database: 'Create Database',
   create_knowledge: 'Create Knowledge',
   path: 'Path',
@@ -368,9 +368,9 @@ export const CommonEn = {
   publish_desc: 'Are you sure about releasing the application?',
   unPublish_desc: 'Are you sure you want to unpublish this application?',
   published_success: 'Published Success',
-  dbgpts_community: 'DBGPTS Community',
-  community_dbgpts: 'Community DBGPTS',
-  my_dbgpts: 'My DBGPTS',
+  dbgpts_community: 'Kavir Motor Apps Community',
+  community_dbgpts: 'Community Kavir Motor Apps',
+  my_dbgpts: 'My Kavir Motor Apps',
   Refresh_dbgpts: 'Refresh from the community Git repository',
   workflow: 'Workflow',
   resources: 'Resources',
@@ -853,7 +853,7 @@ export const CommonEn = {
   chat_error: 'Sorry, an error occurred. Please try again.',
   // ── request.ts error tips ──
   'request.error.network':
-    'Cannot connect to DB-GPT service: network unreachable (possibly CORS restriction or service not running). Please check cors_allowed_origins config and whether the service is up.',
+    'Cannot connect to Kavir Motor service: network unreachable (possibly CORS restriction or service not running). Please check cors_allowed_origins config and whether the service is up.',
   'request.error.timeout': 'Request timed out, please try again later.',
   'request.error.default': 'Request failed (HTTP {{status}}).',
   'editor.please_select_database': 'Please select a database first',

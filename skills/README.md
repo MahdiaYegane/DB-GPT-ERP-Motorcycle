@@ -1,8 +1,8 @@
-# SKILL System - DB-GPT Agent Skill Loading System
+# SKILL System - Kavir Motor Agent Skill Loading System
 
 ## Overview
 
-The SKILL system is an advanced feature of the DB-GPT Agent framework that allows agents to load and manage predefined skill packages, enabling modular and reusable agent capabilities.
+The SKILL system is an advanced feature of the Kavir Motor Agent framework that allows agents to load and manage predefined skill packages, enabling modular and reusable agent capabilities.
 
 ## Core Files
 
@@ -143,7 +143,7 @@ await agent.bind(context).bind(llm_config).bind(memory).build()
     "name": "web_search_assistant",
     "description": "Web search assistant",
     "version": "1.0.0",
-    "author": "DB-GPT Team",
+    "author": "Kavir Motor Team",
     "skill_type": "web_search",
     "tags": ["web", "search"]
   },

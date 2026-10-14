@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 
 
 class Serve(BaseServe):
-    """Serve component for DB-GPT"""
+    """Serve component for Kavir Motor"""
 
     name = SERVE_APP_NAME
 

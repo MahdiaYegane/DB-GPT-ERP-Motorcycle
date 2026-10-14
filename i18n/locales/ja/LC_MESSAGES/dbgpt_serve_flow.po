@@ -107,7 +107,7 @@ msgstr "この設定はフローサービスモジュール用です。"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:38
 msgid "Interval to load dbgpts from installed packages"
-msgstr "インストール済みパッケージから DB-GPT を読み込む間隔"
+msgstr "インストール済みパッケージから Kavir Motor を読み込む間隔"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:41
 msgid "The key to encrypt the data"

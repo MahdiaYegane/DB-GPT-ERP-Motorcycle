@@ -113,7 +113,7 @@ class PreChatHistoryLoadOperator(
 ):
     """The operator to prepare the storage conversation.
 
-    In DB-GPT, conversation record and the messages in the conversation are stored in
+    In Kavir Motor, conversation record and the messages in the conversation are stored in
     the storage,
     and they can store in different storage(for high performance).
 

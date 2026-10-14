@@ -260,7 +260,12 @@ class DefaultObservabilityProvider(ObservabilityProvider):
                     nodes[node.parent_span_id].children.append(node)
                 else:
                     roots.append(node)
+            roots.sort(key=lambda n: n.start_time or datetime.min)
             root = roots[0] if roots else None
+            # Don't silently drop spans whose parent isn't in this trace (e.g. a
+            # parent that hasn't been flushed yet): hang them under the root.
+            if root is not None:
+                root.children.extend(roots[1:])
             starts = [r.start_time for r in rows if r.start_time]
             ends = [r.end_time for r in rows if r.end_time]
             start_time = min(starts, default=None)

@@ -97,6 +97,57 @@ def clean_final_text(text: Any) -> str:
     return text.strip()
 
 
+# Start of any leaked protocol markup (DSML tags or special tokens such as
+# ``<|tool_call_begin|>``), ASCII or fullwidth. Used to hide everything from
+# that point on in live-streamed "thinking" text.
+PROTOCOL_MARKUP_START = re.compile(r"[<\uff1c]\s*[|\uff5c\u2502]")
+
+_ACTION_LINE_PATTERN = re.compile(r"^\s*Action\s*:", re.MULTILINE)
+
+
+def canonicalize_tool_markup(text: Any) -> Any:
+    """Rewrite a raw LLM reply so it never carries DSML tool-call markup.
+
+    Some models (DeepSeek-family behind OpenAI-compatible gateways) fall back
+    to their native DSML syntax, often with SEVERAL ``invoke`` blocks at once.
+    The ReAct loop runs one action per step, so the reply is rewritten to:
+    the free text (Thought, intention, reason) + exactly one
+    ``Action:``/``Action Input:`` pair. If the model already wrote a textual
+    Action line, that one is kept and the markup is just removed; otherwise
+    the FIRST parseable invoke is translated and the rest are dropped (the
+    model re-issues them in later steps). Keeping raw markup out of the
+    stored reply matters: it is fed back as history and the model copies it.
+    """
+    if not isinstance(text, str) or "dsml" not in text.lower():
+        return text
+    first_invoke = _DSML_INVOKE_PATTERN.search(text)
+    rendered = ""
+    if first_invoke is not None:
+        name_match = _DSML_NAME_ATTR_PATTERN.search(first_invoke.group("attrs") or "")
+        tool = name_match.group("name").strip() if name_match else ""
+        if tool.startswith("functions."):
+            tool = tool[len("functions.") :]
+        if tool:
+            args: dict = {}
+            for param in _DSML_PARAM_PATTERN.finditer(first_invoke.group("body") or ""):
+                pname = _DSML_NAME_ATTR_PATTERN.search(param.group("attrs") or "")
+                if pname and pname.group("name").strip():
+                    args[pname.group("name").strip()] = (
+                        param.group("value") or ""
+                    ).strip()
+            rendered = (
+                f"Action: {tool}\n"
+                f"Action Input: {json.dumps(args, ensure_ascii=False)}"
+            )
+    stripped = _DSML_INVOKE_PATTERN.sub("\n", text)
+    stripped = _DSML_BLOCK_PATTERN.sub("\n", stripped)
+    stripped = _DSML_TAG_PATTERN.sub("", stripped)
+    stripped = re.sub(r"\n{3,}", "\n\n", stripped).strip()
+    if _ACTION_LINE_PATTERN.search(stripped) or not rendered:
+        return stripped
+    return f"{stripped}\n{rendered}".strip()
+
+
 # Kimi-style native tool-calling protocol leaked as plain text by some model
 # servers: ``<|tool_calls_section_begin|><|tool_call_begin|>functions.X:0
 # <|tool_call_argument_begin|>{...}<|tool_call_end|><|tool_calls_section_end|>``.
@@ -425,7 +476,7 @@ class ReActOutputParser:
         """Parse the single step that should be executed in the current round.
 
         Some reasoning models incorrectly emit a whole ReAct trajectory in one
-        response. DB-GPT executes one action per round, so callers that are about
+        response. Kavir Motor executes one action per round, so callers that are about
         to run tools should use only the first actionable step while preserving
         ``parse()`` for history and diagnostics.
         """

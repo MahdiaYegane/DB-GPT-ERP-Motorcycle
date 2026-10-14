@@ -20,7 +20,7 @@ class TraceIDMiddleware(BaseHTTPMiddleware):
         app: ASGIApp,
         trace_context_var: ContextVar[TracerContext],
         tracer: Tracer,
-        root_operation_name: str = "DB-GPT-Web-Entry",
+        root_operation_name: str = "KavirMotor-Web-Entry",
         include_prefix: str = "/api",
         exclude_paths=_DEFAULT_EXCLUDE_PATHS,
     ):

@@ -41,7 +41,7 @@ def _get_all_file_paths(knowledge_id: str) -> List[dict]:
     """Get all file paths for a knowledge space.
 
     knowledge_id can be either the space name or space id.
-    In DB-GPT, KnowledgeDocumentEntity uses `space` (name) and `id` (doc id),
+    In Kavir Motor, KnowledgeDocumentEntity uses `space` (name) and `id` (doc id),
     and metadata is stored in `result` field as JSON.
     """
     dao, Entity = _get_document_dao()
@@ -54,7 +54,7 @@ def _get_all_file_paths(knowledge_id: str) -> List[dict]:
     results = []
     for doc in docs:
         try:
-            # In DB-GPT, document metadata is stored in `summary` field as JSON
+            # In Kavir Motor, document metadata is stored in `summary` field as JSON
             meta = (
                 json.loads(doc.summary)
                 if doc.summary and doc.summary.startswith("{")

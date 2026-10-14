@@ -19,10 +19,10 @@ msgstr ""
 
 #: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:32
 msgid ""
-"The module to scan, if not set, will scan all DB-GPT "
+"The module to scan, if not set, will scan all Kavir Motor "
 "modules('dbgpt,dbgpt_client,dbgpt_ext,dbgpt_serve,dbgpt_app')."
 msgstr ""
-"스캔할 모듈입니다. 설정하지 않으면 모든 DB-GPT 모듈"
+"스캔할 모듈입니다. 설정하지 않으면 모든 Kavir Motor 모듈"
 "('dbgpt,dbgpt_client,dbgpt_ext,dbgpt_serve,dbgpt_app')을 스캔합니다."
 
 #: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:42
@@ -82,7 +82,7 @@ msgstr "이름"
 
 #: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:714
 msgid "Installed dbgpts"
-msgstr "설치된 DB-GPT"
+msgstr "설치된 Kavir Motor"
 
 #: ../packages/dbgpt-core/src/dbgpt/util/serialization/json_serialization.py:23
 msgid "Json Serializer"

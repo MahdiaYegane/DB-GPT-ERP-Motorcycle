@@ -57,7 +57,7 @@ class PromptManagerConfigProvider(ConfigProvider):
 
     Obtain the configuration value from the prompt manager.
 
-    It is valid only when DB-GPT web server is running for now.
+    It is valid only when Kavir Motor web server is running for now.
     """
 
     name: ProviderType = ProviderType.PROMPT_MANAGER

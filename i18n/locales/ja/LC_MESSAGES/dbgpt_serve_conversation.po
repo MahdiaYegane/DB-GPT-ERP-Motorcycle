@@ -24,8 +24,8 @@ msgstr "デフォルトのチャット履歴ロードオペレーター"
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:94
 msgid ""
 "Load chat history from the storage of the serve component.It is the default "
-"storage of DB-GPT"
-msgstr "サービスコンポーネントのストレージからチャット履歴を読み込みます。これはDB-GPTのデフォルトのストレージです。"
+"storage of Kavir Motor"
+msgstr "サービスコンポーネントのストレージからチャット履歴を読み込みます。これはKavir Motorのデフォルトのストレージです。"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:100
 msgid "Model Request"

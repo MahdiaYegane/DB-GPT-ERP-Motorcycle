@@ -5,7 +5,7 @@ description: In-depth analysis of listed-company financial reports (such as annu
 
 # Financial Report Analyzer
 
-This skill helps DB-GPT systematically analyze listed-company financial reports by extracting core data, calculating financial ratios, generating visualizations, and incorporating business context to produce high-quality financial analysis reports.
+This skill helps Kavir Motor systematically analyze listed-company financial reports by extracting core data, calculating financial ratios, generating visualizations, and incorporating business context to produce high-quality financial analysis reports.
 
 ## Core Workflow
 

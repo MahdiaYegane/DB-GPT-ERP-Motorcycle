@@ -7,7 +7,7 @@ $config = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT\configs\dbgpt-proxy-ollam
 $workdir = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT"
 $log = "C:\Users\m.yeganehpour\KavirProjects\DB_GPT\logs\dbgpt_std.log"
 
-Write-Host "Starting DB-GPT with Ollama models..."
+Write-Host "Starting Kavir Motor with Ollama models..."
 Write-Host "Python: $python"
 Write-Host "Config: $config"
 Write-Host "Log: $log"

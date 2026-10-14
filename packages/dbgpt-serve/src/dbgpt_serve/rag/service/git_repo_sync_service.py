@@ -7,7 +7,7 @@ Sync operations run asynchronously in the background via asyncio.create_task,
 returning immediately so the HTTP request does not block. Clients poll
 GET /{space_id}/git/sync-status for progress.
 
-Adapted to DB-GPT's data model:
+Adapted to Kavir Motor's data model:
 - KnowledgeSpaceEntity: id, name, vector_type, domain_type
 - KnowledgeDocumentEntity: id, doc_name, doc_type, space (name), content, meta_info
 - DocumentChunkEntity: id, document_id, content, meta_info

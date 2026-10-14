@@ -1,7 +1,7 @@
-"""Integration of Claude-style SKILL mechanism with DB-GPT agents.
+"""Integration of Claude-style SKILL mechanism with Kavir Motor agents.
 
 This module provides utilities to use Claude-style SKILL files
-with DB-GPT's ConversableAgent.
+with Kavir Motor's ConversableAgent.
 """
 
 from typing import List, Optional

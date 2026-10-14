@@ -1,7 +1,7 @@
 /**
  * ReAct Agent SSE Event Parser
  *
- * Parses SSE events from the DB-GPT ReAct Agent API and converts them
+ * Parses SSE events from the Kavir Motor ReAct Agent API and converts them
  * to the OpenCode MessagePart format for rendering.
  *
  * SSE Event Types from Backend:

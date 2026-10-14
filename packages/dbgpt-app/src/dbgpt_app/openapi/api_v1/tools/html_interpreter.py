@@ -12,10 +12,38 @@ from dbgpt.agent.resource.tool.base import tool
 logger = logging.getLogger(__name__)
 
 
-def make_html_interpreter(react_state: Dict[str, Any], skills_dir: str):
+def _run_chart_sql(database_connector: Any, sql: str):
+    """Run a read-only SELECT for a chart; returns (columns, rows)."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    from .sql_query import SQL_QUERY_TIMEOUT_SECONDS
+
+    statement = (sql or "").strip().rstrip(";")
+    head = statement.lstrip("( \t\r\n").upper()
+    if not (head.startswith("SELECT") or head.startswith("WITH")):
+        raise ValueError("Only a SELECT (or WITH ... SELECT) query is allowed for a chart.")
+    with ThreadPoolExecutor(max_workers=1) as executor:
+        result = executor.submit(database_connector.run, statement).result(
+            timeout=SQL_QUERY_TIMEOUT_SECONDS
+        )
+    if not result:
+        return [], []
+    columns = [str(c[0]) if isinstance(c, tuple) else str(c) for c in result[0]]
+    return columns, [list(r) for r in result[1:]]
+
+
+def make_html_interpreter(
+    react_state: Dict[str, Any], skills_dir: str, database_connector: Any = None
+):
     @tool(
         description=(
             "Render HTML as an interactive web report. This is the only way to show a web report to the user. "
+            "[PREFERRED for charts from the database — SQL mode] Pass only the query; the server runs it and "
+            "draws the chart(s) + data table itself, so you never type numbers or HTML: "
+            '{"sql": "SELECT label_col, SUM(x) AS total FROM ... GROUP BY ... ORDER BY ...", '
+            '"title": "report title", "chart": "line|bar|pie (optional)", "y": "col1,col2 (optional)"}. '
+            "The query must return one label column (month, model, city...) and one or more numeric columns. "
+            "Measures of very different scale are drawn as separate charts automatically. "
             "[One-shot] Render the [complete] report in a single call; do NOT call this tool repeatedly for the "
             "same report. If the goal is achieved after a successful render, call terminate directly. "
             "[Default usage] Pass the complete HTML string directly: "
@@ -42,9 +70,60 @@ def make_html_interpreter(react_state: Dict[str, Any], skills_dir: str):
         file_path: str = "",
         template_path: str = "",
         data: dict | str = None,
+        sql: str = "",
+        chart: str = "",
+        x: str = "",
+        y: str = "",
     ) -> str:
         """Render HTML as an interactive web report."""
         from dbgpt.configs.model_config import STATIC_MESSAGE_IMG_PATH
+
+        # ── Mode 0: SQL → server-drawn chart report (no LLM-written HTML) ──
+        if sql and str(sql).strip() and not html:
+            if database_connector is None:
+                return json.dumps(
+                    {"chunks": [{"output_type": "text", "content": "No database selected; SQL chart mode needs a database."}]},
+                    ensure_ascii=False,
+                )
+            try:
+                from ..report_charts import build_sql_chart_report
+
+                columns, rows = _run_chart_sql(database_connector, str(sql))
+                page, summary = build_sql_chart_report(
+                    columns, rows, title=title if title != "Report" else "", chart=chart, x=x, y=y, sql=str(sql)
+                )
+            except Exception as e:  # query error, timeout, nothing plottable
+                logger.warning("SQL chart mode failed: %s", e)
+                return json.dumps(
+                    {
+                        "chunks": [
+                            {
+                                "output_type": "text",
+                                "content": (
+                                    f"Chart not rendered: {type(e).__name__}: {e}. Fix the SQL "
+                                    "(one label column + numeric columns) and call html_interpreter "
+                                    "again with the sql parameter."
+                                ),
+                            }
+                        ]
+                    },
+                    ensure_ascii=False,
+                )
+            preview = "\n".join(
+                " | ".join("" if v is None else str(v) for v in r) for r in [columns] + rows[:30]
+            )
+            chunks: List[Dict[str, Any]] = [
+                {
+                    "output_type": "text",
+                    "content": (
+                        "✅ Chart report rendered and shown to the user. " + summary + " "
+                        "Do not call html_interpreter again for the same report; terminate with a "
+                        "short summary using only these numbers.\nData (first rows):\n" + preview
+                    ),
+                },
+                {"output_type": "html", "content": page, "title": title},
+            ]
+            return json.dumps({"chunks": chunks}, ensure_ascii=False)
 
         skills_path = Path(skills_dir).expanduser().resolve()
 

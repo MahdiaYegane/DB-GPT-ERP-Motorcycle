@@ -20,20 +20,20 @@ _BANNER_ART = """\
 
 
 def _print_banner() -> None:
-    """Print the DB-GPT ASCII art banner to the terminal."""
+    """Print the Kavir Motor ASCII art banner to the terminal."""
     from dbgpt.util.console.console import CliLogger
 
     _log = CliLogger()
     try:
         _log.print(f"[bold green]{_BANNER_ART}[/bold green]")
         _log.print("")
-        _log.print("   [dim]DB-GPT Quick Start[/dim]")
+        _log.print("   [dim]Kavir Motor Quick Start[/dim]")
         _log.print("")
     except Exception:
         # Fallback for non-UTF8 terminals (e.g., cp1256)
         print(_BANNER_ART)
         print("")
-        print("   DB-GPT Quick Start")
+        print("   Kavir Motor Quick Start")
         print("")
 
 
@@ -51,7 +51,7 @@ def _add_webserver_start_options(func):
         required=False,
         default=None,
         help=_(
-            "Path to a TOML config file.  If omitted, DB-GPT will use the active "
+            "Path to a TOML config file.  If omitted, Kavir Motor will use the active "
             "profile from ~/.dbgpt/ or run the first-time setup wizard."
         ),
     )
@@ -114,7 +114,7 @@ def start_webserver(
 ):
     """Start webserver (dbgpt_server.py).
 
-    On first run (or when no config is found) DB-GPT will launch an
+    On first run (or when no config is found) Kavir Motor will launch an
     interactive setup wizard so you can choose your LLM provider and API key.
     Use ``--yes`` to skip the wizard in non-interactive environments.
     """

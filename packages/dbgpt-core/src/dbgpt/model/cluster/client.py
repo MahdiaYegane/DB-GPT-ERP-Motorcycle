@@ -20,7 +20,7 @@ from dbgpt.util.i18n_utils import _
     label=_("Default LLM Client"),
     name="default_llm_client",
     category=ResourceCategory.LLM_CLIENT,
-    description=_("Default LLM client(Connect to your DB-GPT model serving)"),
+    description=_("Default LLM client(Connect to your Kavir Motor model serving)"),
     parameters=[
         Parameter.build_from(
             _("Auto Convert Message"),
@@ -114,7 +114,7 @@ class DefaultLLMClient(LLMClient):
     label=_("Remote LLM Client"),
     name="remote_llm_client",
     category=ResourceCategory.LLM_CLIENT,
-    description=_("Remote LLM client(Connect to the remote DB-GPT model serving)"),
+    description=_("Remote LLM client(Connect to the remote Kavir Motor model serving)"),
     parameters=[
         Parameter.build_from(
             _("Controller Address"),
@@ -148,10 +148,10 @@ class RemoteLLMClient(DefaultLLMClient):
         auto_convert_message (bool, optional): auto convert the message to
             ModelRequest. Defaults to False.
 
-    If you start DB-GPT model cluster, the controller address is the address of the
+    If you start Kavir Motor model cluster, the controller address is the address of the
     Model Controller(`dbgpt start controller`, the default port of model controller
     is 8000).
-    Otherwise, if you already have a running DB-GPT server(start it by
+    Otherwise, if you already have a running Kavir Motor server(start it by
     `dbgpt start webserver --port ${remote_port}`), you can use the address of the
     `http://${remote_ip}:${remote_port}`.
 

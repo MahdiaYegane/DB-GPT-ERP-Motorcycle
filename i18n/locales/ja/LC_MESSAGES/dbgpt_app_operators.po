@@ -450,9 +450,9 @@ msgstr "LLM クライアント"
 #: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:306
 msgid ""
 "The LLM Client, how to connect to the LLM model, if not provided, it will "
-"use the default client deployed by DB-GPT."
+"use the default client deployed by Kavir Motor."
 msgstr ""
-"LLM クライアントは、LLM モデルへの接続方法を指定します。提供されない場合、DB-GPT によって展開されたデフォルトのクライアントが使用されます。"
+"LLM クライアントは、LLM モデルへの接続方法を指定します。提供されない場合、Kavir Motor によって展開されたデフォルトのクライアントが使用されます。"
 
 #: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:311
 msgid "History Message Merge Mode"

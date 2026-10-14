@@ -40,11 +40,12 @@ class MyDocument extends Document {
           <link rel='icon' href='/favicon.ico' />
           <meta name='description' content='دگرگونی تعامل با پایگاه داده با فناوری مدل زبانی خصوصی' />
           <meta property='og:description' content='eosphoros-ai' />
-          <meta property='og:title' content='DB-GPT' />
+          <meta property='og:title' content='Kavir Motor' />
         </Head>
         <body>
           <Main />
           <NextScript />
+          <script src='/kavir-autoscroll.js' defer />
         </body>
       </Html>
     );

@@ -1,5 +1,5 @@
 """
-DB-GPT Sandbox Main Entry Point
+Kavir Motor Sandbox Main Entry Point
 """
 
 import argparse
@@ -21,7 +21,7 @@ def setup_logging():
 
 def parse_args():
     """解析命令行参数"""
-    parser = argparse.ArgumentParser(description="DB-GPT Sandbox Server")
+    parser = argparse.ArgumentParser(description="Kavir Motor Sandbox Server")
     parser.add_argument("--host", type=str, default="0.0.0.0", help="Host to bind to")
     parser.add_argument("--port", type=int, default=8000, help="Port to bind to")
     parser.add_argument(
@@ -40,12 +40,12 @@ def run_sandbox_server(
     """运行沙箱服务器"""
     setup_logging()
 
-    logger.info(f"Starting DB-GPT Sandbox server on {host}:{port}")
+    logger.info(f"Starting Kavir Motor Sandbox server on {host}:{port}")
 
     try:
         initialize_sandbox(host=host, port=port, log_level=log_level)
     except KeyboardInterrupt:
-        logger.info("Shutting down DB-GPT Sandbox server...")
+        logger.info("Shutting down Kavir Motor Sandbox server...")
     except Exception as e:
         logger.error(f"Failed to start server: {e}")
         sys.exit(1)

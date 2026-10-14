@@ -27,7 +27,7 @@ class GitRepoIndex(DomainGeneralIndex):
     ) -> List[Chunk]:
         if not knowledge:
             raise ValueError("knowledge must be provided.")
-        # DB-GPT's Knowledge base only has sync _load(); use load() directly.
+        # Kavir Motor's Knowledge base only has sync _load(); use load() directly.
         # (git_repo_sync_service overrides _load to return pre-built documents)
         documents = knowledge.load()
         if hasattr(knowledge, "extract") and callable(

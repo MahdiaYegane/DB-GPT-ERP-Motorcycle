@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
 
 
 class Serve(BaseServe):
-    """Serve component for DB-GPT
+    """Serve component for Kavir Motor
 
-    Message DB-GPT conversation history and provide API for other components to access.
+    Message Kavir Motor conversation history and provide API for other components to access.
 
     TODO: Move some Http API in app to this component.
     """

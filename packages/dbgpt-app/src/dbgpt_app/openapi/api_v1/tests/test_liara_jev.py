@@ -247,23 +247,31 @@ def test_build_jev_triage_state_truncates_and_marks_context():
 def test_governor_triage_detects_visualization_and_report_required():
     from dbgpt_app.openapi.api_v1 import liara_jev_auto as auto
 
+    payload = {
+        "model": "jev-1.13.0",
+        "answers": {
+            "intent": {"choice": "report_build", "confidence": 0.9},
+            "needs_clarification": {"type": "noul", "noul": 0.1},
+            "task_complexity": {"type": "score", "score": 2.0},
+            "needs_visualization": {"type": "noul", "noul": 0.95},
+        },
+    }
+    # Explicit chart request in the question -> report is mandatory.
     summary = auto.summarize_jev_triage(
-        {
-            "model": "jev-1.13.0",
-            "answers": {
-                "intent": {"choice": "report_build", "confidence": 0.9},
-                "needs_clarification": {"type": "noul", "noul": 0.1},
-                "task_complexity": {"type": "score", "score": 2.0},
-                "needs_visualization": {"type": "noul", "noul": 0.95},
-            },
-        }
+        payload, user_input="نمودار فروش ماهانه را رسم کن"
     )
-
     assert summary["expects_report"] is True
     assert summary["needs_visualization"] == 0.95
     guidance = auto.format_jev_guidance_for_prompt(summary)
     assert "REPORT REQUIRED" in guidance
     assert "html_interpreter" in guidance
+
+    # Jev alone only *suggests* a visualization; it is never forced.
+    summary = auto.summarize_jev_triage(payload, user_input="فروش ماه جاری چقدر بود؟")
+    assert summary["expects_report"] is False
+    guidance = auto.format_jev_guidance_for_prompt(summary)
+    assert "REPORT REQUIRED" not in guidance
+    assert "NOT requested" in guidance
 
 
 def test_governor_history_html_detection():
@@ -299,7 +307,8 @@ def test_governor_needs_repair_logic():
         )
         is False
     )
-    # Jev verification flag forces repair even without triage.
+    # Without an explicit chart/visual request no fallback HTML is synthesized,
+    # even if Jev verification thinks a report was expected.
     assert (
         auto.needs_report_repair(
             user_input="hello",
@@ -307,7 +316,15 @@ def test_governor_needs_repair_logic():
             verification_summary={"needs_repair": True},
             has_html=False,
         )
-        is True
+        is False
+    )
+    assert (
+        auto.needs_report_repair(
+            user_input="گزارش فروش استان ها",
+            triage_summary={"expects_report": False},
+            has_html=False,
+        )
+        is False
     )
 
 
@@ -431,27 +448,23 @@ def test_explicit_database_question_overrides_jev_report_misclassification():
     assert summary["expects_report"] is False
 
 
-def test_inventory_sql_is_not_evidence_for_sales_by_province():
+def test_relevance_guard_requires_successful_sql_but_has_no_domain_rules():
     from dbgpt_app.openapi.api_v1 import liara_jev_auto as auto
 
     question = "چه استان هایی بیشترین فروش رو داشتند؟"
-    inventory_history = [
-        {
-            "action": "sql_query",
-            "action_input": '{"sql":"SELECT gname, SUM(balance) FROM dbo.ware GROUP BY gname"}',
-            "status": "done",
-            "outputs": [
-                {
-                    "output_type": "markdown",
-                    "content": "| gname | total_balance |\\n| --- | --- |\\n| parts | 10 |",
-                }
-            ],
-        }
-    ]
-    assessment = auto.assess_database_answer_relevance(question, inventory_history)
-    assert assessment["requires_database"] is True
-    assert assessment["relevant"] is False
-    assert assessment["successful_sql_count"] == 1
+    no_sql = auto.assess_database_answer_relevance(question, [])
+    assert no_sql["requires_database"] is True
+    assert no_sql["relevant"] is False
+
+    failed = [{"action": "sql_query", "action_input": "SELECT 1", "status": "failed",
+               "outputs": [{"output_type": "text", "content": "SQL execution failed"}]}]
+    assert auto.assess_database_answer_relevance(question, failed)["relevant"] is False
+
+    any_table = [{"action": "sql_query", "action_input": "SELECT a, SUM(b) FROM t GROUP BY a",
+                  "status": "done",
+                  "outputs": [{"output_type": "markdown", "content": "| a | b |\n| x | 1 |"}]}]
+    # Semantic relevance is judged by Jev verification, not by column-name rules.
+    assert auto.assess_database_answer_relevance(question, any_table)["relevant"] is True
 
 
 def test_sales_by_province_sql_evidence_passes_relevance_guard():
@@ -541,10 +554,10 @@ def test_jev_report_threshold_is_tunable(monkeypatch):
     }
 
     monkeypatch.delenv("LIARA_JEV_REPORT_THRESHOLD", raising=False)
-    assert auto.summarize_jev_triage(payload)["expects_report"] is True
+    assert auto.summarize_jev_triage(payload)["suggests_visualization"] is True
 
     monkeypatch.setenv("LIARA_JEV_REPORT_THRESHOLD", "0.9")
-    assert auto.summarize_jev_triage(payload)["expects_report"] is False
+    assert auto.summarize_jev_triage(payload)["suggests_visualization"] is False
     assert auto.get_jev_report_threshold() == 0.9
 
     monkeypatch.setenv("LIARA_JEV_REPORT_THRESHOLD", "garbage")
@@ -620,3 +633,35 @@ async def test_jev_shared_client_is_reused(monkeypatch):
     assert len(calls) == 2
     timeouts = {c[1].get("timeout") for c in calls}
     assert timeouts == {30.0}
+
+
+def test_database_tag_and_conversational_questions_are_not_db_queries():
+    from dbgpt_app.openapi.api_v1 import liara_jev_auto as auto
+
+    # The UI "[Database: ...]" prefix must not turn every message into a DB query.
+    assert (
+        auto.classify_request_intent("[Database: sorooshan1040] سوال قبلی رو یادت هست چی بود؟")
+        == "general_answer"
+    )
+    assert auto.classify_request_intent("[Database: sorooshan1040] سلام خوبی؟") is None
+    assert (
+        auto.classify_request_intent("[Database: sorooshan1040] جمع فروش محصولات رو بگو")
+        == "database_query"
+    )
+    assessment = auto.assess_database_answer_relevance(
+        "[Database: sorooshan1040] سوال قبلی رو یادت هست چی بود؟", []
+    )
+    assert assessment["requires_database"] is False
+
+
+def test_follow_up_answered_from_previous_sql_evidence_is_accepted():
+    from dbgpt_app.openapi.api_v1 import liara_jev_auto as auto
+
+    question = "[Database: x] جمع فروش محصولات رو دوباره بگو"
+    assert auto.assess_database_answer_relevance(question, [])["relevant"] is False
+    assert (
+        auto.assess_database_answer_relevance(
+            question, [], history_has_sql_evidence=True
+        )["relevant"]
+        is True
+    )

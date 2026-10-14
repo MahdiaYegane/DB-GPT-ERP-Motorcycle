@@ -24,9 +24,9 @@ msgstr "پیکربندی‌های سرویس فایل"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:28
 msgid ""
-"This configuration is for the file serve module. In DB-GPT, you can store "
+"This configuration is for the file serve module. In Kavir Motor, you can store "
 "yourfiles in the file server."
-msgstr "این پیکربندی برای ماژول سرویس فایل است. در DB-GPT می‌توانید فایل‌های خود را در سرور فایل ذخیره کنید."
+msgstr "این پیکربندی برای ماژول سرویس فایل است. در کویر موتور می‌توانید فایل‌های خود را در سرور فایل ذخیره کنید."
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:49
 msgid "Check the hash of the file when downloading"

@@ -242,6 +242,22 @@ async def test_connection(
     return Result.succ(res)
 
 
+@router.get(
+    "/datasources/{datasource_id}/catalog",
+    dependencies=[Depends(check_api_key)],
+    response_model=Result[dict],
+)
+async def datasource_catalog_status(
+    datasource_id: str, service: Service = Depends(get_service)
+) -> Result[dict]:
+    """Status of the automatic database catalog (built when connected; rebuilt
+    incrementally by the refresh endpoint)."""
+    res = await blocking_func_to_async(
+        global_system_app, service.catalog_status, datasource_id
+    )
+    return Result.succ(res)
+
+
 @router.post(
     "/datasources/{datasource_id}/refresh",
     dependencies=[Depends(check_api_key)],

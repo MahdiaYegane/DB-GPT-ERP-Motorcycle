@@ -333,8 +333,8 @@ def initialize_sandbox(
         from fastapi import FastAPI
 
         app = FastAPI(
-            title="DB-GPT Sandbox API",
-            description="Secure sandbox execution environment for DB-GPT Agent",
+            title="Kavir Motor Sandbox API",
+            description="Secure sandbox execution environment for Kavir Motor Agent",
             version="0.7.3",
         )
 
@@ -344,7 +344,7 @@ def initialize_sandbox(
         # 添加根路径
         @app.get("/")
         async def root():
-            return {"message": "DB-GPT Sandbox API is running"}
+            return {"message": "Kavir Motor Sandbox API is running"}
 
-        logger.info(f"Starting DB-GPT Sandbox server on {host}:{port}")
+        logger.info(f"Starting Kavir Motor Sandbox server on {host}:{port}")
         uvicorn.run(app, host=host, port=port, log_level=log_level)

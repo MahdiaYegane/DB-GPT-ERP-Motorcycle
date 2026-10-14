@@ -24,9 +24,9 @@ msgstr "기본 채팅 기록 로드 연산자"
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:94
 msgid ""
 "Load chat history from the storage of the serve component.It is the default "
-"storage of DB-GPT"
+"storage of Kavir Motor"
 msgstr ""
-"서비스 구성 요소의 스토리지에서 채팅 기록을 로드합니다. 이는 DB-GPT의 기본 스토리지입니다."
+"서비스 구성 요소의 스토리지에서 채팅 기록을 로드합니다. 이는 Kavir Motor의 기본 스토리지입니다."
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:100
 msgid "Model Request"

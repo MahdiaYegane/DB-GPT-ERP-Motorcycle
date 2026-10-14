@@ -23,9 +23,9 @@ msgstr "ファイルサービス設定"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:28
 msgid ""
-"This configuration is for the file serve module. In DB-GPT, you can store "
+"This configuration is for the file serve module. In Kavir Motor, you can store "
 "yourfiles in the file server."
-msgstr "この設定はファイルサービスモジュール用です。DB-GPT では、ファイルをファイルサーバーに保存できます。"
+msgstr "この設定はファイルサービスモジュール用です。Kavir Motor では、ファイルをファイルサーバーに保存できます。"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/file/config.py:49
 msgid "Check the hash of the file when downloading"

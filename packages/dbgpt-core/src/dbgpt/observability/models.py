@@ -69,7 +69,7 @@ class TraceFilter:
     status: Optional[str] = None
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
-    # Drop pure-HTTP middleware traces (single-span `DB-GPT-Webserver` records)
+    # Drop pure-HTTP middleware traces (single-span `KavirMotor-Webserver` records)
     # from the list by setting a minimum span count.
     min_span_count: Optional[int] = None
     limit: int = 50

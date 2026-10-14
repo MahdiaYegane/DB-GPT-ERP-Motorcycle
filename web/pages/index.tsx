@@ -3048,7 +3048,8 @@ const Playground: NextPage = () => {
               <div
                 className={`${rightPanelCollapsed ? 'flex-1 max-w-[800px] border-r-0' : 'flex-[2] min-w-0 border-r border-gray-200/80 dark:border-gray-800'} min-h-0 flex flex-col overflow-hidden bg-white dark:bg-[#111217] transition-all duration-300 relative`}
               >
-                <div className='flex-1 min-h-0 overflow-y-auto'>
+                {/* data-kavir-autoscroll: follows new steps while the model works (public/kavir-autoscroll.js) */}
+                <div className='flex-1 min-h-0 overflow-y-auto' data-kavir-autoscroll='steps'>
                   {rounds.map((round, roundIndex) => {
                     const isLastRound = roundIndex === rounds.length - 1;
                     const isSelected = round.viewMsg?.id === selectedViewMsgId;

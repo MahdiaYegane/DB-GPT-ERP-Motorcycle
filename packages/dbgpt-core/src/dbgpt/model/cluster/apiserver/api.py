@@ -317,7 +317,7 @@ class APIServer(BaseComponent):
         for m in models:
             model_cards.append(
                 ModelCard(
-                    id=m, root=m, owned_by="DB-GPT", permission=[ModelPermission()]
+                    id=m, root=m, owned_by="Kavir Motor", permission=[ModelPermission()]
                 )
             )
         return ModelList(data=model_cards)
@@ -934,7 +934,7 @@ def initialize_apiserver(
     initialize_tracer(
         trace_file,
         system_app=system_app,
-        root_operation_name=trace_config.root_operation_name or "DB-GPT-APIServer",
+        root_operation_name=trace_config.root_operation_name or "KavirMotor-APIServer",
         tracer_parameters=trace_config,
     )
 
@@ -980,7 +980,7 @@ def initialize_apiserver(
 def parse_args():
     import argparse
 
-    parser = argparse.ArgumentParser(description="DB-GPT API Server")
+    parser = argparse.ArgumentParser(description="Kavir Motor API Server")
     parser.add_argument(
         "-c",
         "--config",

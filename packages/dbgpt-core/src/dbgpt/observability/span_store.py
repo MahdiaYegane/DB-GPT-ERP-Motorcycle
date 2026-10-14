@@ -1,7 +1,7 @@
 """Isolated SQLite store for observability spans.
 
 This is the default backend's persistence layer. It is deliberately **separate
-from the DB-GPT main metadata DB**: it uses its own declarative base and its own
+from the Kavir Motor main metadata DB**: it uses its own declarative base and its own
 SQLite file (default ``logs/observability.db``), so high-volume telemetry never
 bloats the operational database. Both :class:`SqliteSpanStorage` (write side)
 and :class:`DefaultObservabilityProvider` (read side) share this store.

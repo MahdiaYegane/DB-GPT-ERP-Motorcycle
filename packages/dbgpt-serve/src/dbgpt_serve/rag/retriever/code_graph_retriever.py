@@ -8,7 +8,7 @@ Three query modes:
 The retriever formats the subgraph as structured text context and returns
 it as Chunk objects with metadata indicating the retrieval source.
 
-Ported from derisk; adapted to DB-GPT's dbgpt.core / dbgpt.storage / dbgpt.rag
+Ported from derisk; adapted to Kavir Motor's dbgpt.core / dbgpt.storage / dbgpt.rag
 module paths.
 """
 

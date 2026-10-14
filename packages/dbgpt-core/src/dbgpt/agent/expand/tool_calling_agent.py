@@ -31,7 +31,9 @@ from dbgpt.util.configure import DynConfig
 from dbgpt.util.error_types import LLMChatError
 from dbgpt.util.json_utils import parse_or_raise_error
 
-from ..core.base_agent import _new_system_message
+from dbgpt.core import ModelMessageRoleType
+
+from ..core.base_agent import _EMPTY_REPLY_NUDGE, _new_system_message
 from ..util.agent_errors import (
     ErrorCategory,
     classify_agent_error,
@@ -503,11 +505,11 @@ class ToolCallingReActAgent(ReActAgent):
         last_err = None
         retry_count = 0
         llm_messages = [message.to_llm_message() for message in messages]
+        if prompt:
+            llm_messages = _new_system_message(prompt) + llm_messages
         while retry_count < 3:
             llm_model = await self._a_select_llm_model(last_model)
             try:
-                if prompt:
-                    llm_messages = _new_system_message(prompt) + llm_messages
                 if not self.llm_client:
                     raise ValueError("LLM client is not initialized!")
                 response = await self.llm_client.create_with_output(
@@ -535,7 +537,15 @@ class ToolCallingReActAgent(ReActAgent):
                 retry_count += 1
                 last_model = llm_model
                 last_err = str(e)
-                await asyncio.sleep(10)
+                if "stream is null" in last_err:
+                    # Empty reply from the provider: retry quickly with a
+                    # reminder instead of waiting 10 s.
+                    llm_messages = llm_messages + [
+                        {"role": ModelMessageRoleType.HUMAN, "content": _EMPTY_REPLY_NUDGE}
+                    ]
+                    await asyncio.sleep(2)
+                else:
+                    await asyncio.sleep(10)
 
         if last_err:
             raise ValueError(last_err)

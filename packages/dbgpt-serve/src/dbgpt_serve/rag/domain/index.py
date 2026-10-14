@@ -26,7 +26,7 @@ class DomainGeneralIndex(DomainKnowledgeIndex):
     ) -> List[Chunk]:
         if not knowledge:
             raise ValueError("knowledge must be provided.")
-        # DB-GPT's Knowledge base only has sync _load(); use load() directly.
+        # Kavir Motor's Knowledge base only has sync _load(); use load() directly.
         documents = knowledge.load()
         chunk_manager = ChunkManager(
             knowledge=knowledge, chunk_parameter=chunk_parameter
@@ -102,7 +102,7 @@ class DomainGeneralIndex(DomainKnowledgeIndex):
             vector_ids = await vector_store.aload_document_with_limit(
                 chunks, max_chunks_once_load, max_threads
             )
-            # DB-GPT's Chunk has no vector_id field; store in metadata instead
+            # Kavir Motor's Chunk has no vector_id field; store in metadata instead
             for chunk, vector_id in zip(chunks, vector_ids):
                 if vector_id:
                     chunk.metadata["vector_id"] = vector_id

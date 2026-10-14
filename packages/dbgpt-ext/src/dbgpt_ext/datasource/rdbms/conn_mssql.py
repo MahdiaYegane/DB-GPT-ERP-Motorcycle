@@ -65,6 +65,7 @@ class MSSQLConnector(RDBMSConnector):
         engine_args: Optional[dict] = None,
         driver: Optional[str] = None,
         odbc_driver: Optional[str] = None,
+        charset: Optional[str] = None,
         **kwargs: Any,
     ) -> "MSSQLConnector":
         """Construct a SQLAlchemy engine, honoring a driver override.
@@ -84,6 +85,10 @@ class MSSQLConnector(RDBMSConnector):
                 ``mssql+pyodbc`` (e.g. ``ODBC Driver 18 for SQL Server`` or
                 the legacy ``SQL Server``). Passed as the ``driver`` query
                 parameter of the connection URL.
+            charset: Character set for the ``mssql+pymssql`` branch.
+                Defaults to ``cp1256`` so Persian VARCHAR data stored under
+                Arabic collations decodes correctly; pass an explicit value
+                to override.
         """
         selected = (driver or cls.driver or "").strip() or cls.driver
         if selected == "mssql+pyodbc":
@@ -94,9 +99,16 @@ class MSSQLConnector(RDBMSConnector):
                 f"?driver={quote_plus(odbc)}"
             )
         else:
+            # Persian text in legacy SQL Server installs lives as CP1256 bytes
+            # in VARCHAR columns (server ANSI codepage; e.g. Arabic_CI_AS
+            # collation). pymssql defaults to iso_8859_1, which returns
+            # mojibake and pushes chat agents into destructive "decode"
+            # workarounds that drop Persian letters (kaf/gaf/cheh/peh).
+            # Decode as CP1256 at the source so text arrives intact.
             db_url = (
                 f"{selected}://{quote(user)}:{quote_plus(pwd)}"
                 f"@{host}:{str(port)}/{db_name}"
+                f"?charset={quote_plus(charset or 'cp1256')}"
             )
         return cls.from_uri(db_url, engine_args, **kwargs)
 

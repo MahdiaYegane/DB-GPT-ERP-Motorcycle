@@ -97,7 +97,7 @@ def net():
 
 @click.group()
 def tool():
-    """DB-GPT Tools."""
+    """Kavir Motor Tools."""
 
 
 # ---------------------------------------------------------------------------
@@ -139,7 +139,7 @@ def tool():
     help="Show the current active profile and config path, then exit.",
 )
 def setup_command(profile: str, yes: bool, api_key: str, show: bool):
-    """Configure DB-GPT's LLM provider and write ~/.dbgpt/configs/<profile>.toml.
+    """Configure Kavir Motor's LLM provider and write ~/.dbgpt/configs/<profile>.toml.
 
     Run without arguments for an interactive wizard, or use --yes for
     non-interactive / CI usage.
@@ -205,7 +205,7 @@ def stop_all():
 
 @click.command(name="none")
 def start_none():
-    """Start DB-GPT in API-only mode (no web UI). [Planned]"""
+    """Start Kavir Motor in API-only mode (no web UI). [Planned]"""
     click.echo(
         "API-only mode (no web UI) is planned for a future release.\n"
         "For now, use: dbgpt start web"

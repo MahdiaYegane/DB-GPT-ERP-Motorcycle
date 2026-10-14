@@ -24,8 +24,8 @@ msgstr "默认聊天历史加载算子"
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:94
 msgid ""
 "Load chat history from the storage of the serve component.It is the default "
-"storage of DB-GPT"
-msgstr "从服务组件的存储中加载聊天历史。这是 DB-GPT 的默认存储。"
+"storage of Kavir Motor"
+msgstr "从服务组件的存储中加载聊天历史。这是 Kavir Motor 的默认存储。"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:100
 msgid "Model Request"

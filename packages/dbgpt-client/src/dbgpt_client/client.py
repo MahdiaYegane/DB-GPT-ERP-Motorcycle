@@ -1,4 +1,4 @@
-"""This module contains the client for the DB-GPT API."""
+"""This module contains the client for the Kavir Motor API."""
 
 import atexit
 import json
@@ -50,7 +50,7 @@ class ClientException(Exception):
 
 
 class Client:
-    """The client for the DB-GPT API."""
+    """The client for the Kavir Motor API."""
 
     def __init__(
         self,
@@ -62,7 +62,7 @@ class Client:
         """Create the client.
 
         Args:
-            api_base: Optional[str], a full URL for the DB-GPT API.
+            api_base: Optional[str], a full URL for the Kavir Motor API.
                 Defaults to the `http://localhost:5670/api/v2`.
             api_key: Optional[str], The dbgpt api key to use for authentication.
                 Defaults to None.

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 
 class ServePreChatHistoryLoadOperator(PreChatHistoryLoadOperator):
-    """Pre-chat history load operator for DB-GPT serve component
+    """Pre-chat history load operator for Kavir Motor serve component
 
     Args:
         storage (Optional[StorageInterface[StorageConversation, Any]], optional):
@@ -81,7 +81,7 @@ class ServePreChatHistoryLoadOperator(PreChatHistoryLoadOperator):
 
 
 class DefaultServePreChatHistoryLoadOperator(ServePreChatHistoryLoadOperator):
-    """Default pre-chat history load operator for DB-GPT serve component
+    """Default pre-chat history load operator for Kavir Motor serve component
 
     Use the storage and message storage of the serve component.
     """
@@ -92,7 +92,7 @@ class DefaultServePreChatHistoryLoadOperator(ServePreChatHistoryLoadOperator):
         category=OperatorCategory.CONVERSION,
         description=_(
             "Load chat history from the storage of the serve component."
-            "It is the default storage of DB-GPT"
+            "It is the default storage of Kavir Motor"
         ),
         parameters=[],
         inputs=[

@@ -106,7 +106,7 @@ class ReportAnalystOperator(MixinLLMOperator, JoinOperator[str]):
                 default=None,
                 description=_(
                     "The LLM Client, how to connect to the LLM model, if not provided,"
-                    " it will use the default client deployed by DB-GPT."
+                    " it will use the default client deployed by Kavir Motor."
                 ),
             ),
         ],

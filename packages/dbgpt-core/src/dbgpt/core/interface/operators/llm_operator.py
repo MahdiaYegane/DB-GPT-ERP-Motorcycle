@@ -486,7 +486,7 @@ class ModelOutput2CommonResponseOperator(
 class CommonStreamingOutputOperator(TransformStreamAbsOperator[ModelOutput, str]):
     """The Common Streaming Output Operator.
 
-    Transform model output to the string output to show in DB-GPT chat flow page.
+    Transform model output to the string output to show in Kavir Motor chat flow page.
     """
 
     output_format = "SSE"

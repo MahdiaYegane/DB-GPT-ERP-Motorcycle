@@ -53,7 +53,18 @@ from .attachment_react_adapter import (
     resolve_legacy_chat_file_path,
     scrub_react_history_for_share,
 )
+from .kavir_prompt import ALL_SECTIONS as _KAVIR_PROMPT_SECTIONS
+from .kavir_prompt import ASSISTANT_NAME_EN as _KAVIR_NAME_EN
+from .kavir_prompt import ASSISTANT_NAME_FA as _KAVIR_NAME_FA
 from .react_final import AgentFinalAnswer, FinalAnswerAssembler
+from .react_memory import (
+    AI as _HISTORY_AI,
+)
+from .react_memory import (
+    INTERRUPTED_REPLY,
+    BoundedConvCache,
+    build_history_turns,
+)
 from .subagent.dispatcher import DISPATCH_PROMPT_SECTION, make_dispatch_tool
 from .subagent.history import (
     build_subagent_history_snapshot,
@@ -70,60 +81,73 @@ if TYPE_CHECKING:
     from dbgpt.agent.resource.connector.manager import ConnectorManager
     from dbgpt.agent.resource.tool.base import BaseTool
 
-REACT_AGENT_MEMORY_CACHE: Dict[str, "GptsMemory"] = {}
+def _dispose_gpts_memory(conv_id: str, memory: "GptsMemory") -> None:
+    """Release in-process resources of an evicted per-conversation GptsMemory.
+
+    Only the in-memory caches/queues and the thread pool are released; the
+    persisted messages in the database are untouched.
+    """
+    try:
+        memory.clear(conv_id)
+    except Exception:
+        pass
+    executor = getattr(memory, "_executor", None)
+    if executor is not None:
+        try:
+            executor.shutdown(wait=False)
+        except Exception:
+            pass
+
+
+# Per-conversation GptsMemory cache. Bounded LRU (previously an unbounded dict
+# that kept one memory object + one thread pool per conversation forever).
+# Entries used by a running turn are pinned and never evicted.
+REACT_AGENT_MEMORY_CACHE: "BoundedConvCache[GptsMemory]" = BoundedConvCache(
+    max_size=int(os.getenv("DBGPT_REACT_MEMORY_CACHE_SIZE", "64") or 64),
+    on_evict=_dispose_gpts_memory,
+)
 
 DEFAULT_SKILLS_DIR = SKILLS_DIR
+
+
+_CONTEXT_TAG_RE = re.compile(
+    r"\[(?:Database|database|Skill|skill|context|Context)[^\]]*\]"
+)
 
 
 def _rank_database_tables_for_request(
     table_names: List[str], user_input: Any, *, limit: int = 12
 ) -> List[str]:
-    """Choose a small, question-relevant schema set for the model prompt.
+    """Fallback table shortlist, used only until the automatic catalog is ready.
 
-    The previous prompt included every schema in the 1,200+ table MSSQL
-    database. That bloated context, caused overflow, and encouraged unrelated
-    tables (e.g. inventory) to dominate a sales-by-province question.
+    Generic lexical match of the question's latin words against table names; no
+    hand-written knowledge about any database. With the catalog ready, tables
+    are chosen from the catalog (descriptions/keywords learned from the DB).
     """
     names = [name for name in table_names if isinstance(name, str) and name]
     text = user_input if isinstance(user_input, str) else str(user_input or "")
-    lowered = text.casefold()
-    asks_sales_by_province = any(
-        token in lowered for token in ("استان", "استانها", "province", "provinces", "state")
-    ) and any(
-        token in lowered
-        for token in ("فروش", "فروخت", "sales", "sale", "revenue", "sold")
-    )
-
-    if asks_sales_by_province:
-        preferred = (
-            "factors",
-            "bill",
-            "statecity",
-            "statename",
-            "salescustomers",
-            "uses",
-            "salesorders",
-            "salesordersitems",
-            "pishfactors",
-        )
-        by_lower = {name.casefold().split(".")[-1]: name for name in names}
-        selected = [by_lower[key] for key in preferred if key in by_lower]
-        return selected[: max(1, limit)]
-
-    words = [word for word in re.findall(r"[a-z0-9_\u0600-\u06ff]+", lowered) if len(word) > 2]
+    # The UI prefixes "[Database: <name>]"; it must not influence matching.
+    lowered = _CONTEXT_TAG_RE.sub(" ", text).casefold()
+    terms = list(dict.fromkeys(w for w in re.findall(r"[a-z0-9_]+", lowered) if len(w) > 2))
     ranked: List[Tuple[int, str]] = []
     for name in names:
         leaf = name.casefold().split(".")[-1]
-        score = sum(2 for word in words if word in leaf)
+        score = 0
+        for term in terms:
+            if leaf == term:
+                score += 6
+            elif leaf.startswith(term):
+                score += 3
+            elif term in leaf:
+                score += 1
         if score:
             ranked.append((score, name))
-    if ranked:
-        ranked.sort(key=lambda item: (-item[0], item[1].casefold()))
-        return [name for _, name in ranked[: max(1, limit)]]
+    ranked.sort(key=lambda item: (-item[0], len(item[1]), item[1].casefold()))
+    # No usable keyword -> no preselection (an alphabetical shortlist only put
+    # unrelated tables such as job-queue tables into the prompt).
+    return [name for _, name in ranked[: max(1, limit)]]
 
-    # No reliable table keyword: show only a small neutral shortlist. The
-    # prompt teaches the model to inspect INFORMATION_SCHEMA before guessing.
-    return names[: max(1, limit)]
+
 AUTO_DATA_MARKER_PATTERN = re.compile(
     r"###([A-Z0-9_]+)_START###\s*(.*?)\s*###\1_END###", re.DOTALL
 )
@@ -140,6 +164,14 @@ async def _resolve_model_context_tokens(
         metadata = await llm_client.get_model_metadata(model_name)
         context_length = getattr(metadata, "context_length", None)
         if isinstance(context_length, int) and context_length > 0:
+            if context_length <= 4096:
+                logger.warning(
+                    "Model %s reports context_length=%s (proxy default). Set "
+                    "`context_length` for this model in the TOML config, otherwise "
+                    "conversation memory is compacted far too aggressively.",
+                    model_name,
+                    context_length,
+                )
             return context_length
     except Exception:
         logger.debug(
@@ -185,6 +217,25 @@ async def _load_context_budget_config(
                 model_context,
             )
             max_context_tokens = model_context
+        reserved_tokens = _value(
+            agent_context, "reserved_tokens", defaults.reserved_tokens
+        )
+        # Never reserve (almost) the whole window for the output: with a 4096
+        # window and 4096 reserved the budget was 0, every call was "overflow"
+        # and previous turns were dropped by compaction.
+        if (
+            isinstance(max_context_tokens, int)
+            and isinstance(reserved_tokens, int)
+            and max_context_tokens > 0
+            and reserved_tokens > max_context_tokens // 2
+        ):
+            logger.warning(
+                "reserved_tokens %s too large for context window %s; using %s",
+                reserved_tokens,
+                max_context_tokens,
+                max_context_tokens // 4,
+            )
+            reserved_tokens = max_context_tokens // 4
         return ContextBudgetConfig(
             max_context_tokens=max_context_tokens,
             warning_threshold=_value(
@@ -196,9 +247,7 @@ async def _load_context_budget_config(
             critical_threshold=_value(
                 agent_context, "critical_threshold", defaults.critical_threshold
             ),
-            reserved_tokens=_value(
-                agent_context, "reserved_tokens", defaults.reserved_tokens
-            ),
+            reserved_tokens=reserved_tokens,
             min_keep_recent_rounds=_value(
                 agent_context,
                 "min_keep_recent_rounds",
@@ -319,6 +368,23 @@ def _contains_tool_arg_blob(text: str) -> bool:
             return True
         start = text.find("{", start + 1)
     return False
+
+
+def _unfinished_answer_message(user_input: Any) -> str:
+    """Honest final message when the agent stopped without an answer."""
+    if re.search(r"[\u0600-\u06FF]", str(user_input or "")):
+        return (
+            "نتوانستم در زمان/تعداد مرحله مجاز به پاسخ قطعی برسم و عددی را که "
+            "تأیید نشده گزارش نمی‌کنم. مراحل و کوئری‌های بررسی‌شده در بالا قابل "
+            "مشاهده است. لطفاً سؤال را دقیق‌تر کنید (مثلاً جدول، بازه زمانی یا "
+            "معیار مورد نظر) تا دوباره بررسی کنم."
+        )
+    return (
+        "I could not reach a verified answer within the allowed time/steps, so "
+        "I am not reporting unverified numbers. The steps and queries checked "
+        "are shown above. Please narrow the question (table, period or metric) "
+        "and I will try again."
+    )
 
 
 def _is_truncated_tool_call(text: str) -> bool:
@@ -1269,6 +1335,7 @@ def _react_terminal_events(
     final_answer: AgentFinalAnswer,
 ) -> Tuple[str, str]:
     """Persist one ReAct round without risking its terminal SSE events."""
+    _mark_round_closed(storage_conv)
     try:
         storage_conv.add_view_message(history_payload)
         storage_conv.end_current_round()
@@ -1393,6 +1460,9 @@ async def _react_agent_stream_inner(
 ) -> AsyncGenerator[str, None]:
     """Stream ReAct events while owning the lifetime of its background task."""
     agent_task_holder: List["asyncio.Task[Any]"] = []
+    # Filled by the impl: conv_id / storage_conv / history_steps / input_files,
+    # so an interrupted round (client stop, disconnect, error) is still saved.
+    round_holder: Dict[str, Any] = {}
     final_emitted = False
     done_emitted = False
     try:
@@ -1401,6 +1471,7 @@ async def _react_agent_stream_inner(
             tool_mode=tool_mode,
             attachment_ctx=attachment_ctx,
             agent_task_holder=agent_task_holder,
+            round_holder=round_holder,
         ):
             event_type = _sse_event_type(event)
             final_emitted = final_emitted or event_type == "final"
@@ -1419,6 +1490,44 @@ async def _react_agent_stream_inner(
     finally:
         if agent_task_holder:
             await _cancel_and_await_agent_task(agent_task_holder[0])
+        _persist_interrupted_round(round_holder)
+        _conv = round_holder.get("conv_id")
+        if _conv:
+            REACT_AGENT_MEMORY_CACHE.release(_conv)
+
+
+def _mark_round_closed(storage_conv: Any) -> None:
+    try:
+        setattr(storage_conv, "_react_round_closed", True)
+    except Exception:
+        pass
+
+
+def _persist_interrupted_round(round_holder: Dict[str, Any]) -> None:
+    """Save a round that ended without a terminal answer (stop/disconnect/error).
+
+    The user question is already stored when the round starts; this adds an
+    "interrupted" answer containing the steps that did run, so the next turn
+    (and the UI history) still sees what happened.
+    """
+    storage_conv = round_holder.get("storage_conv")
+    if storage_conv is None or getattr(storage_conv, "_react_round_closed", False):
+        return
+    _mark_round_closed(storage_conv)
+    try:
+        payload = _build_react_history_payload(
+            final_content=INTERRUPTED_REPLY,
+            steps=list(round_holder.get("history_steps") or []),
+            task_plan=[],
+            generated_images=[],
+            sub_agents=build_subagent_history_snapshot({}),
+            input_files=list(round_holder.get("input_files") or []),
+            citations=[],
+        )
+        storage_conv.add_view_message(payload)
+        storage_conv.end_current_round()
+    except Exception:
+        logger.exception("Failed to persist interrupted ReAct round")
 
 
 class _AgentStreamingResponse(StreamingResponse):
@@ -1443,6 +1552,7 @@ async def _react_agent_stream_impl(
     tool_mode: str = "full",
     attachment_ctx: Optional[SessionAttachmentContext] = None,
     agent_task_holder: Optional[List["asyncio.Task[Any]"]] = None,
+    round_holder: Optional[Dict[str, Any]] = None,
 ) -> AsyncGenerator[str, None]:
     """Core ReAct agent streaming logic.
 
@@ -1464,7 +1574,10 @@ async def _react_agent_stream_impl(
     from dbgpt.agent.resource import ToolPack
     from dbgpt.agent.resource.manage import get_resource_manager
     from dbgpt.agent.util.llm.llm import LLMConfig, LLMStrategyType
-    from dbgpt.agent.util.react_parser import ReActOutputParser
+    from dbgpt.agent.util.react_parser import (
+        PROTOCOL_MARKUP_START,
+        ReActOutputParser,
+    )
     from dbgpt.core import StorageConversation
     from dbgpt.model.cluster.client import DefaultLLMClient
     from dbgpt_serve.agent.agents.db_gpts_memory import MetaDbGptsMessageMemory
@@ -1783,26 +1896,108 @@ async def _react_agent_stream_impl(
             relevant_tables = _rank_database_tables_for_request(
                 table_names, user_input, limit=12
             )
-            try:
-                table_info = database_connector.get_table_info_no_throw(
-                    relevant_tables
+            # Automatic catalog: learned once when the database was connected
+            # (see dbgpt_serve/datasource/service/db_catalog.py). When it is
+            # ready, the schema shown to the model comes from it — no live
+            # schema queries per question. Otherwise start building it.
+            from dbgpt_serve.datasource.service import db_catalog as _db_catalog
+
+            _catalog = _db_catalog.load_catalog(database_name)
+            # Ready catalog, or the partial one a first build publishes early.
+            _catalog_ready = _db_catalog.is_usable(_catalog)
+            if not (_catalog and _catalog.get("status") == "ready"):
+                _db_catalog.schedule_build(
+                    database_name, local_db_manager.get_connector
                 )
-            except TypeError:
-                # Compatibility with older/custom connector implementations.
-                table_info = database_connector.get_table_info_no_throw()
+
+            def _raw(text: str) -> str:
+                # The system prompt is a jinja2 template; catalog text may
+                # contain braces from data values.
+                return "{% raw %}" + text.replace("{% endraw %}", "") + "{% endraw %}"
+
+            if _catalog_ready:
+                _catalog_tables = _catalog.get("tables") or {}
+                _non_empty = {
+                    n for n, t in _catalog_tables.items() if t.get("row_count")
+                }
+                # Meaning-based search first (local embeddings, any language),
+                # then word overlap, then the generic name ranker.
+                _semantic: List[str] = []
+                try:
+                    _semantic = await _db_catalog.semantic_rank_tables(
+                        database_name, _catalog, str(user_input or ""), limit=8
+                    )
+                except Exception:
+                    logger.warning("Semantic table ranking failed", exc_info=True)
+                if not _semantic:
+                    _db_catalog.schedule_embeddings(database_name)
+                _picked: List[str] = []
+                for _name in (
+                    _semantic
+                    + _db_catalog.rank_tables(_catalog, str(user_input or ""), limit=8)
+                    + list(relevant_tables)
+                ):
+                    if _name in _non_empty and _name not in _picked:
+                        _picked.append(_name)
+                relevant_tables = _picked[:12]
+                table_info = (
+                    _raw(_db_catalog.render_table_details(_catalog, relevant_tables))
+                    if relevant_tables
+                    else "(no table preselected for this question — pick from the list above)"
+                )
+                _table_index = _raw(_db_catalog.render_table_index(_catalog))
+                _empty_count = len(_catalog_tables) - len(_non_empty)
+                tables_line = (
+                    f"- Tables with data ({len(_non_empty)} of {len(_catalog_tables)}; "
+                    f"{_empty_count} empty tables omitted), most important first:\n"
+                    f"{_table_index}"
+                )
+                schema_note = (
+                    "- Relevant table details from the database catalog (built from "
+                    "the live database: columns, observed values, date formats, links). "
+                    "Use them directly; query INFORMATION_SCHEMA only for a table or "
+                    "column that is not listed here:"
+                )
+                if _catalog.get("status") != "ready":
+                    schema_note = (
+                        "- The database catalog is still being built: the list above "
+                        "already excludes empty tables, but descriptions and value "
+                        "profiles may be missing. Inspect a table's columns/values "
+                        "with sql_query before relying on it:\n" + schema_note
+                    )
+            else:
+                if relevant_tables:
+                    try:
+                        table_info = database_connector.get_table_info_no_throw(
+                            relevant_tables
+                        )
+                    except TypeError:
+                        # Compatibility with older/custom connector implementations.
+                        table_info = database_connector.get_table_info_no_throw()
+                else:
+                    table_info = "(no table preselected for this question)"
+                visible_tables = table_names[:80]
+                tables_line = (
+                    f"- Available table names (first 80): {', '.join(visible_tables)}"
+                )
+                schema_note = (
+                    "- Relevant table schemas (other schemas are intentionally omitted; "
+                    "inspect INFORMATION_SCHEMA before using an unlisted table):"
+                )
             max_schema_chars = 24_000
             if isinstance(table_info, str) and len(table_info) > max_schema_chars:
                 table_info = table_info[:max_schema_chars] + "\n... [schema truncated]"
-            visible_tables = table_names[:80]
+                if _catalog_ready:
+                    table_info += "{% endraw %}"
             database_context = f"""
 ## Database Info
 - Database name: {database_name}
 - Total tables: {len(table_names)}
-- Available table names (first 80): {", ".join(visible_tables)}
+{tables_line}
 - Schemas selected for this question ({len(relevant_tables)}): {", ".join(relevant_tables)}
-- Relevant table schemas (other schemas are intentionally omitted; inspect INFORMATION_SCHEMA before using an unlisted table):
+{schema_note}
 {table_info}
-- Relevance contract: Answer the exact metric and dimensions requested. Never substitute inventory/stock/product-group analysis for sales/revenue by province. If no matching sales rows/columns are found, say that the query could not be verified; do not fabricate a different report.
+- Relevance contract: Answer the exact metric and dimensions requested. Never substitute a different measure or table for the one asked. If no matching rows/columns are found, say that the query could not be verified; do not fabricate a different report.
 - Use the 'sql_query' tool to execute SQL queries
 - **Only SELECT queries are allowed. INSERT/UPDATE/DELETE/DROP/ALTER/TRUNCATE are prohibited.**
 """
@@ -2378,7 +2573,9 @@ print(json.dumps(summary, ensure_ascii=False))
     sql_query_tool = make_sql_query(react_state, database_connector)
     code_interpreter_tool = make_code_interpreter(react_state)
     shell_interpreter_tool = make_shell_interpreter(react_state)
-    html_interpreter_tool = make_html_interpreter(react_state, DEFAULT_SKILLS_DIR)
+    html_interpreter_tool = make_html_interpreter(
+        react_state, DEFAULT_SKILLS_DIR, database_connector
+    )
     todowrite_tool = make_todowrite(_todo_list, stream_callback)
     question_tool = make_question(react_state, stream_callback)
     liara_jev_decision_tool = make_liara_jev_decision()
@@ -2584,7 +2781,22 @@ print(json.dumps(summary, ensure_ascii=False))
         )
         gpt_memory.init(conv_id, enable_vis_message=False)
         REACT_AGENT_MEMORY_CACHE[conv_id] = gpt_memory
-    agent_memory = AgentMemory(gpts_memory=gpt_memory)
+    if round_holder is not None and "conv_id" not in round_holder:
+        # Pin while this turn runs; released by _react_agent_stream_inner.
+        REACT_AGENT_MEMORY_CACHE.acquire(conv_id)
+        round_holder["conv_id"] = conv_id
+    # Short-term buffer of this turn's ReAct steps. The default (5) dropped the
+    # current question after a few tool calls; the context manager already
+    # compacts on token budget, so keep more steps here.
+    from dbgpt.agent.core.memory import ShortTermMemory as _ShortTermMemory
+
+    try:
+        _stm_size = max(5, int(os.getenv("DBGPT_REACT_SHORT_TERM_MEMORY", "60")))
+    except ValueError:
+        _stm_size = 60
+    agent_memory = AgentMemory(
+        memory=_ShortTermMemory(buffer_size=_stm_size), gpts_memory=gpt_memory
+    )
 
     conv_serve = ConversationServe.get_instance(CFG.SYSTEM_APP)
     storage_conv = StorageConversation(
@@ -2603,26 +2815,30 @@ print(json.dumps(summary, ensure_ascii=False))
     # before appending the current round, then pass it as historical_dialogues
     # so multi-turn follow-ups see the previous Q&A (mirrors hermes'
     # conversation_history passed into the loop).
-    historical_dialogues: List[AgentMessage] = []
-    for _msg in storage_conv.get_history_message():
-        if _msg.type == "human":
-            historical_dialogues.append(AgentMessage(content=_msg.content))
-        elif _msg.type == "ai":
-            historical_dialogues.append(AgentMessage(content=_msg.content))
-        elif _msg.type == "view":
-            # view 消息存的是 history_payload(JSON)，提取 final_content 作为 AI 回答
-            _content = _msg.content
-            try:
-                _payload = (
-                    json.loads(_content) if isinstance(_content, str) else _content
-                )
-                if isinstance(_payload, dict):
-                    _content = _payload.get("final_content") or ""
-            except Exception:
-                pass
-            if _content:
-                historical_dialogues.append(AgentMessage(content=_content))
+    # Roles are tagged explicitly; interrupted rounds get a placeholder answer
+    # and each previous answer carries a compact summary of the tools/SQL used
+    # (see react_memory.build_history_turns).
+    historical_dialogues: List[AgentMessage] = [
+        AgentMessage(
+            content=_content,
+            # Same values as ModelMessageRoleType.AI / .HUMAN.
+            role="ai" if _role == _HISTORY_AI else "human",
+        )
+        for _role, _content in build_history_turns(
+            storage_conv.get_history_message()
+        )
+    ]
     storage_conv.add_user_message(user_input)
+    # Persist the question immediately: previously it was only written at the
+    # end of the round, so a stopped / restarted / question-pending round was
+    # lost from the conversation memory entirely.
+    try:
+        storage_conv.save_to_storage()
+    except Exception:
+        logger.warning("Failed to persist user question early", exc_info=True)
+    if round_holder is not None:
+        round_holder["storage_conv"] = storage_conv
+        round_holder["input_files"] = input_files_snapshot
     # Auto-detect user language so "hi" -> en, Farsi -> fa, Chinese -> zh.
     # Fallback to CFG.LANGUAGE (default en) for unknown. This fixes the bug where
     # "hi" and Persian questions were answered in Chinese because language was hardcoded to "zh".
@@ -2884,23 +3100,27 @@ The following are the complete instructions of the user-selected skill. Please f
         # Simplified prompt for skill mode - only skill-related tools +
         # html_interpreter
         workflow_prompt = f"""
-You are the DB-GPT intelligent assistant, executing the skill task selected by the user.
-Please always response in the same language as the user's input language.
+You are the {_KAVIR_NAME_EN} («{_KAVIR_NAME_FA}»), executing the skill task
+selected by the user.
+
+{_KAVIR_PROMPT_SECTIONS}
 
 ## Autonomous Decision Principles
-1. Strictly follow the instructions of the loaded skill.
+1. Strictly follow the instructions of the loaded skill, but the Data Grounding,
+Answer-Exactly and Visualization rules above always take precedence.
 2. For each step, output Thought -> Action Intention -> Action Reason -> Action
    -> Action Input.
 3. Wait for the system to return Observation before deciding on the next step.
-4. **[Mandatory Rule] If the task requires generating an analysis report, you MUST
-call `html_interpreter` for HTML rendering.** By default, generate complete HTML
+4. **[Rule] Only when a chart or HTML report is needed under the Visualization
+Policy (the user asked for it, or the user-requested skill deliverable is a visual
+report), render it with `html_interpreter`.** By default, generate complete HTML
 code yourself and pass it via the `html` parameter (include DOCTYPE, html, head,
 body, styles, and all content). Only use `template_path` mode if the skill
 explicitly provides HTML templates in its `templates/` directory and its
 documentation references them. When using template mode, provide ALL required
 placeholders in the `data` dictionary.
-5. If the task does not require generating a report, directly call terminate to
-return the final result. The Action Input format must be
+5. If no chart/report is needed, answer with text (and a markdown table when
+useful) and call terminate to return the final result. The Action Input format must be
 {{"result": "final answer"}}.
 
 {skill_prompt_context}
@@ -2957,7 +3177,10 @@ are needed, use `&&` or `;` to connect commands.
 automatically handle images and data recording.
 5. **html_interpreter**: Render HTML as an interactive web report. This is the ONLY
 way to display reports on the right panel.
-   **Default usage (recommended)**: {{"html": "<html>your complete HTML code</html>",
+   **Charts of database data (recommended)**: {{"sql": "SELECT label, SUM(x) AS total ...",
+"title": "report title", "chart": "line|bar|pie (optional)"}} — the server draws the
+chart and table from the query result; do not write HTML or numbers yourself.
+   **Free HTML**: {{"html": "<html>your complete HTML code</html>",
 "title": "report title"}}
    - Generate complete HTML yourself (DOCTYPE, html, head, body, CSS styles,
 content). No length limit.
@@ -3025,9 +3248,10 @@ Do not use ellipsis.
 Action: The selected tool name (must be one of the tools listed above)
 Action Input: The JSON format of tool parameters
 
-IMPORTANT: Write tool calls only in the textual Thought/Action/Action Input format
-shown above. Do not emit XML <tool_call>/<function>/<parameter> wrappers, DSML,
-or other protocol markup as user-visible text.
+IMPORTANT: Exactly ONE Action per step. If you need several queries, run them
+in consecutive steps or combine them into one SQL statement. Write the call only
+as the plain-text Action / Action Input lines shown above, with no markup
+wrappers or special tokens.
 If the model provider returns a supported native tool-call encoding, the runtime
 normalizes it to the same validated action format before dispatch.
 """.strip()
@@ -3073,9 +3297,10 @@ normalizes it to the same validated action format before dispatch.
             else ""
         )
         workflow_prompt = f"""
-You are the DB-GPT intelligent assistant, capable of autonomously selecting tools
-to solve problems based on user tasks.
-Please always response in the same language as the user's input language.
+You are the {_KAVIR_NAME_EN} («{_KAVIR_NAME_FA}»), capable of autonomously
+selecting tools to answer the user's questions from the company's data.
+
+{_KAVIR_PROMPT_SECTIONS}
 
 ## Autonomous Decision Principles
 1. Carefully analyze the user's task requirements.
@@ -3086,12 +3311,13 @@ order, select as needed).
 4. Wait for the system to return Observation before deciding on the next step.
 5. When the task is completed, call the terminate tool to return the final result.
 The Action Input format must be {{"result": "final answer"}}.
-6. **[Mandatory Rule] If there is a requirement for an analysis report, you MUST call
-`html_interpreter` for HTML rendering. When the user requests generating a webpage,
-HTML report, or interactive report, the final presentation step must call
-`html_interpreter` to render it. It is forbidden to output HTML using only
-`code_interpreter` and then directly terminate. Correct process: code_interpreter
-writes to .html file -> html_interpreter(file_path=...) renders -> terminate.**
+6. **[Rule] Charts and HTML reports follow the Visualization Policy above: by
+default answer with text/markdown tables. Only when a chart or HTML report is
+needed (explicitly requested, or a table cannot convey the answer) the final
+presentation step must call `html_interpreter`. It is forbidden to output HTML
+using only `code_interpreter` and then directly terminate. Correct process:
+code_interpreter writes to .html file -> html_interpreter(file_path=...) renders
+-> terminate.**
 
 ## Task Management
 For complex tasks that require 3 or more steps, use the `todowrite` tool to create
@@ -3150,8 +3376,8 @@ Complete each workflow step before moving to the next. Do not mix multiple tool
 calls in the same step.
 
 ### 4. Special Scenarios
-- For report generation: Same as the principle above, must finally call
-`html_interpreter` to render.
+- For report generation (only when the Visualization Policy allows a visual
+report): finally call `html_interpreter` to render it.
 
 ## Available Tools Description
 1. **load_skill**: Load skill content by skill name and file path.
@@ -3187,7 +3413,11 @@ Parameters: {{"sql": "SELECT statement"}}
 16. **execute_tool**: Execute a tool by name with JSON args.
 Parameters: {{"tool_name": "tool name", "args": {{parameters}}}}
 17. **html_interpreter**: Render HTML as an interactive web report (the ONLY way
-to display reports on the right panel). Default usage:
+to display reports on the right panel). Use ONLY when the Visualization Policy
+allows a chart/report. For charts of database data ALWAYS use SQL mode — the
+server runs the query and draws the chart and table, you write no HTML/numbers:
+{{"sql": "SELECT label, SUM(x) AS total ... GROUP BY ... ORDER BY ...", "title": "title",
+"chart": "line|bar|pie (optional)"}}. Free HTML (only when SQL mode cannot do it):
 {{"html": "<html>complete HTML code</html>", "title": "title"}}. Template mode:
 {{"template_path": "skill/templates/xxx.html", "data": {{...}}, "title": "title"}}.
 File mode: {{"file_path": "/path/to/report.html"}}
@@ -3230,14 +3460,18 @@ Do not use ellipsis.
 Action: The selected tool name
 Action Input: The JSON format of tool parameters
 
-IMPORTANT: Write tool calls only in the textual Thought/Action/Action Input format
-shown above. Do not emit XML <tool_call>/<function>/<parameter> wrappers, DSML,
-or other protocol markup as user-visible text.
+IMPORTANT: Exactly ONE Action per step. If you need several queries, run them
+in consecutive steps or combine them into one SQL statement. Write the call only
+as the plain-text Action / Action Input lines shown above, with no markup
+wrappers or special tokens.
 If the model provider returns a supported native tool-call encoding, the runtime
 normalizes it to the same validated action format before dispatch.
 """.strip()
 
-        workflow_prompt = workflow_prompt + "\n\n" + DISPATCH_PROMPT_SECTION
+        # The long parallel-dispatch section pushes the model to plan and run
+        # extra queries; a plain factual database question does not need it.
+        if request_intent != "database_query":
+            workflow_prompt = workflow_prompt + "\n\n" + DISPATCH_PROMPT_SECTION
 
         if tool_mode == "knowledge":
             # Knowledge-chat mode (no pre-selected skill): only kb
@@ -3378,9 +3612,9 @@ normalizes it to the same validated action format before dispatch.
 
 ## Exact-Question / Database Evidence Contract (mandatory)
 - The user's request is a factual database question, not a request to choose a skill.
-- Answer the exact metric and grouping requested. For "sales by province", query sales/factor data grouped by the customer's `statename`; do not use inventory (`ware.balance`), stock counts, or product groups.
+- Answer the exact metric and grouping requested; do not substitute a neighbouring measure, table or grouping.
 - Only claim results that appear in successful `sql_query` observations. If SQL fails, returns no relevant columns, or cannot be verified, say so explicitly and ask for clarification; never replace the requested analysis with an unrelated report.
-- Do not call an inventory/financial-report skill unless the user explicitly requests that domain/report.
+- Do not call a report skill unless the user explicitly requests that domain/report.
 - Before rendering HTML, confirm the successful SQL result columns and report title describe the same measure and dimensions as the user's request.
 """
 
@@ -3437,11 +3671,16 @@ normalizes it to the same validated action format before dispatch.
         int, List[str]
     ] = {}  # Buffer thinking content for delayed step creation
     pending_action_intentions: Dict[int, str] = {}
+    # Raw streamed text per round, used to hide leaked tool-call markup.
+    _stream_raw_text: Dict[int, str] = {}
+    _stream_shown_len: Dict[int, int] = {}
     pending_action_reasons: Dict[int, str] = {}
     # Emit a one-time "task preview" from the model's first "Plan: ..." line.
     task_plan_emitted = False
     # --- History persistence: collect step data during streaming ---
     history_steps: List[Dict[str, Any]] = []
+    if round_holder is not None:
+        round_holder["history_steps"] = history_steps
     current_history_step: Optional[Dict[str, Any]] = None
     subagent_history: Dict[str, Dict[str, Any]] = {}
     final_answer_assembler = FinalAnswerAssembler()
@@ -3589,6 +3828,19 @@ normalizes it to the same validated action format before dispatch.
             delta_text = event.get("delta_text") or ""
 
             chunk = delta_thinking or delta_text
+            if chunk and delta_text and not delta_thinking:
+                # Hide leaked tool-call markup (DSML / special tokens): once it
+                # starts, the rest of this round's text is a tool call, not a
+                # thought. A trailing "<" is held back until the next chunk.
+                raw_text = _stream_raw_text.get(round_num, "") + chunk
+                _stream_raw_text[round_num] = raw_text
+                markup = PROTOCOL_MARKUP_START.search(raw_text)
+                visible_end = markup.start() if markup else len(raw_text)
+                if not markup and raw_text.endswith(("<", "\uff1c")):
+                    visible_end -= 1
+                shown = _stream_shown_len.get(round_num, 0)
+                chunk = raw_text[shown:visible_end] if visible_end > shown else ""
+                _stream_shown_len[round_num] = max(shown, visible_end)
             if chunk:
                 # Clean chunk: remove Action Input JSON to keep thought pure
                 # Split on Action Input pattern and keep only thought part
@@ -4213,18 +4465,9 @@ normalizes it to the same validated action format before dispatch.
         # reply.content is raw LLM output containing ReAct prefixes.
         # Try to extract a clean summary from the last step's thought.
         raw = reply.content or reply.action_report.content or ""
-        final_content = raw
-        try:
-            steps = parser.parse(raw)
-            if steps:
-                last_step = steps[-1]
-                # Prefer observation (execution result) > thought
-                if last_step.observations:
-                    final_content = last_step.observations
-                elif last_step.thoughts:
-                    final_content = last_step.thoughts
-        except Exception:
-            pass
+        # The last step's thought is an unfinished plan ("Test linking X..."),
+        # not an answer — never present it as one.
+        final_content = ""
         if final_content == raw and _is_truncated_tool_call(raw):
             # The last turn is a truncated tool invocation (bare tool-name
             # line + JSON args, no ReAct prefixes) — never user-facing prose.
@@ -4245,7 +4488,7 @@ normalizes it to the same validated action format before dispatch.
             flags=re.MULTILINE,
         ).strip()
         if not final_content:
-            final_content = "Task execution reached the maximum step limit. Please review the step results above."
+            final_content = _unfinished_answer_message(user_input)
     else:
         raw = reply.content or ""
         if _is_truncated_tool_call(raw):
@@ -4270,7 +4513,6 @@ normalizes it to the same validated action format before dispatch.
             build_fallback_report_html,
             assess_database_answer_relevance,
             build_jev_verification_state,
-            build_database_relevance_failure_html,
             harvest_lost_chart_images,
             history_has_html,
             is_jev_fallback_enabled,
@@ -4301,7 +4543,15 @@ normalizes it to the same validated action format before dispatch.
         # Run a deterministic evidence gate for factual DB questions even if
         # the agent already emitted HTML. A rendered but unrelated report is
         # still a wrong answer and must be replaced before the final event.
-        _db_assessment = assess_database_answer_relevance(user_input, history_steps)
+        _db_assessment = assess_database_answer_relevance(
+            user_input,
+            history_steps,
+            history_has_sql_evidence=any(
+                "- sql_query [done]" in str(getattr(_m, "content", "") or "")
+                for _m in historical_dialogues
+            ),
+        )
+        _db_mismatch = False
         react_state["database_answer_assessment"] = _db_assessment
         _verify_summary: Optional[Dict[str, Any]] = None
         if is_jev_verify_enabled() and (
@@ -4328,9 +4578,7 @@ normalizes it to the same validated action format before dispatch.
                 user_input,
                 _db_assessment,
             )
-            _mismatch_html = build_database_relevance_failure_html(
-                user_input, _db_assessment
-            )
+            _db_mismatch = True
             _mismatch_id, _mismatch_event = build_step(
                 "Database answer verification",
                 "SQL evidence did not match the requested metric/dimensions",
@@ -4340,9 +4588,9 @@ normalizes it to the same validated action format before dispatch.
             yield step_chunk(
                 _mismatch_id,
                 "text",
-                "پاسخ قبلی با سؤال تطبیق نداشت؛ از نمایش آمار نامرتبط جلوگیری شد.",
+                "پاسخ با شواهد SQL این سؤال تطبیق نداشت؛ از نمایش آمار تأییدنشده "
+                "جلوگیری شد.",
             )
-            yield step_chunk(_mismatch_id, "html", _mismatch_html)
             yield step_done(_mismatch_id, "failed")
             history_steps.append(
                 {
@@ -4358,19 +4606,18 @@ normalizes it to the same validated action format before dispatch.
                             "output_type": "text",
                             "content": json.dumps(_db_assessment, ensure_ascii=False),
                         },
-                        {"output_type": "html", "content": _mismatch_html},
                     ],
                     "status": "failed",
                 }
             )
+            # No HTML report is produced for this case.
             final_content = (
-                "نمی‌توانم پاسخ قبلی را به‌عنوان پاسخ سؤال شما تأیید کنم: "
-                "شواهد کوئری با شاخص و بُعد درخواستی تطبیق نداشت. "
-                "هیچ عددی دربارهٔ فروش استان‌ها بدون نتیجهٔ معتبر SQL گزارش نمی‌شود."
+                "برای این سؤال هیچ کوئری موفقی روی پایگاه داده اجرا نشد، "
+                "بنابراین نمی‌توانم عددی گزارش کنم. لطفاً سؤال را دقیق‌تر "
+                "بفرمایید (مثلاً بازهٔ زمانی، محصول یا جدول مورد نظر) تا "
+                "دوباره از روی داده‌ها بررسی کنم."
             )
-            react_state["html_rendered"] = True
-            _has_html = True
-        if needs_report_repair(
+        if not _db_mismatch and needs_report_repair(
             user_input=user_input,
             triage_summary=_triage_summary,
             verification_summary=_verify_summary,
@@ -4390,7 +4637,12 @@ normalizes it to the same validated action format before dispatch.
                         _report_title = strip_context_tags(_raw_title)[:80]
                 except Exception:
                     pass
-                _fallback_html = build_fallback_report_html(
+                # Prefer a real chart drawn from the last verified SQL result.
+                from .liara_jev_auto import build_sql_fallback_report_html
+
+                _fallback_html = build_sql_fallback_report_html(
+                    title=_report_title, history_steps=history_steps
+                ) or build_fallback_report_html(
                     title=_report_title,
                     user_input=user_input,
                     final_content=final_content,
@@ -4483,6 +4735,29 @@ normalizes it to the same validated action format before dispatch.
                 logger.debug("Jev verification card skipped", exc_info=True)
     except Exception:
         logger.debug("Jev post-loop verifier skipped", exc_info=True)
+
+    # Deterministic number check: fix broken digit grouping and flag large
+    # numbers that do not appear in any tool observation.
+    try:
+        from .answer_numbers import check_answer_numbers, observation_texts
+
+        if isinstance(final_content, str) and final_content:
+            _fixed, _unverified, _regrouped = check_answer_numbers(
+                final_content,
+                observation_texts(history_steps)
+                + [str(user_input or "")],
+            )
+            if _regrouped:
+                logger.warning("Regrouped %d malformed number(s) in answer", _regrouped)
+            if _unverified:
+                logger.warning("Unverified numbers in answer: %s", _unverified)
+                _fixed += (
+                    "\n\n> ⚠️ این عدد(ها) در نتایج کوئری‌های این نوبت پیدا نشد و "
+                    "تأییدنشده است: " + "، ".join(_unverified[:5])
+                )
+            final_content = _fixed
+    except Exception:
+        logger.debug("Answer number check skipped", exc_info=True)
 
     final_answer = final_answer_assembler.finalize(final_content)
 

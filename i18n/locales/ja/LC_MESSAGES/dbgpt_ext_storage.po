@@ -506,19 +506,19 @@ msgstr ""
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/s3/config.py:54
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/oss/config.py:55
 msgid ""
-"The fixed bucket name to use. If set, all logical buckets in DB-GPT will be "
+"The fixed bucket name to use. If set, all logical buckets in Kavir Motor will be "
 "mapped to this bucket. We suggest you set this value to avoid bucket name "
 "conflicts."
 msgstr ""
-"使用する固定バケット名です。設定すると、DB-GPT内のすべての論理バケットがこのバケットにマッピングされます。バケット名の衝突を避けるためにこの値を設定することをおすすめします。"
+"使用する固定バケット名です。設定すると、Kavir Motor内のすべての論理バケットがこのバケットにマッピングされます。バケット名の衝突を避けるためにこの値を設定することをおすすめします。"
 
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/s3/config.py:64
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/oss/config.py:65
 msgid ""
-"The prefix of the bucket name. If set, all logical buckets in DB-GPT will be "
+"The prefix of the bucket name. If set, all logical buckets in Kavir Motor will be "
 "prefixed with this value. Just work when fixed_bucket is None."
 msgstr ""
-"バケット名の接頭辞です。設定すると、DB-GPT内のすべての論理バケットにこの値が接頭辞として付けられます。fixed_bucket が None の場合のみ有効です。"
+"バケット名の接頭辞です。設定すると、Kavir Motor内のすべての論理バケットにこの値が接頭辞として付けられます。fixed_bucket が None の場合のみ有効です。"
 
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/s3/config.py:73
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/oss/config.py:74

@@ -199,7 +199,7 @@ const PlaygroundPage: React.FC = () => {
         turns={turns}
         isLoading={isGenerating}
         modelName='GPT-4'
-        title='محیط تمرین DB-GPT'
+        title='محیط تمرین کویر موتور'
         onSendMessage={handleSendMessage}
         onStopGeneration={handleStopGeneration}
         onNewChat={handleNewChat}

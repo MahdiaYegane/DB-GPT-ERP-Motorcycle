@@ -91,7 +91,7 @@ class ZhipuLLMClient(OpenAILLMClient):
         if not model:
             model = _DEFAULT_MODEL
         if not api_key:
-            # Compatible with DB-GPT's config
+            # Compatible with Kavir Motor's config
             api_key = os.getenv("ZHIPU_PROXY_API_KEY")
 
         api_key = self._resolve_env_vars(api_key)

@@ -64,7 +64,7 @@ class LLMOperator(MixinLLMOperator, BaseLLMOperator):
     Args:
         llm_client (Optional[LLMClient], optional): The LLM client. Defaults to None.
             If llm_client is None, we will try to connect to the model serving cluster
-            deploy by DB-GPT,
+            deploy by Kavir Motor,
             and if we can't connect to the model serving cluster, we will use the
             :class:`OpenAILLMClient` as the llm_client.
     """
@@ -118,7 +118,7 @@ class StreamingLLMOperator(MixinLLMOperator, BaseStreamingLLMOperator):
     Args:
         llm_client (Optional[LLMClient], optional): The LLM client. Defaults to None.
             If llm_client is None, we will try to connect to the model serving cluster
-             deploy by DB-GPT,
+             deploy by Kavir Motor,
             and if we can't connect to the model serving cluster, we will use the
             :class:`OpenAILLMClient` as the llm_client.
     """

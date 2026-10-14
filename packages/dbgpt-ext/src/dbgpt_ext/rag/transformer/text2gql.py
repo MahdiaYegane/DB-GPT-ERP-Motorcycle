@@ -37,7 +37,7 @@ Question: Introduce TuGraph and DBGPT seperately.
 Category: Freestyle Question
 relations: []
 Query:
-MATCH p=(n)-[r:relation*2]-(m) WHERE n.id IN ["TuGraph", "DB-GPT"] RETURN p
+MATCH p=(n)-[r:relation*2]-(m) WHERE n.id IN ["TuGraph", "Kavir Motor"] RETURN p
 ---------------------
 Question: {question}
 Category: {category}

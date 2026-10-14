@@ -1,6 +1,6 @@
 """Core Module for the Agent.
 
-There are four modules in DB-GPT agent core according the paper
+There are four modules in Kavir Motor agent core according the paper
 `A survey on large language model based autonomous agents
 <https://link.springer.com/article/10.1007/s11704-024-40231-1>`
 by `Lei Wang, Chen Ma, Xueyang Feng, et al.`:

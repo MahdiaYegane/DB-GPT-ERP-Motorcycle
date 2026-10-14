@@ -1,4 +1,4 @@
-"""DB-GPT: Next Generation Data Interaction Solution with LLMs."""
+"""Kavir Motor: Next Generation Data Interaction Solution with LLMs."""
 
 from dbgpt.component import BaseComponent, SystemApp  # noqa: F401
 

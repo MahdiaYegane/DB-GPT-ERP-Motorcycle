@@ -1,5 +1,5 @@
 """
-DB-GPT Sandbox Agent - 核心沙箱模块
+Kavir Motor Sandbox Agent - 核心沙箱模块
 
 提供统一的代码执行沙箱接口，支持 Docker、本地运行时与 Podman。
 """
@@ -12,7 +12,7 @@ from .podman_runtime import PodmanRuntime
 from .utils import EnvironmentDetector, ResourceLimits
 
 __version__ = "0.1.0"
-__author__ = "DB-GPT Team"
+__author__ = "Kavir Motor Team"
 
 __all__ = [
     "SandboxRuntime",

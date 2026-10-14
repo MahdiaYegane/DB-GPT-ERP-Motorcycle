@@ -1,4 +1,4 @@
-"""Claude-style SKILL mechanism for DB-GPT agents.
+"""Claude-style SKILL mechanism for Kavir Motor agents.
 
 This module implements a simple SKILL system similar to Claude's SKILL mechanism,
 where skills are defined in Markdown files with metadata and instructions.

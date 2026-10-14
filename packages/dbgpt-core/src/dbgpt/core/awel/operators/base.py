@@ -83,7 +83,7 @@ def _dev_mode() -> bool:
     """Check if the operator is in dev mode.
 
     In production mode, the default runner is not None, and the operator will run in
-    the same process with the DB-GPT webserver.
+    the same process with the Kavir Motor webserver.
     """
     return default_runner is None
 
@@ -229,7 +229,7 @@ class BaseOperator(DAGNode, ABC, Generic[OUT], metaclass=BaseOperatorMeta):
         """Whether the operator is in dev mode.
 
         In production mode, the default runner is not None, and the operator will run in
-        the same process with the DB-GPT webserver.
+        the same process with the Kavir Motor webserver.
 
         Returns:
             bool: Whether the operator is in dev mode. True if the

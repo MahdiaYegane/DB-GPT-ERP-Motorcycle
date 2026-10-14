@@ -20,7 +20,7 @@ from .chatgpt import OpenAICompatibleDeployModelParameters, OpenAILLMClient
 
 AIMLAPI_HEADERS = {
     "HTTP-Referer": "https://github.com/eosphoros-ai/DB-GPT",
-    "X-Title": "DB GPT",
+    "X-Title": "Kavir Motor",
 }
 
 if TYPE_CHECKING:

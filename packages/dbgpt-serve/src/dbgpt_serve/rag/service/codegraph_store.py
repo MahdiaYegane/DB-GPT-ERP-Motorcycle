@@ -295,7 +295,7 @@ class CodeGraphStore:
     def _vertices_to_rows(self, knowledge_id: str, graph: MemoryGraph) -> List[Dict]:
         """Convert MemoryGraph vertices to DB row dicts.
 
-        DB-GPT's RepoGraphBuilder stores props like:
+        Kavir Motor's RepoGraphBuilder stores props like:
           - type -> mapped to node_type column
           - file_path -> mapped to source_file column
           - language -> mapped to language column
@@ -307,7 +307,7 @@ class CodeGraphStore:
             row = {
                 "vid": vertex.vid,
                 "name": vertex.name,
-                # Map "type" prop to node_type column (DB-GPT uses "type")
+                # Map "type" prop to node_type column (Kavir Motor uses "type")
                 "node_type": props.get("type", props.get("node_type", "")),
                 # Map "file_path"/"path" prop to source_file column
                 "source_file": props.get(
@@ -331,7 +331,7 @@ class CodeGraphStore:
     def _edges_to_rows(self, knowledge_id: str, graph: MemoryGraph) -> List[Dict]:
         """Convert MemoryGraph edges to DB row dicts.
 
-        DB-GPT's RepoGraphBuilder stores edge props like:
+        Kavir Motor's RepoGraphBuilder stores edge props like:
           - type -> mapped to edge_type column
           - source_file, source_location -> dedicated columns
           - confidence -> default EXTRACTED
@@ -363,7 +363,7 @@ class CodeGraphStore:
         """Convert DB entity to Vertex.
 
         Reconstructs the props dict by merging dedicated columns back in.
-        Uses "type" key (matching DB-GPT's RepoGraphBuilder convention)
+        Uses "type" key (matching Kavir Motor's RepoGraphBuilder convention)
         instead of "node_type" (derisk convention).
         """
         # Parse props JSON
@@ -374,7 +374,7 @@ class CodeGraphStore:
             except json.JSONDecodeError:
                 pass
 
-        # Add dedicated columns back to props using DB-GPT convention
+        # Add dedicated columns back to props using Kavir Motor convention
         props["type"] = entity.node_type
         props["file_path"] = entity.source_file
         props["language"] = entity.language
@@ -396,7 +396,7 @@ class CodeGraphStore:
         """Convert DB entity to Edge.
 
         Reconstructs the props dict by merging dedicated columns back in.
-        Uses "type" key (matching DB-GPT's RepoGraphBuilder convention).
+        Uses "type" key (matching Kavir Motor's RepoGraphBuilder convention).
         """
         # Parse props JSON
         props = {}
@@ -406,7 +406,7 @@ class CodeGraphStore:
             except json.JSONDecodeError:
                 pass
 
-        # Add dedicated columns back to props using DB-GPT convention
+        # Add dedicated columns back to props using Kavir Motor convention
         props["type"] = entity.edge_type
         props["confidence"] = entity.confidence
         props["source_file"] = entity.source_file

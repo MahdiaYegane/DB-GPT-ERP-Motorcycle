@@ -25,10 +25,10 @@ msgstr "عملگر پیش‌فرض بارگذاری تاریخچه گفت‌وگ
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:94
 msgid ""
 "Load chat history from the storage of the serve component.It is the default "
-"storage of DB-GPT"
+"storage of Kavir Motor"
 msgstr ""
 "بارگذاری تاریخچه گفت‌وگو از حافظه ذخیره‌سازی مؤلفه سرو. این حافظه\n"
-"ذخیره‌سازی پیش‌فرض DB-GPT است."
+"ذخیره‌سازی پیش‌فرض کویر موتور است."
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:100
 msgid "Model Request"

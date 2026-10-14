@@ -7,7 +7,7 @@ from typing import Optional
 
 
 def _detect_root_path() -> str:
-    """Detect the root path of the DB-GPT installation.
+    """Detect the root path of the Kavir Motor installation.
 
     Determines whether running from a source checkout or a pip install,
     and returns the appropriate root path.

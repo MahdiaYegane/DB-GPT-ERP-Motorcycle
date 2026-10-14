@@ -24,10 +24,10 @@ msgstr "Opérateur de chargement de l'historique de chat par défaut"
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:94
 msgid ""
 "Load chat history from the storage of the serve component.It is the default "
-"storage of DB-GPT"
+"storage of Kavir Motor"
 msgstr ""
 "Charge l'historique de chat depuis le stockage du composant de service. "
-"C'est le stockage par défaut de DB-GPT"
+"C'est le stockage par défaut de Kavir Motor"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:100
 msgid "Model Request"

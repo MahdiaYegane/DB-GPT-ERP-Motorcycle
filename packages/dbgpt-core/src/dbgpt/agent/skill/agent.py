@@ -1,4 +1,4 @@
-"""Skills-enabled agent for DB-GPT.
+"""Skills-enabled agent for Kavir Motor.
 
 This module provides an agent implementation with SkillsMiddleware integration,
 enabling progressive disclosure of skills from multiple sources.

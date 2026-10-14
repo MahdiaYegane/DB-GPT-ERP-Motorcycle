@@ -19,16 +19,16 @@ msgstr ""
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/dbgpts/my/config.py:21
 msgid "My dbgpts Serve Configurations"
-msgstr "내 DB-GPT 서비스 구성 설정"
+msgstr "내 Kavir Motor 서비스 구성 설정"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/dbgpts/my/config.py:24
 msgid "This configuration is for the my dbgpts serve module."
-msgstr "이 구성은 내 DB-GPT 서비스 모듈에 대한 것입니다."
+msgstr "이 구성은 내 Kavir Motor 서비스 모듈에 대한 것입니다."
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/dbgpts/hub/config.py:21
 msgid "Hub dbgpts Serve Configurations"
-msgstr "허브 DB-GPT 서비스 구성 설정"
+msgstr "허브 Kavir Motor 서비스 구성 설정"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/dbgpts/hub/config.py:24
 msgid "This configuration is for the hub dbgpts serve module."
-msgstr "이 구성은 허브 DB-GPT 서비스 모듈에 대한 것입니다."
+msgstr "이 구성은 허브 Kavir Motor 서비스 모듈에 대한 것입니다."

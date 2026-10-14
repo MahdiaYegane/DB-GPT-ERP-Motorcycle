@@ -1,4 +1,4 @@
-"""Middleware system for DB-GPT agents."""
+"""Middleware system for Kavir Motor agents."""
 
 from .agent import AgentConfig, MiddlewareAgent, create_middleware_agent
 from .base import AgentMiddleware, MiddlewareManager

@@ -1,4 +1,4 @@
-"""Code operators for DB-GPT.
+"""Code operators for Kavir Motor.
 
 The code will be executed in a sandbox environment, which is isolated from the host
 system. You can limit the memory and file system access of the code execution.

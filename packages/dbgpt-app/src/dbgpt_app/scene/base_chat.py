@@ -111,7 +111,7 @@ def _build_conversation(
 
 
 class BaseChat(ABC):
-    """DB-GPT Chat Service Base Module
+    """Kavir Motor Chat Service Base Module
     Include:
     stream_call():scene + prompt -> stream response
     nostream_call():scene + prompt -> nostream response

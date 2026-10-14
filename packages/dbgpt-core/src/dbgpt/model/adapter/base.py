@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 class EmbeddingModelAdapter(ABC):
-    """New Adapter for DB-GPT Embedding models"""
+    """New Adapter for Kavir Motor Embedding models"""
 
     model_name: Optional[str] = None
     model_path: Optional[str] = None
@@ -119,7 +119,7 @@ class EmbeddingModelAdapter(ABC):
 
 
 class LLMModelAdapter(ABC):
-    """New Adapter for DB-GPT LLM models"""
+    """New Adapter for Kavir Motor LLM models"""
 
     model_name: Optional[str] = None
     model_path: Optional[str] = None

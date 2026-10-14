@@ -274,7 +274,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
               {generatedAt.toLocaleDateString()}
             </span>
             <span>•</span>
-            <span>قدرت‌گرفته از هوش مصنوعی DB-GPT</span>
+            <span>قدرت‌گرفته از هوش مصنوعی کویر موتور</span>
           </div>
         </div>
 
@@ -451,7 +451,7 @@ export const ProfessionalReport: React.FC<ProfessionalReportProps> = ({
 
         <div className='report-footer bg-gray-50 dark:bg-[#1a1b1e] border-t border-gray-200 dark:border-gray-800 p-6'>
           <div className='flex items-center justify-between text-xs text-gray-400'>
-            <span>تولیدشده توسط پلتفرم تحلیل داده هوشمند DB-GPT</span>
+            <span>تولیدشده توسط پلتفرم تحلیل داده هوشمند کویر موتور</span>
             <span>© {new Date().getFullYear()} All rights reserved</span>
           </div>
         </div>

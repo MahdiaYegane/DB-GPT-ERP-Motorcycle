@@ -34,7 +34,7 @@ _LIARA_DEFAULT_API_BASE = (
 )
 _LIARA_DEFAULT_MODEL = "xiaomi/mimo-v2.5"
 
-# Display names used in DB-GPT configs/UI (with a "liara" tag so they are
+# Display names used in Kavir Motor configs/UI (with a "liara" tag so they are
 # distinguishable from same-named models on other providers) mapped to the
 # real model ids sent to the Liara API.
 _LIARA_DISPLAY_TO_REAL_MODEL = {
@@ -49,7 +49,7 @@ _LIARA_DISPLAY_TO_REAL_MODEL = {
 
 
 def resolve_liara_model_id(model: Optional[str]) -> str:
-    """Resolve a DB-GPT display name to the real Liara model id."""
+    """Resolve a Kavir Motor display name to the real Liara model id."""
     if not model:
         return _LIARA_DEFAULT_MODEL
     return _LIARA_DISPLAY_TO_REAL_MODEL.get(model, model)

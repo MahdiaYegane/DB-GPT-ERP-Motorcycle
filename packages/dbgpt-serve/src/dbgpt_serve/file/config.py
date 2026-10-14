@@ -25,7 +25,7 @@ SERVER_APP_TABLE_NAME = "dbgpt_serve_file"
     category=ResourceCategory.COMMON,
     tags={"order": TAGS_ORDER_HIGH},
     description=_(
-        "This configuration is for the file serve module. In DB-GPT, you can store your"
+        "This configuration is for the file serve module. In Kavir Motor, you can store your"
         "files in the file server."
     ),
     show_in_ui=False,

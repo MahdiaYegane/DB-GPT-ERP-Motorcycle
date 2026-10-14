@@ -520,21 +520,21 @@ msgstr ""
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/s3/config.py:54
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/oss/config.py:55
 msgid ""
-"The fixed bucket name to use. If set, all logical buckets in DB-GPT will be "
+"The fixed bucket name to use. If set, all logical buckets in Kavir Motor will be "
 "mapped to this bucket. We suggest you set this value to avoid bucket name "
 "conflicts."
 msgstr ""
-"Le nom fixe du compartiment à utiliser. Si défini, tous les compartiments logiques dans DB-GPT "
+"Le nom fixe du compartiment à utiliser. Si défini, tous les compartiments logiques dans Kavir Motor "
 "seront mappés à ce compartiment. Nous vous suggérons de définir cette valeur pour éviter les "
 "conflicts de noms de compartiments."
 
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/s3/config.py:64
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/oss/config.py:65
 msgid ""
-"The prefix of the bucket name. If set, all logical buckets in DB-GPT will be "
+"The prefix of the bucket name. If set, all logical buckets in Kavir Motor will be "
 "prefixed with this value. Just work when fixed_bucket is None."
 msgstr ""
-"Le préfixe du nom du compartiment. Si défini, tous les compartiments logiques dans DB-GPT "
+"Le préfixe du nom du compartiment. Si défini, tous les compartiments logiques dans Kavir Motor "
 "auront ce préfixe. Cela ne fonctionne que lorsque fixed_bucket est None."
 
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/s3/config.py:73

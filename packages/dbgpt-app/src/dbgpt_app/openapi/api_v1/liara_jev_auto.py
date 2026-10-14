@@ -173,9 +173,8 @@ VERIFICATION_QUESTIONS: Dict[str, Dict[str, Any]] = {
             "Compare the user's exact question with the SQL statements, query "
             "result column names/values, and final answer. Answer near 1 only "
             "if the SQL evidence and final answer address the same requested "
-            "metric and dimensions. Answer near 0 if the user asks about sales "
-            "by province but the evidence/report is about inventory, stock, or "
-            "product groups. Never infer relevance merely because both concern "
+            "metric and dimensions. Answer near 0 if the evidence/report is about "
+            "a different measure, table or grouping than the one asked. Never infer relevance merely because both concern "
             "the same database."
         ),
         "criteria": {
@@ -188,9 +187,7 @@ VERIFICATION_QUESTIONS: Dict[str, Dict[str, Any]] = {
         "instructions": (
             "For a database question, did a successful SQL query produce "
             "evidence relevant to the exact measure and dimensions asked? "
-            "If the question asks sales by province, require sales/revenue "
-            "evidence grouped by province/state; inventory balance or stock "
-            "by product group is not relevant."
+            "Evidence about a different measure or grouping is not relevant."
         ),
         "criteria": {
             "true": "Successful SQL output matches the requested metric and dimensions.",
@@ -204,7 +201,10 @@ _INTENT_TOOL_HINTS = {
     "database_query": "prefer sql_query against the selected database",
     "knowledge_search": "prefer kb_ls / kb_glob / kb_grep / kb_cat / semantic_search",
     "file_analysis": "prefer load_file then execute_analysis / code_interpreter",
-    "report_build": "prefer html_interpreter for the final report",
+    "report_build": (
+        "build the answer from SQL results; use html_interpreter only if the "
+        "user asked for a chart/visual or a table cannot convey the result"
+    ),
     "general_answer": "answer directly; avoid unnecessary tool calls",
 }
 
@@ -230,6 +230,64 @@ _REPORT_KEYWORDS = (
     "可视化",
     "渲染",
     "展示",
+)
+
+# Keywords that explicitly ask for a chart / visual / HTML deliverable. Only
+# these make a rendered report mandatory (REPORT REQUIRED + fallback HTML).
+# A plain "report"/"گزارش" request is answered with text and tables unless the
+# model itself decides a table cannot convey the result.
+_VISUAL_KEYWORDS = (
+    "chart",
+    "graph",
+    "plot",
+    "dashboard",
+    "visual",
+    "html",
+    "diagram",
+    "infographic",
+    "نمودار",
+    "چارت",
+    "گراف",
+    "داشبورد",
+    "تصویری",
+    "اینفوگرافیک",
+    "图表",
+    "可视化",
+    "仪表盘",
+)
+
+# Questions about the conversation itself or the assistant (not about data).
+# These must never be treated as database questions, otherwise the evidence
+# guard replaces a correct conversational answer with an "SQL mismatch" text.
+_CONVERSATIONAL_KEYWORDS = (
+    "سوال قبلی",
+    "سؤال قبلی",
+    "سوالات قبلی",
+    "سؤالات قبلی",
+    "پیام قبلی",
+    "پاسخ قبلی",
+    "جواب قبلی",
+    "قبلا چی",
+    "قبلاً چی",
+    "قبلا پرسیدم",
+    "قبلاً پرسیدم",
+    "چی پرسیدم",
+    "یادت هست",
+    "یادته",
+    "یادت میاد",
+    "اسمت",
+    "اسم تو",
+    "تو کی هستی",
+    "کی هستی",
+    "چه کاری میتونی",
+    "چه کارهایی",
+    "previous question",
+    "last question",
+    "what did i ask",
+    "do you remember",
+    "who are you",
+    "your name",
+    "what can you do",
 )
 
 _DATABASE_QUERY_KEYWORDS = (
@@ -281,9 +339,14 @@ def classify_request_intent(user_input: Any) -> Optional[str]:
     """
     try:
         text = user_input if isinstance(user_input, str) else str(user_input or "")
+        # The UI prefixes "[Database: name]" to every message when a database
+        # is selected; that tag must not make every question a DB question.
+        text = strip_context_tags(text)
         lowered = re.sub(r"\s+", " ", text.casefold()).strip()
         if not lowered:
             return None
+        if any(keyword in lowered for keyword in _CONVERSATIONAL_KEYWORDS):
+            return "general_answer"
         if _mentions_report(lowered):
             return "report_build"
         if any(keyword in lowered for keyword in _DATABASE_QUERY_KEYWORDS):
@@ -557,6 +620,14 @@ def _mentions_report(text: Any) -> bool:
     return any(keyword in lowered for keyword in _REPORT_KEYWORDS)
 
 
+def mentions_visualization(text: Any) -> bool:
+    """True when the user explicitly asks for a chart / visual / HTML output."""
+    if not isinstance(text, str) or not text:
+        return False
+    lowered = text.casefold()
+    return any(keyword in lowered for keyword in _VISUAL_KEYWORDS)
+
+
 def summarize_jev_triage(
     result: Dict[str, Any], *, user_input: Any = None
 ) -> Dict[str, Any]:
@@ -607,11 +678,15 @@ def summarize_jev_triage(
     rule_intent = classify_request_intent(user_input)
     if rule_intent:
         intent = rule_intent
-    expects_report = intent == "report_build" or (
+    # Jev's own scores only *suggest* a visualization (advisory). A rendered
+    # chart/HTML report is *required* only when the user explicitly asked for
+    # one in the question itself.
+    suggests_visualization = intent == "report_build" or (
         intent != "database_query"
         and needs_visualization is not None
         and needs_visualization >= get_jev_report_threshold()
     )
+    expects_report = mentions_visualization(user_input)
 
     return {
         "intent": intent,
@@ -621,6 +696,7 @@ def summarize_jev_triage(
         "complexity_label": complexity_label,
         "needs_visualization": needs_visualization,
         "expects_report": expects_report,
+        "suggests_visualization": suggests_visualization,
         "intent_source": "explicit_request" if rule_intent else "jev",
         "model": result.get("model") if isinstance(result, dict) else None,
     }
@@ -661,10 +737,16 @@ def format_jev_guidance_for_prompt(summary: Dict[str, Any]) -> str:
     # The model MUST NOT terminate with plain text when a report is expected.
     if summary.get("expects_report"):
         lines.append(
-            "- REPORT REQUIRED: the user expects a rendered HTML report. "
+            "- REPORT REQUIRED: the user explicitly asked for a chart/visual. "
             "You MUST call `html_interpreter` with the complete HTML "
-            "(DOCTYPE, head, body, styles, charts/tables) before `terminate`. "
-            "Terminating with only text is a FAILURE for this task."
+            "(DOCTYPE, head, body, styles, charts/tables) built ONLY from tool "
+            "results before `terminate`."
+        )
+    else:
+        lines.append(
+            "- Visualization: NOT requested by the user. Answer with text and "
+            "markdown tables; draw a chart only if a table cannot convey the "
+            "result (see Visualization Policy)."
         )
     lines.append(
         "Jev is a hint, not ground truth. If tool observations contradict it, "
@@ -951,6 +1033,15 @@ def needs_report_repair(
     try:
         if has_html:
             return False
+        # A fallback HTML report is synthesized only when the user explicitly
+        # asked for a chart/visual. Otherwise a text/table answer is correct.
+        explicit_visual = mentions_visualization(user_input) or (
+            isinstance(triage_summary, dict)
+            and triage_summary.get("expects_report") is True
+        )
+        if not explicit_visual:
+            logger.info("Jev repair decision: repair=False (no visual requested)")
+            return False
         if (
             isinstance(verification_summary, dict)
             and verification_summary.get("needs_repair") is True
@@ -978,6 +1069,8 @@ def needs_report_repair(
 def assess_database_answer_relevance(
     user_input: Any,
     history_steps: Any,
+    *,
+    history_has_sql_evidence: bool = False,
 ) -> Dict[str, Any]:
     """Deterministically check SQL evidence for common metric/dimension asks.
 
@@ -990,13 +1083,6 @@ def assess_database_answer_relevance(
         text = user_input if isinstance(user_input, str) else str(user_input or "")
         lowered = re.sub(r"\s+", " ", text.casefold())
         intent = classify_request_intent(text)
-        asks_province_sales = (
-            any(term in lowered for term in ("استان", "province", "provinces", "state"))
-            and any(
-                term in lowered
-                for term in ("فروش", "فروخت", "sales", "sale", "revenue", "sold")
-            )
-        )
         if intent != "database_query":
             return {
                 "requires_database": False,
@@ -1047,6 +1133,16 @@ def assess_database_answer_relevance(
                 evidence_parts.append(joined_output)
 
         evidence = "\n".join(evidence_parts)
+        if (not sql_count or not successful_sql_count) and history_has_sql_evidence:
+            # Follow-up answered from SQL results of earlier turns, which are
+            # carried in the conversation memory (react_memory tool summary).
+            return {
+                "requires_database": True,
+                "relevant": True,
+                "reason": "answered from SQL evidence of previous turns",
+                "sql_count": sql_count,
+                "successful_sql_count": successful_sql_count,
+            }
         if not sql_count or not successful_sql_count:
             return {
                 "requires_database": True,
@@ -1056,57 +1152,24 @@ def assess_database_answer_relevance(
                 "successful_sql_count": successful_sql_count,
             }
 
-        if asks_province_sales:
-            has_province = any(
-                term in evidence
-                for term in ("statename", "state_name", "province", "استان", "statecity")
-            )
-            has_sales_metric = any(
-                term in evidence
-                for term in (
-                    "totalprice",
-                    "finaltotal",
-                    "gtotal",
-                    "mainprice",
-                    "grandtotalprice",
-                    "saleprice",
-                    "revenue",
-                    "فروش",
-                    "فاکتور",
-                )
-            )
-            relevant = has_province and has_sales_metric
-            reason = (
-                "province and sales evidence found"
-                if relevant
-                else "province-sales question requires both geographic and sales evidence"
-            )
-        else:
-            # For other factual DB asks require at least one SQL query and
-            # non-empty results; specialized metric guards can be added from
-            # labelled production examples without penalizing free-form asks.
-            relevant = True
-            reason = "successful SQL evidence found"
+        # Generic check only: a successful, non-empty SQL result exists. No
+        # database-specific column/metric rules (the catalog provides the
+        # knowledge; Jev verification judges semantic relevance).
+        relevant = True
+        reason = "successful SQL evidence found"
         return {
             "requires_database": True,
             "relevant": relevant,
             "reason": reason,
-            "asks_province_sales": asks_province_sales,
             "sql_count": sql_count,
             "successful_sql_count": successful_sql_count,
         }
     except Exception:
         logger.debug("Database answer relevance check failed", exc_info=True)
-        # Fail closed for a recognized province-sales question; fail open for
-        # other intents where this narrow guard has no domain-specific rule.
         text = user_input if isinstance(user_input, str) else str(user_input or "")
-        lowered = text.casefold()
-        narrow_case = ("استان" in lowered or "province" in lowered) and (
-            "فروش" in lowered or "sales" in lowered
-        )
         return {
             "requires_database": classify_request_intent(text) == "database_query",
-            "relevant": not narrow_case,
+            "relevant": True,  # fail open
             "reason": "relevance check exception",
             "sql_count": 0,
             "successful_sql_count": 0,
@@ -1540,6 +1603,76 @@ def build_inline_svg_chart(
         )
     except Exception:
         return ""
+
+
+def _parse_markdown_table(text: str) -> Optional[Tuple[List[str], List[List[str]]]]:
+    """Parse the first pipe table in a tool observation (sql_query output)."""
+    lines = [ln.strip() for ln in str(text or "").splitlines() if ln.strip().startswith("|")]
+    if len(lines) < 3 or not re.match(r"^\|\s*:?-{3,}", lines[1]):
+        return None
+
+    def cells(line: str) -> List[str]:
+        return [c.strip() for c in line.strip().strip("|").split("|")]
+
+    columns = cells(lines[0])
+    rows = [cells(ln) for ln in lines[2:]]
+    rows = [r for r in rows if len(r) == len(columns)]
+    return (columns, rows) if rows else None
+
+
+def _last_sql_table(history_steps: Any) -> Optional[Tuple[List[str], List[List[str]]]]:
+    """Most recent successful sql_query result that has 2+ rows."""
+    try:
+        steps = history_steps if isinstance(history_steps, list) else []
+        for step in reversed(steps):
+            if not isinstance(step, dict) or str(step.get("action") or "") != "sql_query":
+                continue
+            for output in reversed(step.get("outputs") or []):
+                if not isinstance(output, dict):
+                    continue
+                content = output.get("content")
+                if isinstance(content, str):
+                    try:
+                        payload = _json_lib.loads(content)
+                        if isinstance(payload, dict):
+                            content = "\n".join(
+                                str(c.get("content") or "")
+                                for c in payload.get("chunks") or []
+                                if isinstance(c, dict)
+                            )
+                    except Exception:
+                        pass
+                    table = _parse_markdown_table(content)
+                    if table and len(table[1]) >= 2:
+                        return table
+    except Exception:
+        return None
+    return None
+
+
+def build_sql_fallback_report_html(*, title: str, history_steps: Any) -> Optional[str]:
+    """Chart report drawn by the server from the last verified SQL result.
+
+    Used when the agent could not finish its own report (e.g. the provider
+    timed out while the model was writing HTML). Returns None when there is
+    no plottable SQL result.
+    """
+    table = _last_sql_table(history_steps)
+    if not table:
+        return None
+    try:
+        from .report_charts import build_sql_chart_report
+
+        page, _summary = build_sql_chart_report(
+            table[0], table[1], title=strip_context_tags(title or "") or "گزارش"
+        )
+    except Exception:
+        return None
+    note = (
+        '<div class="card"><p class="muted">ساخت گزارش توسط مدل کامل نشد؛ این نمودار '
+        "به‌صورت خودکار و مستقیم از آخرین نتیجهٔ تأییدشدهٔ کوئری ساخته شده است.</p></div>"
+    )
+    return page.replace("<div class=\"card\"><h2>", note + "<div class=\"card\"><h2>", 1)
 
 
 def build_fallback_report_html(

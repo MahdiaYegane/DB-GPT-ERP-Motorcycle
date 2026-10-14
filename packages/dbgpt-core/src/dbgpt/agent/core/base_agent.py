@@ -7,6 +7,7 @@ import json
 import logging
 import time
 from concurrent.futures import Executor, ThreadPoolExecutor
+from contextvars import ContextVar
 from datetime import datetime
 from typing import Any, Callable, Dict, List, Optional, Tuple, Type, cast, final
 
@@ -32,6 +33,13 @@ from .memory.gpts.base import GptsMessage
 from .memory.gpts.gpts_memory import GptsMemory
 from .profile.base import ProfileConfig
 from .role import AgentRunMode, Role
+
+# Conversation id of the agent turn currently running in this async context.
+# ``None`` means we are at the top level of a new user turn, so that turn starts
+# its own trace instead of inheriting the server-wide (or a previous chat's) span.
+_AGENT_TRACE_CONV: ContextVar[Optional[str]] = ContextVar(
+    "agent_trace_conv", default=None
+)
 
 logger = logging.getLogger(__name__)
 
@@ -499,8 +507,11 @@ class ConversableAgent(Role, Agent):
         logger.info(
             f"generate agent reply!sender={sender}, rely_messages_len={rely_messages}"
         )
+        _trace_conv_id = self.not_null_agent_context.conv_id
+        _is_top_level_turn = _AGENT_TRACE_CONV.get() is None
         root_span = root_tracer.start_span(
             "agent.generate_reply",
+            new_trace=_is_top_level_turn,
             metadata={
                 "sender": sender.name,
                 "recipient": self.name,
@@ -511,6 +522,11 @@ class ConversableAgent(Role, Agent):
                     [msg.to_dict() for msg in rely_messages] if rely_messages else None
                 ),
             },
+        )
+        _trace_conv_token = (
+            _AGENT_TRACE_CONV.set(_trace_conv_id or "__agent__")
+            if _is_top_level_turn
+            else None
         )
         reply_message = None
 
@@ -533,6 +549,10 @@ class ConversableAgent(Role, Agent):
             fail_reason = None
             current_retry_counter = 0
             start_time = time.time()
+            # Wrap-up state: once the step/time budget is used up the model is
+            # told to finish, and the loop stops if it keeps exploring anyway.
+            object.__setattr__(self, "_wrap_up_note", None)
+            wrap_up_rounds = 0
             is_success = True
             observation = received_message.content or ""
             while current_retry_counter < self.max_retry_count:
@@ -630,6 +650,11 @@ class ConversableAgent(Role, Agent):
                             )
                         else:
                             raise
+                    # Leaked DSML tool-call markup (DeepSeek-style) -> one plain
+                    # ReAct action, so neither history nor the UI carries it.
+                    from ..util.react_parser import canonicalize_tool_markup
+
+                    llm_reply = canonicalize_tool_markup(llm_reply)
                     reply_message.model_name = model_name
                     reply_message.content = llm_reply
                     reply_message.resource_info = resource_info
@@ -741,6 +766,22 @@ class ConversableAgent(Role, Agent):
                         logger.debug(f"Agent {self.name} reply success!{reply_message}")
                         break
                 time_cost = time.time() - start_time
+                if self.run_mode == AgentRunMode.LOOP and (
+                    current_retry_counter + 1 >= _react_step_budget()
+                    or time_cost > self.max_timeout * _WRAP_UP_TIME_FRACTION
+                ):
+                    wrap_up_rounds += 1
+                    object.__setattr__(
+                        self,
+                        "_wrap_up_note",
+                        _wrap_up_note(current_retry_counter + 1),
+                    )
+                    if wrap_up_rounds > _WRAP_UP_MAX_EXTRA_ROUNDS:
+                        logger.warning(
+                            f"Agent {self.name} ignored the wrap-up request for "
+                            f"{wrap_up_rounds} rounds; stopping."
+                        )
+                        break
                 if time_cost > self.max_timeout:
                     logger.warning(
                         f"Agent {self.name} run time out!{time_cost} > "
@@ -770,6 +811,11 @@ class ConversableAgent(Role, Agent):
             if reply_message:
                 root_span.metadata["reply_message"] = reply_message.to_dict()
             root_span.end()
+            if _trace_conv_token is not None:
+                try:
+                    _AGENT_TRACE_CONV.reset(_trace_conv_token)
+                except ValueError:
+                    _AGENT_TRACE_CONV.set(None)
 
     async def thinking(
         self,
@@ -788,14 +834,13 @@ class ConversableAgent(Role, Agent):
         last_err = None
         retry_count = 0
         llm_messages = [message.to_llm_message() for message in messages]
+        if prompt:
+            llm_messages = _new_system_message(prompt) + llm_messages
         # LLM inference automatically retries 3 times to reduce interruption
         # probability caused by speed limit and network stability
         while retry_count < 3:
             llm_model = await self._a_select_llm_model(last_model)
             try:
-                if prompt:
-                    llm_messages = _new_system_message(prompt) + llm_messages
-
                 if not self.llm_client:
                     raise ValueError("LLM client is not initialized!")
                 response = await self.llm_client.create(
@@ -817,7 +862,15 @@ class ConversableAgent(Role, Agent):
                 retry_count += 1
                 last_model = llm_model
                 last_err = str(e)
-                await asyncio.sleep(10)
+                if "stream is null" in last_err:
+                    # The provider returned an empty reply (no text). Retry
+                    # quickly with a reminder of the expected output format.
+                    llm_messages = llm_messages + [
+                        {"role": ModelMessageRoleType.HUMAN, "content": _EMPTY_REPLY_NUDGE}
+                    ]
+                    await asyncio.sleep(2)
+                else:
+                    await asyncio.sleep(10)
 
         if last_err:
             raise ValueError(last_err)
@@ -1198,8 +1251,25 @@ class ConversableAgent(Role, Agent):
                 can_uses = self._excluded_models(all_model_names, None, excluded_models)
             if can_uses and len(can_uses) > 0:
                 return can_uses[0]
-            else:
-                return "deepseek-chat"
+            # Nothing left after excluding the model that just failed (e.g. a
+            # single configured model): retry that same model instead of a
+            # hard-coded name that is usually not deployed ("deepseek-chat
+            # not found" turned a transient empty reply into a failed answer).
+            if excluded_models:
+                retry_model = (
+                    excluded_models
+                    if isinstance(excluded_models, str)
+                    else list(excluded_models)[0]
+                )
+                if retry_model in all_model_names:
+                    return retry_model
+            if self.not_null_llm_config.llm_strategy == LLMStrategyType.Priority:
+                for name in priority:
+                    if name in all_model_names:
+                        return name
+            if all_model_names:
+                return all_model_names[0]
+            raise ValueError("No LLM model is available")
         except Exception as e:
             logger.error(f"{self.role} get next llm failed!{str(e)}")
             raise ValueError(f"Failed to allocate model service,{str(e)}!")
@@ -1413,19 +1483,36 @@ class ConversableAgent(Role, Agent):
         if historical_dialogues:
             # Always pass the full prior Q&A dialogue to the model (multi-turn
             # follow-ups need the earlier turns), independent of whether memory
-            # fragments were also read. Even index = user, odd index = AI.
-            for i in range(len(historical_dialogues)):
-                if i % 2 == 0:
-                    message = historical_dialogues[i]
-                    message.role = ModelMessageRoleType.HUMAN
-                    agent_messages.append(message)
-                else:
-                    message = historical_dialogues[i]
-                    message.role = ModelMessageRoleType.AI
-                    agent_messages.append(message)
+            # fragments were also read. Use the role set by the caller; only
+            # fall back to "even index = user, odd index = AI" for untagged
+            # messages (a missing answer would otherwise flip every later role).
+            _valid_roles = (ModelMessageRoleType.HUMAN, ModelMessageRoleType.AI)
+            for i, history_message in enumerate(historical_dialogues):
+                message = history_message.copy()
+                if message.role not in _valid_roles:
+                    message.role = (
+                        ModelMessageRoleType.HUMAN
+                        if i % 2 == 0
+                        else ModelMessageRoleType.AI
+                    )
+                agent_messages.append(message)
 
         if memory_list:
-            agent_messages.extend(memory_list)
+            # The short-term memory buffer evicts the oldest fragments of the
+            # current turn — including the one that carries "Question: ...".
+            # Without it the model only sees the *previous* turns' questions
+            # and may answer one of those instead (e.g. re-introduce itself).
+            # Always keep the current question right before this turn's steps.
+            if question and not any(
+                question in str(getattr(m, "content", "") or "") for m in memory_list
+            ):
+                agent_messages.append(
+                    AgentMessage(
+                        content=f"Question: {question}",
+                        role=ModelMessageRoleType.HUMAN,
+                    )
+                )
+            agent_messages.extend(_compact_old_observations(memory_list))
 
         # Multi-layer context management: compress if budget exceeded
         ctx_mgr: Optional[ContextManager] = getattr(self, "_context_manager", None)
@@ -1448,7 +1535,87 @@ class ConversableAgent(Role, Agent):
                     role=ModelMessageRoleType.HUMAN,
                 )
             )
+        wrap_up_note = getattr(self, "_wrap_up_note", None)
+        if wrap_up_note:
+            last = agent_messages[-1] if agent_messages else None
+            if last is not None and last.role == ModelMessageRoleType.HUMAN:
+                last = last.copy()
+                last.content = f"{last.content or ''}\n\n{wrap_up_note}"
+                agent_messages[-1] = last
+            else:
+                agent_messages.append(
+                    AgentMessage(
+                        content=wrap_up_note, role=ModelMessageRoleType.HUMAN
+                    )
+                )
         return agent_messages, resource_references
+
+
+_EMPTY_REPLY_NUDGE = (
+    "Your previous reply was empty. Continue with the latest question: reply "
+    "with plain text in the Thought / Action / Action Input format (one Action), "
+    "or terminate with the final answer."
+)
+
+# ── ReAct loop budget & memory compaction (env-tunable, generic) ──────────
+_WRAP_UP_TIME_FRACTION = 0.7
+_WRAP_UP_MAX_EXTRA_ROUNDS = 3
+
+
+def _env_int(name: str, default: int, minimum: int) -> int:
+    import os
+
+    try:
+        return max(minimum, int(os.getenv(name, str(default))))
+    except ValueError:
+        return default
+
+
+def _react_step_budget() -> int:
+    """Steps after which the agent is told to stop exploring and answer."""
+    return _env_int("DBGPT_REACT_STEP_BUDGET", 25, 3)
+
+
+def _wrap_up_note(steps: int) -> str:
+    return (
+        f"[Budget reached: {steps} steps used] Stop exploring and do not repeat "
+        "earlier queries. Your next action MUST be `terminate`. Answer the "
+        "question from the results you already have. If the data needed was "
+        "not found, say clearly that it could not be found in the database, "
+        "list briefly which tables/columns you checked and why they did not "
+        "work, and say what information would be needed. Never invent data. "
+        "Reply in the user's language."
+    )
+
+
+def _compact_old_observations(memory_list: List[AgentMessage]) -> List[AgentMessage]:
+    """Shorten old tool results so long runs keep every step in view.
+
+    Dropping old steps made the model forget what it had already checked and
+    re-run the same queries in a loop. Keeping every step but trimming old
+    observations keeps the whole trail (actions + key results) at low cost.
+    """
+    keep_full = _env_int("DBGPT_REACT_KEEP_FULL_OBSERVATIONS", 6, 1)
+    max_chars = _env_int("DBGPT_REACT_OLD_OBSERVATION_CHARS", 800, 200)
+    obs_idx = [
+        i
+        for i, m in enumerate(memory_list)
+        if str(getattr(m, "content", "") or "").lstrip().startswith("Observation:")
+    ]
+    old = set(obs_idx[:-keep_full]) if len(obs_idx) > keep_full else set()
+    if not old:
+        return memory_list
+    result: List[AgentMessage] = []
+    for i, m in enumerate(memory_list):
+        content = str(getattr(m, "content", "") or "")
+        if i in old and len(content) > max_chars:
+            m = m.copy()
+            m.content = (
+                content[:max_chars]
+                + f"\n... [older result shortened; {len(content)} chars originally]"
+            )
+        result.append(m)
+    return result
 
 
 def _new_system_message(content):

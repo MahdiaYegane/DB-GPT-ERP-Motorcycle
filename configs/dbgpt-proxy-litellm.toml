@@ -23,7 +23,7 @@ persist_path = "pilot/data"
 # Model Configurations
 #
 # LiteLLM is used here as an embedded AI gateway (the Python SDK), NOT as a
-# separate proxy server — DB-GPT imports litellm directly and routes every
+# separate proxy server — Kavir Motor imports litellm directly and routes every
 # completion through litellm.acompletion(). Specify the model with a provider
 # prefix (e.g. "anthropic/...", "vertex_ai/...", "bedrock/...", "azure/...",
 # "groq/...") and set the matching provider environment variable

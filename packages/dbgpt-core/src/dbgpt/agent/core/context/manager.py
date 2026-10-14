@@ -42,6 +42,9 @@ class ContextManager:
         on_status_event: Optional[ContextStatusCallback] = None,
     ):
         self.config = config or ContextBudgetConfig()
+        # Used by Layer 3 (LLM summarisation); was missing, so Layer 3 always
+        # failed with AttributeError and never compacted anything.
+        self.model_name = model_name
         self.tracker = ContextBudgetTracker(self.config, model_name=model_name)
         self.llm_client = llm_client
         self.on_status_event = on_status_event

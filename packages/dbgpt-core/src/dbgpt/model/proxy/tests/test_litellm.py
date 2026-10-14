@@ -361,7 +361,7 @@ class TestLiteLLMGenerateStream:
 
 
 class TestLiteLLMNewClient:
-    """new_client() — DB-GPT's actual entry point when loading a deploy config."""
+    """new_client() — Kavir Motor's actual entry point when loading a deploy config."""
 
     def test_new_client_constructs_with_params(self):
         params = LiteLLMDeployModelParameters(

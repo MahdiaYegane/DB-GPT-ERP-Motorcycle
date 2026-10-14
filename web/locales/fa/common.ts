@@ -106,7 +106,7 @@ export const CommonEn = {
   language: 'زبان',
   choose_model: 'لطفاً یک مدل انتخاب کنید',
   data_center_desc:
-    'DB-GPT همچنین یک رابط کاربری ساده مرکز داده برای نگهداری کارآمد داده‌ها ارائه می‌دهد.',
+    'کویر موتور همچنین یک رابط کاربری ساده مرکز داده برای نگهداری کارآمد داده‌ها ارائه می‌دهد.',
   create_database: 'ایجاد پایگاه داده',
   create_knowledge: 'ایجاد دانش',
   path: 'مسیر',
@@ -368,9 +368,9 @@ export const CommonEn = {
   publish_desc: 'آیا از انتشار برنامه مطمئن هستید؟',
   unPublish_desc: 'آیا مطمئن هستید که می‌خواهید انتشار این برنامه را لغو کنید؟',
   published_success: 'انتشار با موفقیت انجام شد',
-  dbgpts_community: 'جامعه DBGPTS',
-  community_dbgpts: 'DBGPTS جامعه',
-  my_dbgpts: 'DBGPTS من',
+  dbgpts_community: 'جامعه برنامه‌های کویر موتور',
+  community_dbgpts: 'برنامه‌های جامعه کویر موتور',
+  my_dbgpts: 'برنامه‌های کویر موتور من',
   Refresh_dbgpts: 'بازخوانی از مخزن جامعه Git',
   workflow: 'گردش‌کار',
   resources: 'منابع',
@@ -853,7 +853,7 @@ export const CommonEn = {
   chat_error: 'متأسفانه خطایی رخ داد. لطفاً دوباره تلاش کنید.',
   // ── request.ts error tips ──
   'request.error.network':
-    'امکان اتصال به سرویس DB-GPT وجود ندارد: شبکه در دسترس نیست (احتمالاً به دلیل محدودیت CORS یا اجرا نشدن سرویس). تنظیمات cors_allowed_origins و فعال بودن سرویس را بررسی کنید.',
+    'امکان اتصال به سرویس کویر موتور وجود ندارد: شبکه در دسترس نیست (احتمالاً به دلیل محدودیت CORS یا اجرا نشدن سرویس). تنظیمات cors_allowed_origins و فعال بودن سرویس را بررسی کنید.',
   'request.error.timeout': 'درخواست با اتمام مهلت مواجه شد؛ لطفاً بعداً دوباره تلاش کنید.',
   'request.error.default': 'Request ناموفق (HTTP {{status}}).',
   'editor.please_select_database': 'لطفاً ابتدا یک پایگاه داده انتخاب کنید',

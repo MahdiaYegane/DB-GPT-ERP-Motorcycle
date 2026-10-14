@@ -309,8 +309,8 @@ msgid "Default LLM Client"
 msgstr "کلاینت پیش‌فرض LLM"
 
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:23
-msgid "Default LLM client(Connect to your DB-GPT model serving)"
-msgstr "کلاینت پیش‌فرض LLM (اتصال به سرو مدل DB-GPT شما)"
+msgid "Default LLM client(Connect to your Kavir Motor model serving)"
+msgstr "کلاینت پیش‌فرض LLM (اتصال به سرو مدل کویر موتور شما)"
 
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:26
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:128
@@ -331,8 +331,8 @@ msgid "Remote LLM Client"
 msgstr "کلاینت راه‌دور LLM"
 
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:117
-msgid "Remote LLM client(Connect to the remote DB-GPT model serving)"
-msgstr "کلاینت راه‌دور LLM (اتصال به سرو مدل راه‌دور DB-GPT)"
+msgid "Remote LLM client(Connect to the remote Kavir Motor model serving)"
+msgstr "کلاینت راه‌دور LLM (اتصال به سرو مدل راه‌دور کویر موتور)"
 
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:120
 msgid "Controller Address"

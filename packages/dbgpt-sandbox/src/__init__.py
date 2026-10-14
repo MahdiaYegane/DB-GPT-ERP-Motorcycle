@@ -1,3 +1,3 @@
 """
-DB-GPT Core Package
+Kavir Motor Core Package
 """

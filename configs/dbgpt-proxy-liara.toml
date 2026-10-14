@@ -55,6 +55,9 @@ persist_path = "pilot/data"
 name = "xiaomi/mimo-v2.5 (liara)"
 provider = "proxy/liara"
 backend = "xiaomi/mimo-v2.5"
+# Real context window (without it the proxy default 4096 is used and
+# conversation memory gets compacted away).
+context_length = 1050000
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
 
@@ -63,6 +66,9 @@ api_key = "${env:LIARA_API_KEY}"
 name = "xiaomi/mimo-v2.5-pro (liara)"
 provider = "proxy/liara"
 backend = "xiaomi/mimo-v2.5-pro"
+# Real context window (without it the proxy default 4096 is used and
+# conversation memory gets compacted away).
+context_length = 1050000
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
 
@@ -89,6 +95,9 @@ context_length = 1048576
 name = "z-ai/glm-5.3-flash (liara)"
 provider = "proxy/liara"
 backend = "z-ai/glm-5.3-flash"
+# Real context window (without it the proxy default 4096 is used and
+# conversation memory gets compacted away).
+context_length = 1310720
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
 
@@ -97,6 +106,9 @@ api_key = "${env:LIARA_API_KEY}"
 name = "minimax/minimax-m3 (liara)"
 provider = "proxy/liara"
 backend = "minimax/minimax-m3"
+# Real context window (without it the proxy default 4096 is used and
+# conversation memory gets compacted away).
+context_length = 1048576
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
 
@@ -105,6 +117,9 @@ api_key = "${env:LIARA_API_KEY}"
 name = "qwen/qwen3.7-flash (liara)"
 provider = "proxy/liara"
 backend = "qwen/qwen3.7-flash"
+# Real context window (without it the proxy default 4096 is used and
+# conversation memory gets compacted away).
+context_length = 1000000
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
 
@@ -140,6 +155,9 @@ context_length = 1000000
 name = "deepseek/deepseek-v4-pro (liara)"
 provider = "proxy/liara"
 backend = "deepseek/deepseek-v4-pro"
+# Real context window (without it the proxy default 4096 is used and
+# conversation memory gets compacted away).
+context_length = 1048576
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
 

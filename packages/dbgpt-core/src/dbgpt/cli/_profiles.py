@@ -1,4 +1,4 @@
-"""Profile definitions and API key resolution for DB-GPT CLI.
+"""Profile definitions and API key resolution for Kavir Motor CLI.
 
 Each profile corresponds to a supported LLM provider and contains the
 information needed to generate a TOML configuration file and resolve
@@ -29,7 +29,7 @@ class ProfileSpec:
     """Default LLM model name."""
 
     llm_provider: str
-    """DB-GPT provider string, e.g. 'proxy/openai'."""
+    """Kavir Motor provider string, e.g. 'proxy/openai'."""
 
     llm_api_base: str
     """Base URL for the LLM API."""
@@ -38,7 +38,7 @@ class ProfileSpec:
     """Default embedding model name."""
 
     embedding_provider: str
-    """DB-GPT provider string for embeddings."""
+    """Kavir Motor provider string for embeddings."""
 
     embedding_api_url: str
     """URL for the embedding API endpoint."""

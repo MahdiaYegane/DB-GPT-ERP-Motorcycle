@@ -32,7 +32,7 @@ class MaxComputeParameters(BaseDatasourceParameters):
 
     __type__ = "maxcompute"
 
-    # A MaxCompute project acts as the database in DB-GPT's model.
+    # A MaxCompute project acts as the database in Kavir Motor's model.
     project: str = field(metadata={"help": _("MaxCompute project name")})
     access_id: str = field(
         default="",

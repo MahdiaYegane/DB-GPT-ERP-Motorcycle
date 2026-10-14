@@ -678,3 +678,28 @@ Action Input: {"demo": true}
         )
 
         assert clean_final_text(text) == "گزارش آماده است."
+
+
+def test_canonicalize_tool_markup_keeps_one_action():
+    from dbgpt.agent.util.react_parser import (
+        ReActOutputParser,
+        canonicalize_tool_markup,
+    )
+
+    text = (
+        "Thought: check\n<｜DSML｜ calls>\n"
+        '<｜DSML｜ invoke name="sql_query">\n'
+        '<｜DSML｜ parameter name="sql" string="true">SELECT 1</｜DSML｜ parameter>\n'
+        "</｜DSML｜ invoke>\n"
+        '<｜DSML｜ invoke name="sql_query">\n'
+        '<｜DSML｜ parameter name="sql" string="true">SELECT 2</｜DSML｜ parameter>\n'
+        "</｜DSML｜ invoke>\n</｜DSML｜ calls>"
+    )
+    out = canonicalize_tool_markup(text)
+    assert "DSML" not in out
+    assert out.count("Action:") == 1
+    step = ReActOutputParser().parse(out)[0]
+    assert step.action == "sql_query"
+    assert step.action_input == {"sql": "SELECT 1"}
+    plain = "Thought: ok\nAction: terminate\nAction Input: {}"
+    assert canonicalize_tool_markup(plain) == plain

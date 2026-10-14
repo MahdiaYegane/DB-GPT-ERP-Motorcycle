@@ -207,8 +207,9 @@ class ReActAction(ToolAction):
             "the model name in the server config."
         ),
         "overloaded": (
-            "The AI provider is temporarily overloaded or timed out. No "
-            "tool was run. Wait a moment and try again."
+            "سرویس مدل هوش مصنوعی موقتاً پاسخ نداد (شلوغی یا پایان مهلت زمانی). "
+            "لطفاً چند لحظه بعد دوباره امتحان کنید. "
+            "(The AI provider is temporarily overloaded or timed out.)"
         ),
         "unknown": (
             "The AI provider returned an error and no tool was run. "

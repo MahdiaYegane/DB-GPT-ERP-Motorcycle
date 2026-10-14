@@ -453,7 +453,7 @@ class LocalWorkerManager(WorkerManager):
                 worker_run_data = await self._get_model(params)
             except Exception as e:
                 yield ModelOutput(
-                    text=f"**LLMServer Generate Error, Please CheckErrorInfo.**: {e}",
+                    text=f"**LLMServer Generate Error, Please CheckErrorInfo.**: {type(e).__name__}: {e}",
                     error_code=1,
                 )
                 return
@@ -483,7 +483,7 @@ class LocalWorkerManager(WorkerManager):
                 worker_run_data = await self._get_model(params)
             except Exception as e:
                 return ModelOutput(
-                    text=f"**LLMServer Generate Error, Please CheckErrorInfo.**: {e}",
+                    text=f"**LLMServer Generate Error, Please CheckErrorInfo.**: {type(e).__name__}: {e}",
                     error_code=1,
                 )
             async with worker_run_data.semaphore:
@@ -1323,7 +1323,7 @@ def run_worker_manager(
     initialize_tracer(
         trace_file,
         system_app=system_app,
-        root_operation_name=trace_config.root_operation_name or "DB-GPT-ModelWorker",
+        root_operation_name=trace_config.root_operation_name or "KavirMotor-ModelWorker",
         tracer_parameters=trace_config,
     )
     if isinstance(deploy_model_params, LLMDeployModelParameters):
@@ -1369,7 +1369,7 @@ def run_worker_manager(
 def parse_args():
     import argparse
 
-    parser = argparse.ArgumentParser(description="DB-GPT Model Worker")
+    parser = argparse.ArgumentParser(description="Kavir Motor Model Worker")
     parser.add_argument(
         "-c",
         "--config",

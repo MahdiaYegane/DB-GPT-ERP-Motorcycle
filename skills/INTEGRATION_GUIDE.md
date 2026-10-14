@@ -1,6 +1,6 @@
 # SKILL Integration Guide
 
-This document explains how to integrate the SKILL system into an existing DB-GPT agent.
+This document explains how to integrate the SKILL system into an existing Kavir Motor agent.
 
 ## Integration Steps
 
@@ -190,7 +190,7 @@ agent_manage.register_agent(IntentRecognitionAgent)
     "name": "intent_recognition",
     "description": "Intent recognition skill for user queries",
     "version": "1.0.0",
-    "author": "DB-GPT Team",
+    "author": "Kavir Motor Team",
     "skill_type": "custom",
     "tags": ["intent", "recognition", "nlp"]
   },

@@ -1,4 +1,4 @@
-"""Agent Middleware System for DB-GPT.
+"""Agent Middleware System for Kavir Motor.
 
 This module implements a middleware system similar to deepagents' AgentMiddleware,
 allowing plugins to hook into agent lifecycle events.

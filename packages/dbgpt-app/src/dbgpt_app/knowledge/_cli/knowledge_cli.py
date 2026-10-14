@@ -131,7 +131,7 @@ def load(
     chunk_size: int,
     chunk_overlap: int,
 ):
-    """Load your local documents to DB-GPT"""
+    """Load your local documents to Kavir Motor"""
     from dbgpt_app.knowledge._cli.knowledge_client import knowledge_init
 
     knowledge_init(

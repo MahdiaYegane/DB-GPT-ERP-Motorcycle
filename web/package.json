@@ -2,7 +2,7 @@
   "name": "db-gpt-web",
   "version": "0.1.0",
   "private": true,
-  "description": "DB-GPT WebUI",
+  "description": "Kavir Motor WebUI",
   "main": "next.config.js",
   "directories": {
     "lib": "lib"

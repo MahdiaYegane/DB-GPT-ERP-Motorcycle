@@ -97,7 +97,7 @@ class LiteLLMClient(ProxyLLMClient):
     """Embedded LiteLLM AI gateway client.
 
     Routes every request through ``litellm.acompletion`` (the LiteLLM Python
-    SDK), so a single DB-GPT model entry can talk to OpenAI, Anthropic, Vertex
+    SDK), so a single Kavir Motor model entry can talk to OpenAI, Anthropic, Vertex
     AI, Bedrock, Azure, Cohere, Mistral, Groq, Ollama, and 90+ other providers
     *without running a separate LiteLLM proxy server*. The model is selected
     via the standard LiteLLM provider-prefixed name (``anthropic/...``,
@@ -143,7 +143,7 @@ class LiteLLMClient(ProxyLLMClient):
 
         # drop_params silently strips kwargs that the destination provider does
         # not support (e.g., presence_penalty on Anthropic). Defaulted on so
-        # DB-GPT's generic per-request payload doesn't crash provider-specific
+        # Kavir Motor's generic per-request payload doesn't crash provider-specific
         # backends. Users can opt out via litellm_kwargs={"drop_params": False}.
         merged_kwargs: Dict[str, Any] = {"drop_params": True}
         if litellm_kwargs:

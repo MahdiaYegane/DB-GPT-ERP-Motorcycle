@@ -41,8 +41,8 @@ ROOT_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 sys.path.append(ROOT_PATH)
 
 app = create_app(
-    title=_("DB-GPT Open API"),
-    description=_("DB-GPT Open API"),
+    title=_("Kavir Motor Open API"),
+    description=_("Kavir Motor Open API"),
     version=version,
     openapi_tags=[],
 )
@@ -308,7 +308,7 @@ def run_webserver(config_file: str):
     initialize_tracer(
         trace_file,
         system_app=system_app,
-        root_operation_name=trace_config.root_operation_name or "DB-GPT-Webserver",
+        root_operation_name=trace_config.root_operation_name or "KavirMotor-Webserver",
         tracer_parameters=trace_config,
     )
 
@@ -388,7 +388,7 @@ def load_config(config_file: str = None) -> ApplicationConfig:
 def parse_args():
     import argparse
 
-    parser = argparse.ArgumentParser(description="DB-GPT Webserver")
+    parser = argparse.ArgumentParser(description="Kavir Motor Webserver")
     parser.add_argument(
         "-c",
         "--config",

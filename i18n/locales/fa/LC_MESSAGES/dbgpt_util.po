@@ -20,9 +20,9 @@ msgstr ""
 
 #: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:32
 msgid ""
-"The module to scan, if not set, will scan all DB-GPT "
+"The module to scan, if not set, will scan all Kavir Motor "
 "modules('dbgpt,dbgpt_client,dbgpt_ext,dbgpt_serve,dbgpt_app')."
-msgstr "ماژول موردنظر برای اسکن؛ اگر تنظیم نشود، همه ماژول‌های DB-GPT اسکن می‌شوند ('dbgpt,dbgpt_client,dbgpt_ext,dbgpt_serve,dbgpt_app')."
+msgstr "ماژول موردنظر برای اسکن؛ اگر تنظیم نشود، همه ماژول‌های کویر موتور اسکن می‌شوند ('dbgpt,dbgpt_client,dbgpt_ext,dbgpt_serve,dbgpt_app')."
 
 #: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:42
 msgid ""

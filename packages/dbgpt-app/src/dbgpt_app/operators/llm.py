@@ -305,7 +305,7 @@ _PARAMETER_LLM_CLIENT = Parameter.build_from(
     default=None,
     description=_(
         "The LLM Client, how to connect to the LLM model, if not provided, it will use"
-        " the default client deployed by DB-GPT."
+        " the default client deployed by Kavir Motor."
     ),
 )
 _PARAMETER_HISTORY_MERGE_MODE = Parameter.build_from(

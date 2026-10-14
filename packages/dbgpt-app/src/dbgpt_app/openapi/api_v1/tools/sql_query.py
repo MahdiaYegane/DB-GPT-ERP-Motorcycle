@@ -18,13 +18,7 @@ def _is_missing_name_error(message: str) -> bool:
 
 
 def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any]):
-    @tool(
-        description=(
-            "Execute a SQL query against the user-selected database (SELECT only). "
-            'Parameters: {"sql": "SELECT statement"}'
-        )
-    )
-    def sql_query(sql: str) -> str:
+    def _run_sql(sql: str) -> str:
         """Execute a read-only SQL query against the selected database."""
         if database_connector is None:
             return json.dumps(
@@ -153,5 +147,30 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
                 },
                 ensure_ascii=False,
             )
+
+
+    @tool(
+        description=(
+            "Execute a SQL query against the user-selected database (SELECT only). "
+            'Parameters: {"sql": "SELECT statement"}'
+        )
+    )
+    def sql_query(sql: str) -> str:
+        """Execute a read-only SQL query against the selected database."""
+        # Same query already run for this question: return the earlier result
+        # instead of hitting the database again, and say so, so the model
+        # stops re-checking things it already knows.
+        key = " ".join(str(sql or "").strip().rstrip(";").lower().split())
+        cache = react_state.setdefault("_sql_result_cache", {})
+        if key and key in cache:
+            return (
+                "NOTE: this exact query was already run earlier for this "
+                "question; the result is unchanged (shown below). Do not run "
+                "it again — use it, or move on / finish.\n" + cache[key]
+            )
+        result = _run_sql(sql)
+        if key:
+            cache[key] = result
+        return result
 
     return sql_query

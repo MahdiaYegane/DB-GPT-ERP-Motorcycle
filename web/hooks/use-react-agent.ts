@@ -1,7 +1,7 @@
 /**
  * useReActAgent Hook
  *
- * Custom React hook for interacting with the DB-GPT ReAct Agent API.
+ * Custom React hook for interacting with the Kavir Motor ReAct Agent API.
  * Handles SSE streaming and converts events to OpenCode MessagePart format.
  */
 

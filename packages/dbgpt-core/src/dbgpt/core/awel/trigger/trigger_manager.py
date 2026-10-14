@@ -1,6 +1,6 @@
 """Trigger manager for AWEL.
 
-After DB-GPT started, the trigger manager will be initialized and register all triggers
+After Kavir Motor started, the trigger manager will be initialized and register all triggers
 """
 
 import logging

@@ -107,7 +107,7 @@ msgstr "이 구성은 흐름 서비스 모듈용입니다."
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:38
 msgid "Interval to load dbgpts from installed packages"
-msgstr "설치된 패키지에서 DB-GPT를 로드하는 간격"
+msgstr "설치된 패키지에서 Kavir Motor를 로드하는 간격"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:41
 msgid "The key to encrypt the data"

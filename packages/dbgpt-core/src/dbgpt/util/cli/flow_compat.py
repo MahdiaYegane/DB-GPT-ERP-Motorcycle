@@ -29,7 +29,7 @@ def tool_flow_cli_group():
     default=None,
     required=False,
     help=_(
-        "The module to scan, if not set, will scan all DB-GPT modules("
+        "The module to scan, if not set, will scan all Kavir Motor modules("
         "'dbgpt,dbgpt_client,dbgpt_ext,dbgpt_serve,dbgpt_app')."
     ),
 )

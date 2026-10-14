@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class BaseServe(BaseComponent, ABC):
-    """Base serve component for DB-GPT"""
+    """Base serve component for Kavir Motor"""
 
     name = "dbgpt_serve_base"
 

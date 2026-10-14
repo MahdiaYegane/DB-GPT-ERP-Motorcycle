@@ -43,7 +43,7 @@ class ConnectorToolSummary(TypedDict):
 
     name: str
     """Full routing name (``mcp__{prefix}__{original_name}``) — what LLMs
-    invoke. Includes the DB-GPT-internal namespace prefix added by
+    invoke. Includes the Kavir Motor-internal namespace prefix added by
     :meth:`ConnectorManager._apply_tool_prefix`."""
 
     original_name: str

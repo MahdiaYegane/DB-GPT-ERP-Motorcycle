@@ -73,7 +73,7 @@ def _initialize_db_storage(param: ServiceConfig, system_app: SystemApp):
         db_name = db_config.database
     else:
         raise ValueError(
-            "DB-GPT only support SQLite, MySQL and OceanBase database as metadata "
+            "Kavir Motor only support SQLite, MySQL and OceanBase database as metadata "
             "storage database"
         )
 
@@ -152,11 +152,11 @@ def _migration_db_storage(
         else:
             warn_msg = """For safety considerations, MySQL Database not support DDL \
             init and upgrade. "
-                "1.If you are use DB-GPT firstly, please manually execute the following\
+                "1.If you are use Kavir Motor firstly, please manually execute the following\
                  command to initialize, 
                 `mysql -h127.0.0.1 -uroot -p{your_password} \
                 < ./assets/schema/dbgpt.sql` "
-                "2.If there are any changes to the table columns in the DB-GPT database,
+                "2.If there are any changes to the table columns in the Kavir Motor database,
                  it is necessary to compare with the DB-GPT/assets/schema/dbgpt.sql file
                  and manually make the columns changes in the MySQL database instance.
                  """

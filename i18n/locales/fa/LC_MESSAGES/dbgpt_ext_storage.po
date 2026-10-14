@@ -501,17 +501,17 @@ msgstr "آیا از متغیرهای محیطی AWS_ACCESS_KEY_ID و AWS_SECRET_
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/s3/config.py:54
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/oss/config.py:55
 msgid ""
-"The fixed bucket name to use. If set, all logical buckets in DB-GPT will be "
+"The fixed bucket name to use. If set, all logical buckets in Kavir Motor will be "
 "mapped to this bucket. We suggest you set this value to avoid bucket name "
 "conflicts."
-msgstr "نام ثابت باکت مورد استفاده. اگر تنظیم شود، همه باکت‌های منطقی در DB-GPT به این باکت نگاشت می‌شوند. پیشنهاد می‌کنیم این مقدار را برای جلوگیری از تداخل نام باکت‌ها تنظیم کنید."
+msgstr "نام ثابت باکت مورد استفاده. اگر تنظیم شود، همه باکت‌های منطقی در کویر موتور به این باکت نگاشت می‌شوند. پیشنهاد می‌کنیم این مقدار را برای جلوگیری از تداخل نام باکت‌ها تنظیم کنید."
 
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/s3/config.py:64
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/oss/config.py:65
 msgid ""
-"The prefix of the bucket name. If set, all logical buckets in DB-GPT will be "
+"The prefix of the bucket name. If set, all logical buckets in Kavir Motor will be "
 "prefixed with this value. Just work when fixed_bucket is None."
-msgstr "پیشوند نام باکت. اگر تنظیم شود، همه باکت‌های منطقی در DB-GPT با این مقدار پیشوند می‌گیرند. فقط زمانی کار می‌کند که fixed_bucket برابر None باشد."
+msgstr "پیشوند نام باکت. اگر تنظیم شود، همه باکت‌های منطقی در کویر موتور با این مقدار پیشوند می‌گیرند. فقط زمانی کار می‌کند که fixed_bucket برابر None باشد."
 
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/s3/config.py:73
 #: ../packages/dbgpt-ext/src/dbgpt_ext/storage/file/oss/config.py:74

@@ -1,9 +1,9 @@
 """Adapted from OpenAI API types.
 
 All types are adapted from the OpenAI API types. They will be used to provide the OpenAI
-compatible types for the DB-GPT apiserver.
+compatible types for the Kavir Motor apiserver.
 
-Note: the are not the internal types of the DB-GPT.
+Note: the are not the internal types of the Kavir Motor.
 """
 
 from typing import Iterable, Optional, TypeAlias, Union

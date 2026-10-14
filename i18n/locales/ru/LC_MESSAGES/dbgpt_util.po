@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../packages/dbgpt-core/src/dbgpt/util/cli/flow_compat.py:32
 msgid ""
-"The module to scan, if not set, will scan all DB-GPT "
+"The module to scan, if not set, will scan all Kavir Motor "
 "modules('dbgpt,dbgpt_client,dbgpt_ext,dbgpt_serve,dbgpt_app')."
 msgstr ""
 "Модуль для сканирования. Если не задан, будут просканированы все модули DB-"
@@ -83,7 +83,7 @@ msgstr "Имя"
 
 #: ../packages/dbgpt-core/src/dbgpt/util/dbgpts/repo.py:714
 msgid "Installed dbgpts"
-msgstr "Установленные DB-GPT"
+msgstr "Установленные Kavir Motor"
 
 #: ../packages/dbgpt-core/src/dbgpt/util/serialization/json_serialization.py:23
 msgid "Json Serializer"

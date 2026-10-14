@@ -306,8 +306,8 @@ msgid "Default LLM Client"
 msgstr "기본 LLM 클라이언트"
 
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:23
-msgid "Default LLM client(Connect to your DB-GPT model serving)"
-msgstr "기본 LLM 클라이언트(DB-GPT 모델 서비스에 연결)"
+msgid "Default LLM client(Connect to your Kavir Motor model serving)"
+msgstr "기본 LLM 클라이언트(Kavir Motor 모델 서비스에 연결)"
 
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:26
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:128
@@ -326,8 +326,8 @@ msgid "Remote LLM Client"
 msgstr "원격 LLM 클라이언트"
 
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:117
-msgid "Remote LLM client(Connect to the remote DB-GPT model serving)"
-msgstr "원격 LLM 클라이언트(원격 DB-GPT 모델 서비스에 연결)"
+msgid "Remote LLM client(Connect to the remote Kavir Motor model serving)"
+msgstr "원격 LLM 클라이언트(원격 Kavir Motor 모델 서비스에 연결)"
 
 #: ../packages/dbgpt-core/src/dbgpt/model/cluster/client.py:120
 msgid "Controller Address"

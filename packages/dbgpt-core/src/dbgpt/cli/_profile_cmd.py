@@ -5,7 +5,7 @@ import click
 
 @click.group()
 def profile():
-    """Manage DB-GPT configuration profiles."""
+    """Manage Kavir Motor configuration profiles."""
     pass
 
 

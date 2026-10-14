@@ -1,5 +1,5 @@
 @echo off
-REM DB-GPT webserver starter
+REM Kavir Motor webserver starter
 REM Launched manually or via Scheduled Task.
 
 REM ============================================================
@@ -41,10 +41,10 @@ REM ============================================================
 for /f %%I in ('powershell -NoProfile -Command "Get-Date -Format yyyyMMdd_HHmmss"') do set "_stamp=%%I"
 
 REM ============================================================
-REM Start DB-GPT
+REM Start Kavir Motor
 REM ============================================================
 
-echo Starting DB-GPT...
+echo Starting Kavir Motor...
 echo Project: %PROJECT_DIR%
 echo Python:  %VENV_PYTHON%
 echo Log:     %LOG_DIR%\webserver_task_%_stamp%.log

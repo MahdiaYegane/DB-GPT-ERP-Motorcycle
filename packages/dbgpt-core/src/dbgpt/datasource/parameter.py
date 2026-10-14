@@ -78,7 +78,7 @@ class BaseDatasourceParameters(BaseParameters, RegisterParameters):
     def _persisted_state_mapping(cls) -> Dict[str, str]:
         """Return the mapping of persisted state.
 
-        Tell how to save the persisted state to the database(DB-GPT datasource serve
+        Tell how to save the persisted state to the database(Kavir Motor datasource serve
         module).
         """
         return {

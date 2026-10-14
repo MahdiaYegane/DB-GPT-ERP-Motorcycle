@@ -20,5 +20,5 @@ msgstr ""
 
 #: ../packages/dbgpt-app/src/dbgpt_app/dbgpt_server.py:44
 #: ../packages/dbgpt-app/src/dbgpt_app/dbgpt_server.py:45
-msgid "DB-GPT Open API"
-msgstr "API باز DB-GPT"
+msgid "Kavir Motor Open API"
+msgstr "API باز کویر موتور"

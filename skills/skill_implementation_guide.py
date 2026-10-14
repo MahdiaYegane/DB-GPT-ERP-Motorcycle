@@ -1,7 +1,7 @@
 """
 Skill-based Agent Implementation Guide
 
-This guide shows how to integrate SKILL loading mechanism into DB-GPT agents.
+This guide shows how to integrate SKILL loading mechanism into Kavir Motor agents.
 """
 
 # ============================================================================

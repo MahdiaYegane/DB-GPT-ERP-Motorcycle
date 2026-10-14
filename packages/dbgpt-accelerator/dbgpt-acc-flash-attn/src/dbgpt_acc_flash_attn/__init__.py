@@ -1,4 +1,4 @@
-"""Flash Attention wrapper for DB-GPT."""
+"""Flash Attention wrapper for Kavir Motor."""
 
 from ._version import version as __version__  # noqa: F401
 

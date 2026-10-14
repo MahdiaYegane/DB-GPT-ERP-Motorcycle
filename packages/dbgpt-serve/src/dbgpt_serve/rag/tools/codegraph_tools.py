@@ -10,7 +10,7 @@ structural questions that vector search cannot handle:
 The graph is built during knowledge space indexing (when build_graph=True)
 and persisted to both database (primary) and JSON file (backup).
 
-Ported from derisk; uses DB-GPT's @tool decorator and CodeGraphRetriever.
+Ported from derisk; uses Kavir Motor's @tool decorator and CodeGraphRetriever.
 """
 
 import json

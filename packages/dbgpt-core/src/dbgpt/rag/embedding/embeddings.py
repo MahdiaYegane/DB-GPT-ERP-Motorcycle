@@ -749,8 +749,8 @@ class OpenAPIEmbeddings(BaseModel, Embeddings):
             texts = ["Hello, world!", "How are you?"]
             openai_embeddings.embed_documents(texts)
 
-        Using DB-GPT APIServer's embedding API:
-        To use the DB-GPT APIServer's embedding API, you should deploy DB-GPT according
+        Using Kavir Motor APIServer's embedding API:
+        To use the Kavir Motor APIServer's embedding API, you should deploy Kavir Motor according
         to the `Cluster Deploy
         <https://docs.dbgpt.site/docs/installation/model_service/cluster>`_.
 

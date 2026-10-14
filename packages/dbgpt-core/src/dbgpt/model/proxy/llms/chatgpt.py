@@ -336,7 +336,7 @@ class OpenAILLMClient(ProxyLLMClient):
             return await self.generate_v1(messages, payload)
         except Exception as e:
             return ModelOutput(
-                text=f"**LLMServer Generate Error, Please CheckErrorInfo.**: {e}",
+                text=f"**LLMServer Generate Error, Please CheckErrorInfo.**: {type(e).__name__}: {e}",
                 error_code=1,
             )
 

@@ -25,10 +25,10 @@ msgstr "Оператор загрузки истории чата по умол�
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:94
 msgid ""
 "Load chat history from the storage of the serve component.It is the default "
-"storage of DB-GPT"
+"storage of Kavir Motor"
 msgstr ""
 "Загрузить историю чата из хранилища компонента сервера. Это хранилище по "
-"умолчанию в DB-GPT."
+"умолчанию в Kavir Motor."
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/conversation/operators.py:100
 msgid "Model Request"

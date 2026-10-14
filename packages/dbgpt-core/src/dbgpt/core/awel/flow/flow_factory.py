@@ -223,7 +223,7 @@ class _VariablesRequestBase(BaseModel):
 class VariablesRequest(_VariablesRequestBase):
     """Variable request model.
 
-    For creating a new variable in the DB-GPT.
+    For creating a new variable in the Kavir Motor.
     """
 
     name: str = Field(

@@ -1,11 +1,11 @@
-"""First-run setup wizard for DB-GPT CLI.
+"""First-run setup wizard for Kavir Motor CLI.
 
 Provides :func:`run_setup_wizard` (interactive) and
 :func:`run_setup_noninteractive` (``--yes`` / CI mode).
 
 Interactive flow::
 
-    Welcome to DB-GPT! 🎉
+    Welcome to Kavir Motor! 🎉
 
     Which LLM provider would you like to use?
 
@@ -211,7 +211,7 @@ def maybe_run_wizard(
 
 def _print_welcome() -> None:
     _log.print("")
-    _log.print("[bold bright_blue]Welcome to DB-GPT! 🎉[/bold bright_blue]")
+    _log.print("[bold bright_blue]Welcome to Kavir Motor! 🎉[/bold bright_blue]")
     _log.print("")
     _log.info(
         "Let's set up your configuration. This only takes a moment.\n"

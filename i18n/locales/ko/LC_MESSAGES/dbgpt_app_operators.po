@@ -450,7 +450,7 @@ msgstr "LLM 클라이언트"
 #: ../packages/dbgpt-app/src/dbgpt_app/operators/llm.py:306
 msgid ""
 "The LLM Client, how to connect to the LLM model, if not provided, it will "
-"use the default client deployed by DB-GPT."
+"use the default client deployed by Kavir Motor."
 msgstr ""
 "LLM 클라이언트입니다. LLM 모델에 연결하는 방법입니다. 제공되지 않을 경우 DB-"
 "GPT가 배포한 기본 클라이언트를 사용합니다."

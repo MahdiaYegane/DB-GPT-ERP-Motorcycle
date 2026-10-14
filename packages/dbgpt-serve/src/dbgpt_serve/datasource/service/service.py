@@ -74,6 +74,60 @@ class Service(
     def after_start(self):
         """Execute after the application starts"""
 
+    async def async_after_start(self):
+        """Remember the server event loop for background catalog builds."""
+        import asyncio
+
+        from dbgpt_serve.datasource.service import db_catalog
+
+        db_catalog.set_main_loop(asyncio.get_running_loop())
+
+        def _embeddings():
+            from dbgpt.rag.embedding.embedding_factory import EmbeddingFactory
+
+            return EmbeddingFactory.get_instance(self._system_app).create()
+
+        db_catalog.set_embeddings_getter(_embeddings)
+        # Finish/learn catalogs of already connected databases that have no
+        # ready catalog yet (e.g. an interrupted build). Delayed so the model
+        # workers are registered first; never blocks startup.
+        try:
+            for item in self._dao.get_list({}) or []:
+                db_catalog.schedule_build(
+                    item.db_name,
+                    self.datasource_manager.get_connector,
+                    force=False,
+                    delay_seconds=db_catalog.STARTUP_DELAY_SECONDS,
+                )
+                # Ready catalogs without (up-to-date) table embeddings.
+                db_catalog.schedule_embeddings(
+                    item.db_name, delay_seconds=db_catalog.STARTUP_DELAY_SECONDS
+                )
+        except Exception:
+            logger.warning("Catalog startup scan failed", exc_info=True)
+
+    def _schedule_catalog(self, db_name: str, force: bool = False) -> None:
+        """Build the automatic database catalog in the background."""
+        from dbgpt_serve.datasource.service import db_catalog
+
+        try:
+            db_catalog.schedule_build(
+                db_name, self.datasource_manager.get_connector, force=force
+            )
+        except Exception:
+            logger.warning("Could not schedule catalog build for %s", db_name, exc_info=True)
+
+    def catalog_status(self, datasource_id: str) -> dict:
+        """Status of the automatic catalog of a datasource."""
+        from dbgpt_serve.datasource.service import db_catalog
+
+        db_config = self._dao.get_one({"id": datasource_id})
+        if not db_config:
+            raise HTTPException(status_code=404, detail="datasource not found")
+        status = db_catalog.catalog_status(db_config.db_name)
+        status["building"] = db_catalog.is_building(db_config.db_name)
+        return status
+
     @property
     def dao(
         self,
@@ -160,6 +214,8 @@ class Service(
             )
         except Exception as e:
             raise ValueError("Add db connect info error!" + str(e))
+        # Learn the database once, right after it is connected.
+        self._schedule_catalog(db_name, force=True)
         return self._to_query_response(res)
 
     def update(
@@ -211,6 +267,8 @@ class Service(
         # changed; drop any cached connector so the next get_connector
         # reflects the new config.
         self.datasource_manager.invalidate_connector(db_name)
+        # Connection may now point to a different database: relearn it.
+        self._schedule_catalog(db_name, force=True)
         return self._to_query_response(res)
 
     def get(self, datasource_id: str) -> Optional[DatasourceQueryResponse]:
@@ -240,6 +298,9 @@ class Service(
         if db_config:
             self._db_summary_client.delete_db_profile(db_config.db_name)
             self._dao.delete({"id": datasource_id})
+            from dbgpt_serve.datasource.service import db_catalog
+
+            db_catalog.delete_catalog(db_config.db_name)
             # Datasource is gone; drop the cached connector so we don't
             # hand callers a connector pointing at a config row that no
             # longer exists.
@@ -323,4 +384,6 @@ class Service(
             db_config.db_name,
             db_config.db_type,
         )
+        # Incremental relearn: unchanged tables keep their descriptions.
+        self._schedule_catalog(db_config.db_name, force=True)
         return True

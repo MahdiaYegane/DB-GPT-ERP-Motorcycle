@@ -1,11 +1,11 @@
-"""Some internal tools for the DB-GPT project."""
+"""Some internal tools for the Kavir Motor project."""
 
 from typing_extensions import Annotated, Doc
 
 from ...resource.tool.base import tool
 
 
-@tool(description="List the supported models in DB-GPT project.")
+@tool(description="List the supported models in Kavir Motor project.")
 def list_dbgpt_support_models(
     model_type: Annotated[
         str, Doc("The model type, LLM(Large Language Model) and EMBEDDING).")

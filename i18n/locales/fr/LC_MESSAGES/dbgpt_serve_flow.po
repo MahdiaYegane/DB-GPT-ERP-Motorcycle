@@ -107,7 +107,7 @@ msgstr "Cette configuration est destinée au module de service de flux."
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:38
 msgid "Interval to load dbgpts from installed packages"
-msgstr "Intervalle pour charger les DB-GPT à partir des packages installés"
+msgstr "Intervalle pour charger les Kavir Motor à partir des packages installés"
 
 #: ../packages/dbgpt-serve/src/dbgpt_serve/flow/config.py:41
 msgid "The key to encrypt the data"
