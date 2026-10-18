@@ -16,7 +16,6 @@ if TYPE_CHECKING:
     from dbgpt.model.proxy.llms.minimax import MiniMaxLLMClient
     from dbgpt.model.proxy.llms.moonshot import MoonshotLLMClient
     from dbgpt.model.proxy.llms.nvidia import NvidiaLLMClient
-    from dbgpt.model.proxy.llms.ollama import OllamaLLMClient
     from dbgpt.model.proxy.llms.orcarouter import OrcaRouterLLMClient
     from dbgpt.model.proxy.llms.siliconflow import SiliconFlowLLMClient
     from dbgpt.model.proxy.llms.spark import SparkLLMClient
@@ -42,7 +41,6 @@ def __lazy_import(name):
         "YiLLMClient": "dbgpt.model.proxy.llms.yi",
         "MoonshotLLMClient": "dbgpt.model.proxy.llms.moonshot",
         "NvidiaLLMClient": "dbgpt.model.proxy.llms.nvidia",
-        "OllamaLLMClient": "dbgpt.model.proxy.llms.ollama",
         "OrcaRouterLLMClient": "dbgpt.model.proxy.llms.orcarouter",
         "SynthoraiLLMClient": "dbgpt.model.proxy.llms.synthorai",
         "DeepseekLLMClient": "dbgpt.model.proxy.llms.deepseek",

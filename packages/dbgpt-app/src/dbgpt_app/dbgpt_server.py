@@ -154,6 +154,21 @@ def mount_static_files(app: FastAPI, param: ApplicationConfig):
 add_exception_handler(app)
 
 
+# ── Jev shared keepalive client lifecycle (P1 hygiene) ──────────────────────
+# The shared httpx client holds idle TLS connections to the Liara endpoint;
+# close them on graceful shutdown so no socket leaks after a restart.
+async def _close_jev_clients_on_shutdown() -> None:
+    try:
+        from dbgpt_app.openapi.api_v1.liara_jev import close_jev_shared_client
+
+        await close_jev_shared_client()
+    except Exception:
+        logger.debug("Jev shared client shutdown skipped", exc_info=True)
+
+
+app.add_event_handler("shutdown", _close_jev_clients_on_shutdown)
+
+
 def initialize_app(param: ApplicationConfig, args: List[str] = None):
     """Initialize app
     If you use gunicorn as a process manager, initialize_app can be invoke in

@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import logging
 import time
+from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeoutError
 from dataclasses import dataclass, asdict
 from typing import Optional
 
@@ -26,6 +28,15 @@ from erp.config import erp_settings, get_database_url_safe
 from erp.database import _classify_db_error, get_engine
 
 logger = logging.getLogger(__name__)
+
+# Process-wide executor for health checks. A per-call executor (the old
+# behavior) started a fresh thread for every /erp/ping request and leaked it
+# whenever the check timed out (threads cannot be killed once blocked on a
+# black-holed DB read; at most 2 such threads stay parked now instead of one
+# per request).
+_HEALTH_EXECUTOR = ThreadPoolExecutor(
+    max_workers=2, thread_name_prefix="erp-health"
+)
 
 
 @dataclass
@@ -128,25 +139,21 @@ def run_health_check(timeout: int | None = None) -> HealthResult:
     if timeout is None:
         return _run_health_check_sync()
 
-    from concurrent.futures import ThreadPoolExecutor
-    from concurrent.futures import TimeoutError as FutureTimeoutError
-
     safe_url = get_database_url_safe()
     t0 = time.monotonic()
-    with ThreadPoolExecutor(max_workers=1, thread_name_prefix="erp-health") as ex:
-        future = ex.submit(_run_health_check_sync)
-        try:
-            return future.result(timeout=timeout)
-        except FutureTimeoutError:
-            latency = int((time.monotonic() - t0) * 1000)
-            logger.warning("ERP health timed out after %ss", timeout)
-            return HealthResult(
-                ok=False,
-                category="timeout",
-                latency_ms=latency,
-                error=f"health check exceeded {timeout}s budget",
-                safe_url=safe_url,
-            )
+    future = _HEALTH_EXECUTOR.submit(_run_health_check_sync)
+    try:
+        return future.result(timeout=timeout)
+    except FutureTimeoutError:
+        latency = int((time.monotonic() - t0) * 1000)
+        logger.warning("ERP health timed out after %ss", timeout)
+        return HealthResult(
+            ok=False,
+            category="timeout",
+            latency_ms=latency,
+            error=f"health check exceeded {timeout}s budget",
+            safe_url=safe_url,
+        )
 
 
 def run_health_check_async(executor=None):

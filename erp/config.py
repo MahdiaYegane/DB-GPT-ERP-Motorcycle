@@ -33,19 +33,36 @@ def _load_env_file() -> None:
     except ImportError:
         pass
 
-    # Fallback: manual .env parse (simple KEY=VALUE, ignore comments)
+    # Fallback: manual .env parse (simple KEY=VALUE, ignore comments).
+    # Handles `export KEY=...` prefixes, inline comments after unquoted
+    # values (`PORT=3306 # primary` -> 3306) and quoted values containing '#'
+    # (the comment after the closing quote is dropped).
     root = Path(__file__).resolve().parent.parent
     env_path = root / ".env"
     if not env_path.exists():
         return
-    for line in env_path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
+    for raw_line in env_path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
         if not line or line.startswith("#") or "=" not in line:
             continue
+        tokens = line.split(None, 1)
+        if tokens[0] == "export" and len(tokens) > 1:
+            line = tokens[1].strip()
+            if not line or "=" not in line:
+                continue
         k, v = line.split("=", 1)
         k = k.strip()
-        v = v.strip().strip('"').strip("'")
-        if k and k not in os.environ:
+        if not k or any(ch.isspace() for ch in k):
+            continue
+        v = v.strip()
+        if v[:1] in ('"', "'"):
+            # Quoted value: keep everything up to the closing quote, so a
+            # '#' inside the quotes is NOT treated as a comment.
+            closing = v.find(v[0], 1)
+            v = v[1:closing].strip() if closing != -1 else v[1:].strip()
+        elif "#" in v:
+            v = v.split("#", 1)[0].strip()
+        if k not in os.environ:
             os.environ[k] = v
 
 
@@ -86,11 +103,14 @@ class ERPSettings:
 
 
 def load_erp_settings() -> ERPSettings:
+    # No hardcoded endpoints/accounts: missing DB_HOST/DB_USER keep the
+    # settings empty and get_database_url() raises a clear configuration
+    # error instead of dialing a private server.
     return ERPSettings(
-        host=_env("DB_HOST", "172.16.1.131"),
+        host=_env("DB_HOST"),
         port=_env_int("DB_PORT", 3306),
         name=_env("DB_NAME", "erp_motorcycle"),
-        user=_env("DB_USER", "a.mansourpour"),
+        user=_env("DB_USER"),
         password=_env("DB_PASSWORD", ""),
         charset=_env("DB_CHARSET", "utf8mb4"),
         pool_size=_env_int("DB_POOL_SIZE", 10),
@@ -105,6 +125,11 @@ erp_settings = load_erp_settings()
 
 def get_database_url(settings: ERPSettings | None = None) -> str:
     s = settings or erp_settings
+    if not s.host or not s.user:
+        raise ValueError(
+            "ERP database is not configured: set DB_HOST and DB_USER in the "
+            "environment or .env (no server is dialed)"
+        )
     # Empty password => "user:@host"  (PyMySQL accepts this)
     if s.password:
         auth = f"{quote_plus(s.user)}:{quote_plus(s.password)}"

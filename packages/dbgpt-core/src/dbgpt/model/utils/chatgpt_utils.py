@@ -98,11 +98,21 @@ def _initialize_openai_v1(init_params: OpenAIParameters):
 
 
 def _build_openai_client(init_params: OpenAIParameters) -> Tuple[str, ClientType]:
+    import os
+
     import httpx
 
     openai_params, api_type, api_version, api_azure_deployment = _initialize_openai_v1(
         init_params
     )
+    # Central-byte retry policy: the OpenAI SDK retries idempotent-safe
+    # failures (connection errors, 408/409/429/5xx) with exponential backoff
+    # and honors the provider-provided ``Retry-After`` header for 429s — this
+    # replaces ad-hoc "retry on 429" code in every provider adapter.
+    try:
+        max_retries = max(0, int(os.getenv("DBGPT_LLM_MAX_RETRIES", "3")))
+    except ValueError:
+        max_retries = 3
     if api_type == "azure":
         from openai import AsyncAzureOpenAI
 
@@ -111,6 +121,7 @@ def _build_openai_client(init_params: OpenAIParameters) -> Tuple[str, ClientType
             api_version=api_version,
             azure_deployment=api_azure_deployment,
             azure_endpoint=openai_params["base_url"],
+            max_retries=max_retries,
         )
     else:
         from openai import AsyncOpenAI
@@ -126,7 +137,13 @@ def _build_openai_client(init_params: OpenAIParameters) -> Tuple[str, ClientType
             http_client = httpx.AsyncClient(proxies=init_params.proxies)
         else:
             http_client = httpx.AsyncClient()
-        async_client = AsyncOpenAI(**openai_params, http_client=http_client)
+        async_client = AsyncOpenAI(
+            **openai_params, http_client=http_client, max_retries=max_retries
+        )
+    logger.info(
+        "OpenAI-compatible client built (api_type=%s, max_retries=%d)",
+        api_type, max_retries
+    )
     return api_type, async_client
 
 

@@ -120,7 +120,6 @@ LLM_MODEL_CONFIG = {
     "yi_proxyllm": "yi_proxyllm",
     # https://platform.moonshot.cn/docs/
     "moonshot_proxyllm": "moonshot_proxyllm",
-    "ollama_proxyllm": "ollama_proxyllm",
     # https://platform.deepseek.com/api-docs/
     "deepseek_proxyllm": "deepseek_proxyllm",
     # https://docs.siliconflow.cn/quickstart
@@ -358,7 +357,6 @@ EMBEDDING_MODEL_CONFIG = {
     "proxy_azure": "proxy_azure",
     # Common HTTP embedding model
     "proxy_http_openapi": "proxy_http_openapi",
-    "proxy_ollama": "proxy_ollama",
     "proxy_tongyi": "proxy_tongyi",
     "proxy_qianfan": "proxy_qianfan",
     # Rerank model, rerank mode is a special embedding model

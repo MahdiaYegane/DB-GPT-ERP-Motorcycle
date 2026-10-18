@@ -9,7 +9,7 @@ import { ChangeEvent, Key, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Chart from '../chart';
 import Header from './header';
-import MonacoEditor, { ISession } from './monaco-editor';
+import MonacoEditor, { ISession } from './monaco-editor-dynamic';
 
 import SplitScreenHeight from '@/components/icons/split-screen-height';
 import SplitScreenWeight from '@/components/icons/split-screen-width';

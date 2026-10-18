@@ -347,6 +347,10 @@ _DATABASE_QUERY_KEYWORDS = (
     "ماهانه",
 )
 
+# Public alias: governor.py imports this list for its own routing rules;
+# a public name avoids a private cross-module import.
+DATABASE_QUERY_KEYWORDS = _DATABASE_QUERY_KEYWORDS
+
 
 def classify_request_intent(user_input: Any) -> Optional[str]:
     """Apply high-precision intent rules before trusting Jev's softer score.
@@ -1756,10 +1760,19 @@ def build_fallback_report_html(
             _para(answer_text) if answer_text else "<p>خلاصه متنی ثبت نشد.</p>"
         )
         if snippets:
-            shown = snippets[1:] if (promoted and len(snippets) > 1) else snippets
-            findings_html = (
-                f"<ol>{''.join(f'<li>{_html_lib.escape(s)[:2000]}</li>' for s in shown)}</ol>"
-            )
+            # The promoted snippet is already the summary above — never
+            # repeat it in the findings list (also when it is the only one).
+            shown = snippets[1:] if promoted else snippets
+            if shown:
+                findings_html = (
+                    "<ol>"
+                    + "".join(
+                        f"<li>{_html_lib.escape(s[:2000])}</li>" for s in shown
+                    )
+                    + "</ol>"
+                )
+            else:
+                findings_html = "<p>جزئیات میانی قابل‌نمایش ثبت نشد.</p>"
         else:
             findings_html = "<p>جزئیات میانی قابل‌نمایش ثبت نشد.</p>"
         charts_parts: List[str] = []

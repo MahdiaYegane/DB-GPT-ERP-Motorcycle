@@ -123,7 +123,6 @@ llama_cpp_server = [
     "llama-cpp-server-py-core>=0.1.4",
     "llama-cpp-server-py>=0.1.4",
 ]
-proxy_ollama = ["ollama"]
 proxy_zhipuai = ["openai>=1.59.6"]
 proxy_tongyi = [
     # tongyi supported by openai package

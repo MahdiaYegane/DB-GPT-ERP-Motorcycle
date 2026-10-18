@@ -1289,6 +1289,31 @@ def embeddings_path(db_name: str) -> str:
     return os.path.join(_catalog_dir(), f"{_safe(db_name)}.embeddings.json")
 
 
+_EMBEDDING_MODEL_LABEL_CACHE: Dict[int, Optional[str]] = {}
+# Semantic vectors from different embedding providers live in different
+# spaces; cosine across a provider switch is meaningless. Store the model
+# identifier next to the vectors and force a rebuild when it changes.
+
+
+def _embedding_model_label(embeddings: Any) -> Optional[str]:
+    """Human-readable identifier of the embedding model currently in use."""
+    if embeddings is None:
+        return None
+    key = id(embeddings)
+    if key in _EMBEDDING_MODEL_LABEL_CACHE:
+        return _EMBEDDING_MODEL_LABEL_CACHE[key]
+    label: Optional[str] = None
+    for attr in ("model_name", "model", "model_name_or_path", "provider"):
+        value = getattr(embeddings, attr, None)
+        if isinstance(value, str) and value.strip():
+            label = value.strip()
+            break
+        if isinstance(value, property):
+            continue
+    _EMBEDDING_MODEL_LABEL_CACHE[key] = label
+    return label
+
+
 def _embedding_text(name: str, t: Dict[str, Any]) -> str:
     cols = [c["name"] for c in t.get("columns", [])
             if (c.get("profile") or {}).get("null_ratio", 0) < 0.999][:60]
@@ -1331,7 +1356,13 @@ def embeddings_stale(db_name: str, catalog: Optional[Dict[str, Any]]) -> bool:
     """True when some non-empty table has no up-to-date vector."""
     if not catalog or not EMBED_ENABLED:
         return False
-    items = (load_embeddings(db_name) or {}).get("items") or {}
+    data = load_embeddings(db_name) or {}
+    # Rebuild when vectors were produced by a different embedding model:
+    # cross-provider cosine similarity is meaningless.
+    current_label = _embedding_model_label(_get_embeddings())
+    if current_label and data.get("model") != current_label:
+        return True
+    items = data.get("items") or {}
     for name, t in (catalog.get("tables") or {}).items():
         if not t.get("row_count"):
             continue
@@ -1355,7 +1386,14 @@ async def build_embeddings(db_name: str, catalog: Dict[str, Any], embeddings: An
             continue
         text = _embedding_text(name, t)
         h = hashlib.sha1(text.encode("utf-8")).hexdigest()[:16]
-        if (items.get(name) or {}).get("h") == h:
+        current_label = _embedding_model_label(embeddings)
+        stored = items.get(name) or {}
+        # A provider switch invalidates stored vectors even when the text
+        # hash still matches (vectors from different models are not
+        # comparable).
+        if stored.get("h") == h and (
+            current_label is None or old.get("model") == current_label
+        ):
             keep[name] = items[name]
         else:
             todo.append((name, text, h))
@@ -1369,6 +1407,7 @@ async def build_embeddings(db_name: str, catalog: Dict[str, Any], embeddings: An
             done += 1
     data = {
         "version": 1,
+        "model": _embedding_model_label(embeddings),
         "built_at": _dt.datetime.now().isoformat(timespec="seconds"),
         "items": keep,
     }

@@ -14,16 +14,56 @@ tokens / status / final metadata.
 
 import json
 import logging
+import threading
+from datetime import datetime, timedelta
 from typing import Any, Dict, Optional
 
 from dbgpt.observability.span_store import (
     ObservabilitySpanEntity,
+    SPAN_RETENTION_DAYS,
     get_observability_store,
+    prune_observability_spans,
     resolve_sqlite_path,
 )
 from dbgpt.util.tracer.base import Span, SpanStorage
 
 logger = logging.getLogger(__name__)
+
+
+def _prune_old_tracer_files() -> None:
+    """Delete dated ``<name>_YYYY-MM-DD.jsonl`` tracer day-files older than the
+    retention window (mirror of the SQLite prune for ``FileSpanStorage``)."""
+    import glob
+    import os
+    import re
+    import time as _time
+
+    retention_days = SPAN_RETENTION_DAYS
+    if retention_days <= 0:
+        return
+    cutoff = _time.time() - retention_days * 86400
+    try:
+        from dbgpt.configs.model_config import LOGDIR
+
+        root = LOGDIR
+    except Exception:
+        root = "logs"
+    pattern = os.path.join(root, "*_????-??-??.*")
+    for path in glob.glob(pattern):
+        m = re.search(r"_(\d{4}-\d{2}-\d{2})\.\w+$", path)
+        if not m:
+            continue
+        try:
+            file_date = datetime.strptime(m.group(1), "%Y-%m-%d")
+            # Keep files younger than the retention window (date + slack so
+            # recent files are never removed while a day is still in flux).
+            if (datetime.utcnow() - file_date).days > retention_days:
+                if os.path.getmtime(path) < cutoff:
+                    os.unlink(path)
+        except OSError:
+            continue
+        except Exception:
+            continue
 
 
 def _as_str(value: Any) -> Optional[str]:
@@ -114,13 +154,85 @@ def _extract(meta: Dict[str, Any]) -> Dict[str, Any]:
 class SqliteSpanStorage(SpanStorage):
     """Persist spans to an isolated observability SQLite file."""
 
+    # Retention bookkeeping shared by all instances. Pruning is throttled
+    # (min 6h between runs) and executed on a daemon thread so the hot
+    # span-write path never blocks.
+    _PRUNE_INTERVAL_SECONDS = 6 * 3600
+    _PRUNE_CHECK_LOCK = threading.Lock()
+    _last_prune_check = 0.0
+    _prune_thread_started = False
+
     def __init__(self, sqlite_path: Optional[str] = None):
         super().__init__()
         self._sqlite_path = resolve_sqlite_path(sqlite_path)
+        self._maybe_schedule_prune(force=True)
+
+    @classmethod
+    def _maybe_schedule_prune(cls, force: bool = False):
+        import time as _time
+
+        if force and not cls._prune_thread_started:
+            with cls._PRUNE_CHECK_LOCK:
+                if not cls._prune_thread_started:
+                    cls._prune_thread_started = True
+                    cls._last_prune_check = _time.monotonic()
+                    threading.Thread(
+                        target=cls._run_initial_prune, daemon=True, name="span-prune"
+                    ).start()
+        elif _time.monotonic() - cls._last_prune_check >= (
+            cls._PRUNE_INTERVAL_SECONDS
+        ):
+            with cls._PRUNE_CHECK_LOCK:
+                if _time.monotonic() - cls._last_prune_check >= (
+                    cls._PRUNE_INTERVAL_SECONDS
+                ):
+                    cls._last_prune_check = _time.monotonic()
+                    threading.Thread(
+                        target=prune_observability_spans, daemon=True, name="span-prune"
+                    ).start()
+
+    @classmethod
+    def _run_initial_prune(cls):
+        """Startup prune + one-time VACUUM after a big delete."""
+        try:
+            from sqlalchemy import delete as _del, text as _sql_text
+
+            keep_days = SPAN_RETENTION_DAYS
+            if keep_days <= 0:
+                return
+            engine, _f = get_observability_store()
+            with engine.begin() as conn:
+                cutoff = datetime.utcnow() - timedelta(days=keep_days)
+                result = conn.execute(
+                    _del(ObservabilitySpanEntity).where(
+                        ObservabilitySpanEntity.start_time < cutoff
+                    )
+                )
+                deleted = int(getattr(result, "rowcount", 0) or 0)
+            if deleted:
+                logger.info(
+                    "Startup prune: removed %d spans older than %d days",
+                    deleted,
+                    keep_days,
+                )
+                if deleted > 100_000:
+                    try:
+                        engine, _f = get_observability_store()
+                        with engine.begin() as conn:
+                            conn.execute(_sql_text("PRAGMA wal_checkpoint(TRUNCATE)"))
+                            conn.execute(_sql_text("VACUUM"))
+                        logger.info("observability.db compacted after prune")
+                    except Exception as e:
+                        logger.warning("observability.db vacuum skipped: %s", e)
+            # Keep old jsonl day-files bounded too.
+            _prune_old_tracer_files()
+        except Exception as e:
+            logger.warning("observability prune failed: %s", e)
 
     def append_span(self, span: Span):
         try:
             _, factory = get_observability_store(self._sqlite_path)
+            self._maybe_schedule_prune()
             with factory() as session:
                 self._upsert(session, span)
                 session.commit()

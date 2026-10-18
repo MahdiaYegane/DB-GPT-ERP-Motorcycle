@@ -86,6 +86,36 @@ class MSSQLParameters(RDBMSDatasourceParameters):
             "help": _("Driver name for MSSQL, default is mssql+pymssql."),
         },
     )
+    # Statement timeout (seconds) pushed down to the pymssql driver via the
+    # ``timeout`` connect argument. Without it a runaway table scan keeps
+    # running server-side even after the tool-level future is abandoned.
+    query_timeout: int = field(
+        default=60,
+        metadata={
+            "help": _(
+                "Statement timeout in seconds for MSSQL queries (pymssql "
+                "timeout connect arg), default 60."
+            ),
+        },
+    )
+    login_timeout: int = field(
+        default=15,
+        metadata={
+            "help": _("Connect/login timeout in seconds, default 15."),
+        },
+    )
+
+    def engine_args(self) -> Optional[Dict[str, Any]]:
+        """Return engine arguments."""
+        args = super().engine_args() or {}
+        args.setdefault(
+            "connect_args",
+            {
+                "timeout": self.query_timeout,
+                "login_timeout": self.login_timeout,
+            },
+        )
+        return args
 
     def create_connector(self) -> "MSSQLConnector":
         """Create MS SQL connector."""

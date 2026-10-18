@@ -46,6 +46,7 @@ class MyDocument extends Document {
           <Main />
           <NextScript />
           <script src='/kavir-autoscroll.js' defer />
+          <script src='/jev-button.js' defer />
         </body>
       </Html>
     );

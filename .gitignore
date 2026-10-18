@@ -185,6 +185,18 @@ thirdparty
 *.tsbuildinfo
 /web/next-env.d.ts
 
+# Kavir Motor fork:
+# The compiled web bundle is a build artifact, not source. Building the UI
+# (`cd web && npm run build:then export`) writes into
+# packages/dbgpt-app/src/dbgpt_app/static/web/. A fresh clone must run the
+# build once to serve the web UI (or copy an existing snapshot).
+/packages/dbgpt-app/src/dbgpt_app/static/web/
+/packages/dbgpt-app/src/dbgpt_app/static/old_web/
+
+# User-uploaded files land here at runtime (previously a user CSV was
+# committed by accident).
+/python_uploads/
+
 # Ignore awel DAG visualization files
 /examples/**/*.gv
 /examples/**/*.gv.pdf

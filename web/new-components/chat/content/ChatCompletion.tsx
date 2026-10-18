@@ -1,6 +1,6 @@
 import { ChatContext } from '@/app/chat-context';
 import { apiInterceptors, getAppInfo } from '@/client/api';
-import MonacoEditor from '@/components/chat/monaco-editor';
+import MonacoEditor from '@/components/chat/monaco-editor-dynamic';
 import ChatContent from '@/new-components/chat/content/ChatContent';
 import { ChatContentContext } from '@/pages/chat';
 import { IApp } from '@/types/app';

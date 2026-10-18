@@ -135,9 +135,13 @@ class DefaultWorkflowRunner(WorkflowRunner):
         if node.node_id in node_outputs:
             return
 
-        # Run all upstream nodes
-        # TODO: run in parallel, there are some code to be changed:
-        #  dag_ctx.set_current_task_context(task_ctx)
+        # Run all upstream nodes.
+        # NOTE: intentionally sequential. All operators resolve their own
+        # TaskContext via the shared ``dag_ctx.current_task_context`` (which
+        # every ``_execute_node`` swaps in-place), so running siblings
+        # concurrently would make concurrent ``_run`` calls read each other's
+        # context. True parallelism needs context-local threading in DAGContext
+        # (bigger refactor, upstream TODO).
         for upstream_node in node.upstream:
             if isinstance(upstream_node, BaseOperator):
                 await self._execute_node(

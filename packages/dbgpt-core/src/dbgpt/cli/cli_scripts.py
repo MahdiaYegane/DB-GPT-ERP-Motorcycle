@@ -114,7 +114,7 @@ def tool():
     default=None,
     help=(
         "Provider profile to configure: openai / kimi / qwen / minimax / "
-        "deepseek / ollama.  If omitted, an interactive menu is shown."
+        "deepseek.  If omitted, an interactive menu is shown."
     ),
 )
 @click.option(

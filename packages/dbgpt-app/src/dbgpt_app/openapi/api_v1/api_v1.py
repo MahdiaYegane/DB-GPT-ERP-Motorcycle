@@ -520,7 +520,15 @@ async def chat_prepare(
     await chat.prepare()
 
     # Refresh messages
-    return Result.succ(get_hist_messages(dialogue.conv_uid, user_token.user_id))
+    try:
+        return Result.succ(
+            await asyncio.to_thread(
+                get_hist_messages, dialogue.conv_uid, user_token.user_id
+            )
+        )
+    except Exception:
+        logger.exception("chat_prepare failed: %s", dialogue.conv_uid)
+        raise
 
 
 @router.post("/v1/chat/completions")
@@ -633,13 +641,17 @@ async def chat_completions(
             media_type="text/plain",
         )
     finally:
-        # write to recent usage app.
+        # write to recent usage app (off the event loop: sync SQLAlchemy DAO).
         if dialogue.user_name is not None and dialogue.app_code is not None:
-            user_recent_app_dao.upsert(
-                user_code=dialogue.user_name,
-                sys_code=dialogue.sys_code,
-                app_code=dialogue.app_code,
-            )
+            try:
+                await asyncio.to_thread(
+                    user_recent_app_dao.upsert,
+                    user_code=dialogue.user_name,
+                    sys_code=dialogue.sys_code,
+                    app_code=dialogue.app_code,
+                )
+            except Exception:
+                logger.exception("user_recent_app_dao.upsert failed")
 
 
 @router.post("/v1/chat/topic/terminate")
@@ -769,7 +781,6 @@ async def stream_generator(
             text_output=text_output, incremental=incremental
         ):
             if not chunk:
-                await asyncio.sleep(0.02)
                 continue
 
             if openai_format:
@@ -810,7 +821,6 @@ async def stream_generator(
                     msg, None, model_name, stream_id
                 )
                 yield _content
-            await asyncio.sleep(0.02)
         if incremental:
             yield "data: [DONE]\n\n"
         span.end()

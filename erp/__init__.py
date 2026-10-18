@@ -6,7 +6,7 @@ Layered architecture:
     -> Services (business logic)
       -> Repositories (data access)
         -> Database Layer (engine/session)
-          -> MariaDB 172.16.1.131:3306 / erp_motorcycle
+          -> MariaDB <DB_HOST>:<DB_PORT> / <DB_NAME>  (from .env)
 
 All connections are env-based (.env), UTF-8/utf8mb4, pooled with pre_ping,
 and never hard-code credentials.

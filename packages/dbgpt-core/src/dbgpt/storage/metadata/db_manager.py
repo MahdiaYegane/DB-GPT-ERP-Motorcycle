@@ -309,6 +309,22 @@ class DatabaseManager:
             if not hasattr(base, "__db_manager__") or override_query_class:
                 base.__db_manager__ = self
         self._engine = create_engine(db_url, **(engine_args or {}))
+        if str(db_url).startswith("sqlite"):
+            # WAL lets readers proceed while another thread writes and keeps
+            # the single-writer lock short; busy_timeout avoids immediate
+            # "database is locked" errors under concurrent request load.
+            from sqlalchemy import event
+
+            def _sqlite_pragmas(dbapi_conn, _connection_record):
+                cursor = dbapi_conn.cursor()
+                try:
+                    cursor.execute("PRAGMA journal_mode=WAL")
+                    cursor.execute("PRAGMA synchronous=NORMAL")
+                    cursor.execute("PRAGMA busy_timeout=30000")
+                finally:
+                    cursor.close()
+
+            event.listen(self._engine, "connect", _sqlite_pragmas)
 
         session_options.setdefault("class_", Session)
         session_options.setdefault("query_cls", self.Query)

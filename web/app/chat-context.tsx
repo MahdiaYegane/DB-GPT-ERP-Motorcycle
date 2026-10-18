@@ -5,7 +5,7 @@ import { getUserId } from '@/utils';
 import { STORAGE_THEME_KEY } from '@/utils/constants/index';
 import { useRequest } from 'ahooks';
 import { useSearchParams } from 'next/navigation';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useEffect, useMemo, useState } from 'react';
 
 type ThemeMode = 'dark' | 'light';
 
@@ -140,30 +140,58 @@ const ChatContextProvider = ({ children }: { children: React.ReactElement }) => 
     setModel(modelList[0]);
   }, [modelList, modelList?.length]);
 
-  const contextValue = {
-    isContract,
-    isMenuExpand,
-    scene,
-    chatId,
-    model,
-    modelList,
-    dbParam: dbParam || db_param,
-    agent,
-    setAgent,
-    mode,
-    setMode,
-    setModel,
-    setIsContract,
-    setIsMenuExpand,
-    setDbParam,
-    history,
-    setHistory,
-    docId,
-    setDocId,
-    currentDialogInfo,
-    setCurrentDialogInfo,
-    adminList,
-  };
+  // Memoize the context object: without it, every re-render of this provider
+  // (e.g. global theme/login fetches) produced a fresh object identity and
+  // re-rendered every consumer of ChatContext on the whole page.
+  const contextValue = useMemo(
+    () => ({
+      isContract,
+      isMenuExpand,
+      scene,
+      chatId,
+      model,
+      modelList,
+      dbParam: dbParam || db_param,
+      agent,
+      setAgent,
+      mode,
+      setMode,
+      setModel,
+      setIsContract,
+      setIsMenuExpand,
+      setDbParam,
+      history,
+      setHistory,
+      docId,
+      setDocId,
+      currentDialogInfo,
+      setCurrentDialogInfo,
+      adminList,
+    }),
+    // db_param comes from useSearchParams (stable per URL entry).
+    [
+      isContract,
+      isMenuExpand,
+      scene,
+      chatId,
+      model,
+      modelList,
+      dbParam,
+      db_param,
+      agent,
+      mode,
+      history,
+      docId,
+      currentDialogInfo,
+      adminList,
+      setAgent,
+      setMode,
+      setModel,
+      setIsContract,
+      setIsMenuExpand,
+      setDbParam,
+    ],
+  );
   return <ChatContext.Provider value={contextValue}>{children}</ChatContext.Provider>;
 };
 

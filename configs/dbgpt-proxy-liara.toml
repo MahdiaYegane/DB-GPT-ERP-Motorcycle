@@ -2,7 +2,7 @@
 # Load language from environment variable(It is set by the hook)
 language = "${env:DBGPT_LANG:-en}"
 api_keys = []
-encrypt_key = "your_secret_key"
+encrypt_key = "${env:DBGPT_ENCRYPT_KEY:-your_secret_key}"
 
 # Server Configurations
 [service.web]
@@ -14,6 +14,29 @@ cors_allowed_origins = "${env:DBGPT_CORS_ALLOWED_ORIGINS:-*}"
 [service.web.database]
 type = "sqlite"
 path = "pilot/meta_data/dbgpt.db"
+
+[service.web.agent_context]
+# Same budget as dbgpt-proxy-qwen-gateway.toml. Per-model clamp in
+# agentic_data_api._load_context_budget_config caps this to each model's
+# real context_length, so small models fail safe instead of overflowing.
+max_context_tokens = 999000
+reserved_tokens = 2048
+warning_threshold = 0.70
+error_threshold = 0.90
+critical_threshold = 0.95
+min_keep_recent_rounds = 2
+max_observation_age_rounds = 5
+truncated_observation_max_chars = 500
+min_keep_tokens = 6000
+max_compact_failures = 3
+max_parallel_subagents = 1
+
+[app]
+# Output cap must leave room for full tool-call argument JSON. Too small a
+# value truncates tool arguments mid-JSON -> empty args -> "No code provided"
+# retry loops. temperature = 0 for deterministic, stable answers.
+temperature = 0
+max_new_tokens = 1500
 [service.model.worker]
 host = "127.0.0.1"
 
@@ -161,8 +184,18 @@ context_length = 1048576
 api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}"
 api_key = "${env:LIARA_API_KEY}"
 
+# ============================================================================
+# Embeddings — Liara OpenAI-compatible embeddings API (no local Ollama).
+# Tested 2026-10-17: POST {LIARA_API_BASE}/embeddings with a fully-qualified
+# model id (e.g. "openai/text-embedding-3-small", 1536 dims) and batched
+# `input` arrays are supported. Batching removes one HTTP round-trip per
+# chunk that the removed local Ollama runtime had.
+# On provider change the DB-catalog embeddings rebuild automatically
+# (model fingerprint check in dbgpt_serve.datasource.service.db_catalog).
+# ============================================================================
 [[models.embeddings]]
-name = "bge-m3:567m"
-provider = "proxy/ollama"
-api_url = "http://localhost:11434"
-api_key = ""
+name = "text-embedding-3-small"
+backend = "openai/text-embedding-3-small"
+provider = "proxy/openai"
+api_url = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}/embeddings"
+api_key = "${env:LIARA_API_KEY}"

@@ -35,9 +35,11 @@ async def _get_shared_jev_client() -> "httpx.AsyncClient":
         if client is None or client.is_closed:
             client = httpx.AsyncClient(
                 timeout=httpx.Timeout(30.0, connect=10.0),
-                limits=httpx.Limits(
-                    max_connections=20, max_keepalive_connections=10
-                ),
+                # One transport-level retry for connection errors only (TLS
+                # reset, connect refused). It never retries HTTP errors, so
+                # latency stays bounded while flaky links stop causing
+                # whole-run fail-open degradation.
+                transport=httpx.AsyncHTTPTransport(retries=1),
             )
             _JEV_SHARED_CLIENT = client
         return client

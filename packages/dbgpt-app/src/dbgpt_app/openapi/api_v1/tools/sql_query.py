@@ -1,15 +1,28 @@
 """sql_query tool — read-only SQL query against the selected database."""
 
 import json
-from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
+import logging
+from concurrent.futures import (
+    ThreadPoolExecutor,
+    TimeoutError as FutureTimeoutError,
+)
 from typing import Any, Dict, Optional
 
 from dbgpt.agent.resource.tool.base import tool
+
+logger = logging.getLogger(__name__)
 
 # Hard cap per query so one heavy scan can't stall the agent turn (and the
 # user's "time out" perception). Dialect-agnostic: enforced with a worker
 # thread because not every driver honors statement timeouts.
 SQL_QUERY_TIMEOUT_SECONDS = 90
+
+# Shared executor for all SQL tool calls process-wide. Creating a new
+# ThreadPoolExecutor per query leaked threads and paid pool startup cost on
+# every turn; timeouts still leave a thread busy only while the driver runs.
+_SQL_EXECUTOR = ThreadPoolExecutor(
+    max_workers=4, thread_name_prefix="dbgpt-sql-tool"
+)
 
 
 def _is_missing_name_error(message: str) -> bool:
@@ -62,28 +75,31 @@ def make_sql_query(react_state: Dict[str, Any], database_connector: Optional[Any
                 )
 
         try:
-            with ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(database_connector.run, sql_stripped)
-                try:
-                    result = future.result(timeout=SQL_QUERY_TIMEOUT_SECONDS)
-                except FutureTimeoutError:
-                    return json.dumps(
-                        {
-                            "chunks": [
-                                {
-                                    "output_type": "text",
-                                    "content": (
-                                        f"Query timed out after "
-                                        f"{SQL_QUERY_TIMEOUT_SECONDS}s. "
-                                        "Retry with a cheaper query: add TOP, "
-                                        "filter on indexed columns, and avoid "
-                                        "SELECT * on wide tables."
-                                    ),
-                                }
-                            ]
-                        },
-                        ensure_ascii=False,
-                    )
+            future = _SQL_EXECUTOR.submit(database_connector.run, sql_stripped)
+            try:
+                result = future.result(timeout=SQL_QUERY_TIMEOUT_SECONDS)
+            except FutureTimeoutError:
+                # NOTE: cancelling the Python future does not stop the query
+                # server-side. Driver-level statement timeouts (pymssql
+                # ``timeout=`` connect arg, see conn_mssql.py) plus this tool's
+                # own cap keep runaway scans bounded.
+                return json.dumps(
+                    {
+                        "chunks": [
+                            {
+                                "output_type": "text",
+                                "content": (
+                                    f"Query timed out after "
+                                    f"{SQL_QUERY_TIMEOUT_SECONDS}s. "
+                                    "Retry with a cheaper query: add TOP, "
+                                    "filter on indexed columns, and avoid "
+                                    "SELECT * on wide tables."
+                                ),
+                            }
+                        ]
+                    },
+                    ensure_ascii=False,
+                )
             if not result:
                 return json.dumps(
                     {

@@ -19,7 +19,7 @@ import CompletionInput from '../common/completion-input';
 import ChatContent from './chat-content';
 import ChatFeedback from './chat-feedback';
 import { renderModelIcon } from './header/model-selector';
-import MonacoEditor from './monaco-editor';
+import MonacoEditor from './monaco-editor-dynamic';
 import OpenCodeAgentContent, { useGroupedMessages } from './opencode-agent-content';
 
 type Props = {

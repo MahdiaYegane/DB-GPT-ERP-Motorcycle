@@ -15,7 +15,7 @@ import { v4 as uuid } from 'uuid';
 
 import { ChatContext } from '@/app/chat-context';
 import { apiInterceptors, getAppInfo } from '@/client/api';
-import MonacoEditor from '@/components/chat/monaco-editor';
+import MonacoEditor from '@/components/chat/monaco-editor-dynamic';
 import { ChatContentContext } from '@/pages/chat';
 import { IApp } from '@/types/app';
 import { IChatDialogueMessageSchema } from '@/types/chat';

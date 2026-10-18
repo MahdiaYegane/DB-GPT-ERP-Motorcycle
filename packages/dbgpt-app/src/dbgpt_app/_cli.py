@@ -63,7 +63,7 @@ def _add_webserver_start_options(func):
         default=None,
         help=_(
             "Name of the provider profile to use (openai / kimi / qwen / minimax / "
-            "deepseek / ollama).  Overrides the active profile in ~/.dbgpt/config.toml."
+            "deepseek).  Overrides the active profile in ~/.dbgpt/config.toml."
         ),
     )
     @click.option(

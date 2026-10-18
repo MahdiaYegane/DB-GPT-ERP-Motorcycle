@@ -151,8 +151,18 @@ def _build_logger(
     if handler is None and logger_filename:
         logger_dir = os.path.dirname(logger_filename)
         os.makedirs(logger_dir, exist_ok=True)
+        # Bound the daily rotation files: without a backupCount the log dir
+        # accumulated a file per day forever.
+        try:
+            backup_count = max(0, int(os.getenv("DBGPT_LOG_BACKUP_COUNT", "14")))
+        except (TypeError, ValueError):
+            backup_count = 14
         handler = logging.handlers.TimedRotatingFileHandler(
-            logger_filename, when="D", utc=True, encoding="utf-8"
+            logger_filename,
+            when="D",
+            utc=True,
+            encoding="utf-8",
+            backupCount=backup_count,
         )
         handler.setFormatter(formatter)
 

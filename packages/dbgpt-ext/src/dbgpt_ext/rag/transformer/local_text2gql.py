@@ -6,7 +6,7 @@ import re
 from typing import Dict, List, Union
 
 from dbgpt.core import BaseMessage, HumanPromptTemplate
-from dbgpt.model.proxy.llms.ollama import OllamaLLMClient
+from dbgpt.model.proxy.llms.chatgpt import OpenAILLMClient
 from dbgpt.rag.transformer.llm_translator import LLMTranslator
 
 LOCAL_TEXT_TO_GQL_PT = """
@@ -26,8 +26,14 @@ class LocalText2GQL(LLMTranslator):
     """LocalText2GQL class."""
 
     def __init__(self, model_name: str):
-        """Initialize the LocalText2GQL."""
-        super().__init__(OllamaLLMClient(), model_name, LOCAL_TEXT_TO_GQL_PT)
+        """Initialize the LocalText2GQL.
+
+        Uses the OpenAI-compatible proxy LLM (configured via
+        ``OPENAI_API_KEY`` / ``OPENAI_API_BASE`` env variables). The previous
+        Ollama-backed client was removed from this fork with full Ollama
+        support.
+        """
+        super().__init__(OpenAILLMClient(), model_name, LOCAL_TEXT_TO_GQL_PT)
 
     def _format_messages(self, text: str, history: str = None) -> List[BaseMessage]:
         # translate intention to gql with single prompt only.

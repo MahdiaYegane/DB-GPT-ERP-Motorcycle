@@ -14,7 +14,7 @@ REM Liara AI gateway (OpenAI-compatible). Verified 2026-10-04:
 REM correct format is https://ai.liara.ir/api/{workspaceID}/v1
 set LIARA_API_BASE=https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1
 set LIARA_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJrZXkiOiI2YWJhNDVhODg3ZDM0NmFiZGNkMGRkZmMiLCJ0eXBlIjoiYWlfa2V5IiwiaWF0IjoxNzkwNTkyNDI0fQ.ods8GSxBhf_Y8ulflhft8vhtZ2WY41FfB6eNlzkttpU
-REM Liara model IDs (provider proxy/liara, see configs/dbgpt-proxy-ollama-qwen.toml):
+REM Liara model IDs (provider proxy/liara, see configs/dbgpt-proxy-qwen-gateway.toml):
 REM  - deepseek/deepseek-v4.1-flash (DeepSeek: DeepSeek V4.1 Flash, 1M ctx)
 REM  - xiaomi/mimo-v2.5-pro (Xiaomi: MiMo-V2.5-Pro, ~1M ctx)
 REM  - xiaomi/mimo-v2.5 (Xiaomi: MiMo-V2.5, ~1M ctx)
@@ -25,8 +25,12 @@ REM ============================================================
 REM Project paths
 REM ============================================================
 
-set PROJECT_DIR=C:\Users\m.yeganehpour\KavirProjects\DB_GPT
-set VENV_PYTHON=%PROJECT_DIR%\.venv\Scripts\python.exe
+set PROJECT_DIR=C:\Users\a.mansourpour\Desktop\DB_GPT
+REM Repaired 2026-10-14: .venv trampoline shim broke after the checkout moved
+REM (pyvenv.cfg/.pth pointed at the old user path). Use the real uv-managed
+REM base interpreter and put the venv site-packages on PYTHONPATH instead.
+set VENV_PYTHON=C:\Users\a.mansourpour\AppData\Roaming\uv\python\cpython-3.11-windows-x86_64-none\python.exe
+set PYTHONPATH=%PROJECT_DIR%\.venv\Lib\site-packages
 set LOG_DIR=%PROJECT_DIR%\logs
 
 cd /d "%PROJECT_DIR%"

@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from concurrent.futures import Executor
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, AsyncIterator, Dict, List, Optional, Type, Union
@@ -135,6 +136,20 @@ class OpenAICompatibleDeployModelParameters(LLMDeployModelParameters):
     concurrency: Optional[int] = field(
         default=100, metadata={"help": _("Model concurrency limit")}
     )
+
+
+def _rate_limit_max_tokens() -> int:
+    """Max_tokens cap enforced for rate-limited gateways (0 = disabled)."""
+    try:
+        return max(0, int(os.getenv("DBGPT_RATE_LIMIT_MAX_TOKENS", "900")))
+    except (TypeError, ValueError):
+        return 900
+
+
+def _rate_limit_gateway_markers() -> List[str]:
+    """api_base substrings that identify rate-limited gateways."""
+    raw = os.getenv("DBGPT_RATE_LIMIT_GATEWAY_MARKERS", "groq.com")
+    return [m.strip().lower() for m in raw.split(",") if m.strip()]
 
 
 async def chatgpt_generate_stream(
@@ -298,17 +313,25 @@ class OpenAILLMClient(ProxyLLMClient):
         if request.temperature:
             payload["temperature"] = request.temperature
         if request.max_new_tokens:
-            # Groq Free tier OTPM is 1000 (qwen/qwen3.8-27b) -> cap max_tokens
-            # to stay under the limit (was 4096 -> 1027 OTPM exceeded).
-            # Scope: Groq gateway only (api_base contains groq.com). Other
-            # OpenAI-compatible gateways (TokenHarbor, SiliconFlow, ...) have
-            # their own limits — capping them to 900 truncates tool-call JSON
-            # and causes empty-argument retry loops.
+            # Gateway rate-limit policy (central, config-driven):
+            # rate-limited gateways expose an output-tokens/minute budget; a
+            # generous max_tokens alone can exceed it (Groq free tier:
+            # OTPM 1000). Markers + cap are configured via env:
+            #   DBGPT_RATE_LIMIT_MAX_TOKENS  (default 900, 0 disables)
+            #   DBGPT_RATE_LIMIT_GATEWAY_MARKERS (default "groq.com")
+            # Raw OpenAI-compatible gateways (TokenHarbor, SiliconFlow, ...)
+            # must NOT match these markers — capping them to 900 truncates
+            # tool-call JSON and causes empty-argument retry loops.
             raw_max = int(request.max_new_tokens)
             api_base = (self._init_params.api_base or "").lower()
-            if "groq.com" in api_base:
-                # cap to 900 to leave headroom
-                payload["max_tokens"] = min(raw_max, 900)
+            cap = _rate_limit_max_tokens()
+            if cap and any(m in api_base for m in _rate_limit_gateway_markers()):
+                if raw_max > cap:
+                    logger.info(
+                        "Rate-limit policy: max_tokens %s -> %s for %s",
+                        raw_max, cap, api_base,
+                    )
+                payload["max_tokens"] = min(raw_max, cap)
             else:
                 payload["max_tokens"] = raw_max
         if request.stop:

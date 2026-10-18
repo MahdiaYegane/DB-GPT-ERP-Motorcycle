@@ -1,7 +1,7 @@
 [system]
 language = "${env:DBGPT_LANG:-en}"
 api_keys = []
-encrypt_key = "your_secret_key"
+encrypt_key = "${env:DBGPT_ENCRYPT_KEY:-your_secret_key}"
 
 # Server Configurations
 [service.web]
@@ -16,7 +16,7 @@ path = "pilot/meta_data/dbgpt.db"
 [service.web.agent_context]
 # 999K context budget (effective ~997K after reserved_tokens).
 # Per-model clamp in agentic_data_api._load_context_budget_config caps this
-# to each model's real context_length (Groq 131K, Ollama 262K, Liara ~1M),
+# to each model's real context_length (Groq 131K, Liara ~1M),
 # so small models fail safe instead of overflowing the provider API.
 # TPM (tokens/minute) is a RATE limit, not the context window.
 max_context_tokens = 999000
@@ -44,16 +44,8 @@ max_new_tokens = 1500
 type = "chroma"
 persist_path = "pilot/data"
 
-# Model Configurations - Groq + local fallback (Groq hit 200K/day limit, local avoids 429)
+# Model Configurations - Groq + tokenharbor + Liara (no local Ollama runtime)
 [models]
-[[models.llms]]
-name = "qwen3.5:9b"
-provider = "proxy/ollama"
-api_base = "http://localhost:11434"
-api_key = ""
-# Ollama /api/show reports qwen35.context_length=262144
-context_length = 262144
-
 [[models.llms]]
 name = "openai/gpt-oss-120b"
 provider = "proxy/openai"
@@ -193,14 +185,8 @@ api_base = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a4519264
 context_length = 1048576
 
 [[models.embeddings]]
-name = "bge-m3:567m"
-provider = "proxy/ollama"
-api_url = "http://localhost:11434"
-api_key = ""
-
-# Optional second embedding - uncomment if you want to use qwen3-embedding:8b instead/as alternative
-# [[models.embeddings]]
-# name = "qwen3-embedding:8b"
-# provider = "proxy/ollama"
-# api_url = "http://localhost:11434"
-# api_key = ""
+name = "text-embedding-3-small"
+backend = "openai/text-embedding-3-small"
+provider = "proxy/openai"
+api_url = "${env:LIARA_API_BASE:-https://ai.liara.ir/api/6aba44bb5d4e25a451926448/v1}/embeddings"
+api_key = "${env:LIARA_API_KEY}"

@@ -11,7 +11,7 @@ import json
 import logging
 import os
 import threading
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Any, Dict, Optional, Tuple
 
 from sqlalchemy import (
@@ -158,12 +158,72 @@ def get_observability_store(
                 future=True,
                 connect_args={"check_same_thread": False, "timeout": 30},
             )
+
+            # WAL + NORMAL sync keep high-volume span writes from stalling
+            # readers and make the small per-span transactions durable but
+            # cheap.
+            from sqlalchemy import event as _sa_event
+
+            def _observability_pragmas(dbapi_conn, _connection_record):
+                cursor = dbapi_conn.cursor()
+                try:
+                    cursor.execute("PRAGMA journal_mode=WAL")
+                    cursor.execute("PRAGMA synchronous=NORMAL")
+                    cursor.execute("PRAGMA busy_timeout=30000")
+                finally:
+                    cursor.close()
+
+            _sa_event.listen(engine, "connect", _observability_pragmas)
+
             ObservabilityBase.metadata.create_all(engine, checkfirst=True)
             _ensure_new_columns(engine)
             factory = sessionmaker(bind=engine, expire_on_commit=False, class_=Session)
             _engines[path] = (engine, factory)
             logger.info(f"Observability sqlite store initialized at {path}")
         return _engines[path]
+
+
+# Rows older than this are deleted by ``prune_observability_spans``; 0/False
+# disables pruning entirely. High-volume tracing once grew a single
+# observability.db past 400 MB because nothing ever expired rows.
+SPAN_RETENTION_DAYS = int(os.getenv("DBGPT_SPAN_RETENTION_DAYS", "7") or "7")
+
+
+def prune_observability_spans(
+    keep_days: Optional[int] = None, vacuum: bool = False
+) -> int:
+    """Delete spans older than the retention window. Returns rows deleted.
+
+    Runs synchronously — call it from a background thread. With
+    ``vacuum=True`` the file is compacted afterwards (expensive; only worth
+    it after deleting a large share of the table).
+    """
+    from sqlalchemy import delete, text as _sql_text
+
+    keep = SPAN_RETENTION_DAYS if keep_days is None else int(keep_days)
+    if keep <= 0:
+        return 0
+    try:
+        engine, _factory = get_observability_store()
+        cutoff = datetime.utcnow() - timedelta(days=keep)
+        with engine.begin() as conn:
+            result = conn.execute(
+                delete(ObservabilitySpanEntity).where(
+                    ObservabilitySpanEntity.start_time < cutoff
+                )
+            )
+            deleted = int(getattr(result, "rowcount", 0) or 0)
+            if vacuum and deleted > 0:
+                conn.execute(_sql_text("PRAGMA wal_checkpoint(TRUNCATE)"))
+                conn.execute(_sql_text("VACUUM"))
+        if deleted:
+            logger.info(
+                "Pruned %d observability spans older than %d days", deleted, keep
+            )
+        return deleted
+    except Exception as e:
+        logger.warning("observability span pruning failed: %s", e)
+        return 0
 
 
 def now() -> datetime:
